@@ -11,22 +11,23 @@ This website is designed to be deployed to a sub-folder on shared hosting.
 To run this website on your local machine, follow these instruction carefully :
 
 * **Deploy instruction**
-  * Clone this repository to your PC/laptop.
-  * Open terminal/CMD then go to the **root directory** of the clone results.
-  * Run this command `cp .env.example .env`
-  * Run `composer install` / `composer update` & `npm install` command to install all required dependencies.
-  * Run `php artisan migrate` to create fresh database and tables with empty data
+  + Clone this repository to your PC/laptop.
+  + Open terminal/CMD then go to the **root directory** of the clone results.
+  + Run this command `cp .env.example .env`
+  + Run `composer install` / `composer update` & `npm install` command to install all required dependencies.
+  + Run `php artisan migrate` to create fresh database and tables with empty data
 
 * **Deploy using artisan command**
-  * Just run `php artisan serve` from your terminal
+  + Just run `php artisan serve` from your terminal
 
 * **Deploy on XAMPP**
-  * Create a new directory in **htdocs**
-  * Copy all files and directories in the public folder to the root folder in the directory you just created
-  * Create a new directory in the directory that you just created then copy all the cloned files except the public folder to that directory
-  * Modify your index.php 
+  + Create a new directory in **htdocs**
+  + Copy all files and directories in the public folder to the root folder in the directory you just created
+  + Create a new directory in the directory that you just created then copy all the cloned files except the public folder to that directory
+  + Modify your index.php 
+    
 
-    ```php
+```php
         require __DIR__.'/../<new-dir-you-just-created>/vendor/autoload.php';
 
         /*

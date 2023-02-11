@@ -2,26 +2,40 @@
 
 use Illuminate\Support\Facades\Http;
 
-function sendNotification($body, $header)
+function sendNotification($message, $header): void
 {
+    $api_key = config('services.one_signal.api_key');
+    $base_url = config('services.one_signal.base_url');
+
     $contents = [
-        'en' => $body
+        'en' => $message,
     ];
 
     $headings = [
-        'en' => $header
+        'en' => $header,
     ];
 
-    $fields = [
-        'app_id' => env('ONESIGNAL_APP_ID'),
+    $headers = [
+        'Content-Type' => 'application/json',
+        'Authorization' => "Basic $api_key",
+    ];
+
+    $data = [
+        'app_id' => config('services.one_signal.app_id'),
         'included_segments' => ['All'],
         'contents' => $contents,
         'headings' => $headings,
-        'url' => 'https://banuacoders.com/corona/data'
+        'url' => 'https://banuacoders.com/corona/data',
     ];
 
-    Http::withHeaders([
-        'Content-Type' => 'application/json',
-        'Authorization' => 'Basic ' . env('ONESIGNAL_API_KEY')
-    ])->retry(3, 1000)->post(env('ONESIGNAL_API_URL'), $fields);
+    Http::withHeaders($headers)->retry(3, 1000)->post($base_url, $data);
+}
+
+function setResponse($data, $errors = [], $is_success = true)
+{
+    return [
+        'success' => $is_success,
+        'errors'  => $errors,
+        'data' => $data,
+    ];
 }

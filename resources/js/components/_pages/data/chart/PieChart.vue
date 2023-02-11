@@ -4,17 +4,16 @@
     <div class="bg-white rounded-lg shadow-lg vld-parent">
       <div class="flex justify-center w-full">
         <loading
-          :active.sync="isLoading"
+          :active="isLoading()"
           :is-full-page="false"
           :opacity="0.8"
           :width="120"
-          height="400px"
-          loader="bars"
+          :height="400"
           color="#59F"
         >
         </loading>
       </div>
-      <div v-show="!isLoading" style="height: 400px" class="p-5">
+      <div v-show="!isLoading()" style="height: 400px" class="p-5">
         <keep-alive>
           <canvas
             id="pie-chart"
@@ -29,36 +28,35 @@
 </template>
 <script>
 import Loading from "vue-loading-overlay";
-import Chart from "chart.js";
-import "chartjs-plugin-datalabels";
-import "chart.js/dist/Chart.min";
+import "vue-loading-overlay/dist/vue-loading.css";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import Chart from "chart.js/auto";
+Chart.register({ ChartDataLabels });
 import { id } from "date-fns/locale";
 const { format } = require("date-fns");
 var dataChart = {
   type: "pie",
   data: {
-    labels: ["Positif - Dirawat", "Positif - Meninggal", "Positif - Sembuh"],
+    labels: ["Dirawat", "Sembuh", "Meninggal"],
     datasets: [
       {
         data: [],
         backgroundColor: [
           "rgb(54, 162, 235)",
-          "rgb(255, 159, 64)",
           "rgb(75, 192, 192)",
+          "rgb(255, 159, 64)",
         ],
       },
     ],
   },
   options: {
-    title: {
-      display: true,
-      fontSize: 16,
-      text: "Persentase Kasus Positif COVID-19 di Sulawesi Tengah",
-    },
-    tooltips: {
-      enabled: true,
-    },
+    locale: "id-ID",
     plugins: {
+      title: {
+        display: true,
+        fontSize: 16,
+        text: "Persentase Kasus Positif COVID-19 di Sulawesi Tengah",
+      },
       datalabels: {
         formatter: (value, ctx) => {
           let sum = 0;
@@ -71,10 +69,10 @@ var dataChart = {
         },
         color: "#fff",
       },
+      legend: { position: "bottom", usePointStyle: false, display: true },
     },
     maintainAspectRatio: false,
     responsive: true,
-    legend: { position: "bottom", usePointStyle: false, display: true },
   },
 };
 export default {
@@ -89,12 +87,14 @@ export default {
   },
   data() {
     return {
-      isLoading: true,
       chart: null,
       jsonDataProvinsi: {},
     };
   },
   methods: {
+    isLoading() {
+      return _.isEmpty(this.jsonDataProvinsi) ? true : false;
+    },
     createChart(chartId, chartData) {
       const ctx = document.getElementById(chartId);
       if (this.chart != null) {
@@ -108,14 +108,13 @@ export default {
     },
     getStatistic: function () {
       let data = this.jsonDataProvinsi;
-      let positif = data.kumulatif.positif;
-      let sembuh = data.kumulatif.sembuh;
-      let meninggal = data.kumulatif.meninggal;
+      let positif = data == undefined ? 0 : data.kumulatif.positif;
+      let sembuh = data == undefined ? 0 : data.kumulatif.sembuh;
+      let meninggal = data == undefined ? 0 : data.kumulatif.meninggal;
       let dirawat = positif - (sembuh + meninggal);
-      dataChart.data.datasets[0].data = [dirawat, meninggal, sembuh];
+      dataChart.data.datasets[0].data = [dirawat, sembuh, meninggal];
       this.chart.update();
       this.chart.render();
-      this.isLoading = false;
     },
   },
   watch: {

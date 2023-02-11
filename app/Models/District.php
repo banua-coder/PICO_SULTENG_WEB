@@ -2,56 +2,63 @@
 
 namespace App\Models;
 
-use App\Models\Facility;
-use App\Models\LocalCaseHistory;
 use Illuminate\Database\Eloquent\Model;
+use Staudenmeir\EloquentEagerLimit\HasEagerLimit;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class District extends Model
 {
-    use HasFactory;
-
-    protected $table = 'kabupaten';
+    use HasFactory, HasEagerLimit;
 
     protected $guarded = [];
-    protected $hidden = ['created_at'];
-    protected $appends = ['dalam_pengawasan', 'dalam_pemantauan', 'rasio_kematian'];
-    protected $casts = [
-        'no' => 'integer',
-        'ODP' => 'integer',
-        'PDP' => 'integer',
-        'positif' => 'integer',
-        'negatif' => 'integer',
-        'sembuh' => 'integer',
-        'meninggal' => 'integer',
-        'selesai_pengawasan' => 'integer',
-        'selesai_pemantauan' => 'integer',
-    ];
+    public $incrementing = false;
 
-    protected $primaryKey = 'no';
+    // Relationships
 
-    public function posts()
+    /**
+     * Get the regency that owns the District.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function regency(): BelongsTo
     {
-        return $this->hasMany(Facility::class, 'kode_kabupaten', 'no');
+        return $this->belongsTo(Regency::class, 'regency_id', 'id');
     }
 
-    public function history()
+    /**
+     * Get all of the villages for the District.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function villages(): HasMany
     {
-        return $this->hasMany(LocalCaseHistory::class, 'district_id', 'no');
+        return $this->hasMany(Village::class, 'district_id', 'id');
     }
 
-    public function getDalamPengawasanAttribute()
+    /**
+     * Get all of the cases for the District.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function cases(): HasMany
     {
-        return $this->PDP - $this->selesai_pengawasan;
+        return $this->hasMany(DistrictCase::class, 'district_id', 'id');
     }
 
-    public function getDalamPemantauanAttribute()
+    /**
+     * Get the case associated with the District.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function case(): HasOne
     {
-        return $this->ODP - $this->selesai_pemantauan;
+        return $this->hasOne(DistrictCase::class, 'district_id', 'id')->latest('day')->limit(1);
     }
 
-    public function getRasioKematianAttribute()
-    {
-        return ($this->positif > 0) ? round(($this->meninggal / $this->positif) * 100, 2) : 0;
-    }
+    // Methods
+
+    // Mutators & Accessors
 }

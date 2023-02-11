@@ -4,13 +4,14 @@ namespace App\Transformers;
 
 use League\Fractal\Serializer\ArraySerializer;
 
-class DetexiSerializer extends ArraySerializer
+class AppSerializer extends ArraySerializer
 {
     public function collection($resourceKey, array $data)
     {
         if ($resourceKey) {
             return [$resourceKey => $data];
         }
+
         return $data;
     }
 
@@ -19,6 +20,7 @@ class DetexiSerializer extends ArraySerializer
         if ($resourceKey) {
             return [$resourceKey => $data];
         }
+
         return $data;
     }
 }
