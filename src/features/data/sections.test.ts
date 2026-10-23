@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cache } from '@/api/cache'
 import { provincesLatest } from '@/api/normalize/areas'
+import { genderSnapshot, testPeriods, testTypes } from '@/api/normalize/stats'
 import { nationalSeries, provinceSeries, regencySeries } from '@/api/normalize/series'
 import type { LatestByArea } from '@/api/types'
 import { KABUPATEN_SNAPSHOT_URL } from '@/api/useSeries'
@@ -174,5 +175,61 @@ describe('SubAreaMap (W17)', () => {
     const aceh = await openMap('/data/provinsi/aceh')
     expect(aceh.wrapper.find('[data-testid="submap"]').exists()).toBe(false)
     expect(aceh.wrapper.find('#peta').exists()).toBe(false)
+  })
+})
+
+describe('GenderAge and TestsByType (W18)', () => {
+  const seedStats = () =>
+    cache.seed({
+      '/stats/gender/latest': genderSnapshot(fx('gender-latest')),
+      'tests+types': { periods: testPeriods(fx('tests')), types: testTypes(fx('test-types')) },
+    })
+  const openStats = async (path: string) => {
+    seedStats()
+    const out = await mountApp(DataView, {}, path)
+    await flush()
+    await flush()
+    return out
+  }
+
+  it('renders only on the Sulawesi Tengah routes', async () => {
+    for (const p of ['/data', '/data/provinsi/sulawesi-tengah']) {
+      const { wrapper } = await openStats(p)
+      expect(wrapper.find('[data-testid="gender"]').exists(), p).toBe(true)
+      expect(wrapper.find('[data-testid="tests"]').exists(), p).toBe(true)
+    }
+    for (const p of ['/data/provinsi/aceh', '/data/indonesia', '/data/kabupaten/kota-palu']) {
+      const { wrapper } = await openStats(p)
+      expect(wrapper.find('[data-testid="gender"]').exists(), p).toBe(false)
+      expect(wrapper.find('[data-testid="tests"]').exists(), p).toBe(false)
+    }
+  })
+
+  it('with no date from the API the caption says the date is not recorded, and no date is shown', async () => {
+    const { wrapper } = await openStats('/data/provinsi/sulawesi-tengah')
+    expect(wrapper.find('[data-testid="gender-caption"]').text()).toBe('Data terakhir yang tersedia dari sumber. Tanggal tidak tercatat di API.')
+    expect(wrapper.find('[data-testid="gender-caption"]').text()).not.toMatch(/\d{4}/)
+  })
+
+  it('sex bars carry label, share and value as text; the PDP toggle swaps the numbers', async () => {
+    const { wrapper } = await openStats('/data/provinsi/sulawesi-tengah')
+    const g = wrapper.find('[data-testid="gender"]')
+    const first = g.findAll('figure')[0]!
+    expect(first.text()).toContain('Laki-laki (44,8%)')
+    expect(first.text()).toContain('10.199')
+    expect(g.findAll('figure')).toHaveLength(3)
+    await g.find('input[value="pdp"]').setValue()
+    expect(g.findAll('figure')[0]!.text()).toContain('178')
+    expect(g.findAll('figure')[0]!.find('figcaption').text()).toBe('PDP menurut jenis kelamin')
+  })
+
+  it('tests: PCR and RDT only, the last period as text, the type description, and the end-date note', async () => {
+    const { wrapper } = await openStats('/data/provinsi/sulawesi-tengah')
+    const t = wrapper.find('[data-testid="tests"]')
+    expect(t.findAll('[data-type]').map((e) => e.attributes('data-type'))).toEqual(['pcr', 'rdt'])
+    expect(t.find('[data-testid="tests-note"]').text()).toBe('Data pemeriksaan hanya tersedia sampai 28 September 2020.')
+    expect(t.text()).toContain('Periode terakhir (28 September 2020)')
+    expect(t.text()).toContain('Spesimen saluran pernapasan')
+    expect(t.findAll('dt').map((d) => d.text()).slice(0, 4)).toEqual(['Diproses', 'Tidak valid', 'Positif', 'Negatif'])
   })
 })

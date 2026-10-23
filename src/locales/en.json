@@ -202,6 +202,34 @@
       "deceased": "Total deceased",
       "recovered": "Total recovered",
       "caption": "The map shows the latest data, {date}. It does not follow the date range above."
+    },
+    "gender": {
+      "title": "Sex and age",
+      "kind": "Show",
+      "positive": "Positive cases",
+      "pdp": "PDP",
+      "sexTitle": "{kind} by sex",
+      "ageTitleMale": "{kind}, male, by age",
+      "ageTitleFemale": "{kind}, female, by age",
+      "male": "Male",
+      "female": "Female",
+      "noDate": "Latest data available from the source. The date is not recorded in the API.",
+      "withDate": "Data as of {date}.",
+      "sexSummary": "{kind}: male {male}, female {female}.",
+      "ageSummary": "{kind} by age, {sex}: {values}."
+    },
+    "tests": {
+      "title": "Testing",
+      "note": "Testing data is only available until {date}.",
+      "chart": "{type}: positive and negative per period",
+      "positive": "Positive",
+      "negative": "Negative",
+      "last": "Last period ({date})",
+      "processed": "Processed",
+      "invalid": "Invalid",
+      "sample": "Sample",
+      "duration": "Time",
+      "summary": "{type}: {first} to {last}, last period {positive} positive and {negative} negative."
     }
   },
   "chart": {

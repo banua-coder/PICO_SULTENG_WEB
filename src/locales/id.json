@@ -202,6 +202,34 @@
       "deceased": "Total meninggal",
       "recovered": "Total sembuh",
       "caption": "Peta menampilkan data terakhir, {date}. Peta tidak mengikuti rentang tanggal di atas."
+    },
+    "gender": {
+      "title": "Jenis kelamin dan usia",
+      "kind": "Tampilkan",
+      "positive": "Kasus positif",
+      "pdp": "PDP",
+      "sexTitle": "{kind} menurut jenis kelamin",
+      "ageTitleMale": "{kind}, laki-laki, menurut usia",
+      "ageTitleFemale": "{kind}, perempuan, menurut usia",
+      "male": "Laki-laki",
+      "female": "Perempuan",
+      "noDate": "Data terakhir yang tersedia dari sumber. Tanggal tidak tercatat di API.",
+      "withDate": "Data per {date}.",
+      "sexSummary": "{kind}: laki-laki {male}, perempuan {female}.",
+      "ageSummary": "{kind} menurut usia, {sex}: {values}."
+    },
+    "tests": {
+      "title": "Pemeriksaan (tes)",
+      "note": "Data pemeriksaan hanya tersedia sampai {date}.",
+      "chart": "{type}: positif dan negatif per periode",
+      "positive": "Positif",
+      "negative": "Negatif",
+      "last": "Periode terakhir ({date})",
+      "processed": "Diproses",
+      "invalid": "Tidak valid",
+      "sample": "Sampel",
+      "duration": "Waktu",
+      "summary": "{type}: {first} sampai {last}, periode terakhir {positive} positif dan {negative} negatif."
     }
   },
   "chart": {

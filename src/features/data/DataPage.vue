@@ -3,10 +3,13 @@ import { provide, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { AreaRef } from '@/api/types'
 import { usePageHead } from '@/app/head'
+import { SULTENG } from '@/app/areas'
 import SectionHeading from '@/components/SectionHeading.vue'
 import CaseCurves from './components/CaseCurves.vue'
 import RtSection from './components/RtSection.vue'
+import GenderAge from './components/GenderAge.vue'
 import SubAreaMap from './components/SubAreaMap.vue'
+import TestsByType from './components/TestsByType.vue'
 import AreaSummary from './components/AreaSummary.vue'
 import DataToolbar from './components/DataToolbar.vue'
 import OdpPdpNote from './components/OdpPdpNote.vue'
@@ -17,6 +20,8 @@ import { areaPath, DataPageKey, useDataPage } from './useDataPage'
 const props = defineProps<{ area: AreaRef; isRoot?: boolean }>()
 const { t } = useI18n()
 const state = useDataPage(toRef(props, 'area'))
+// gender, age and tests exist for Sulawesi Tengah only (spec 45)
+const isSulteng = props.area.level === 'provinsi' && props.area.code === SULTENG.code
 provide(DataPageKey, state)
 
 usePageHead({
@@ -40,6 +45,10 @@ usePageHead({
     <RtSection class="mt-8" />
     <SubAreaMap class="mt-8" />
     <OdpPdpNote class="mt-8" />
+    <template v-if="isSulteng">
+      <GenderAge class="mt-8" />
+      <TestsByType class="mt-8" />
+    </template>
     <ShareLink class="mt-8" />
   </div>
 </template>
