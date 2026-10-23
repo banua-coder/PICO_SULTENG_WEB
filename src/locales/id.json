@@ -1,0 +1,40 @@
+{
+  "app": {
+    "name": "PICO Sulteng",
+    "tagline": "Catatan COVID-19 Sulawesi Tengah",
+    "skip": "Lompat ke konten"
+  },
+  "nav": {
+    "label": "Navigasi utama",
+    "menu": "Menu",
+    "beranda": "Beranda",
+    "data": "Data",
+    "tabel": "Tabel Data",
+    "vaksin": "Vaksin",
+    "infografis": "Infografis",
+    "kontak": "Kontak",
+    "wiki": "Wiki",
+    "isoman": "Isoman",
+    "metodologi": "Metodologi"
+  },
+  "locale": {
+    "label": "Bahasa",
+    "switchTo": "English",
+    "switchToLabel": "Ganti bahasa ke English"
+  },
+  "theme": {
+    "label": "Tema",
+    "system": "Ikuti perangkat",
+    "light": "Terang",
+    "dark": "Gelap"
+  },
+  "format": {
+    "notAvailable": "tidak tersedia",
+    "rangeJoin": "sampai"
+  },
+  "common": {
+    "retry": "Coba lagi",
+    "loading": "Memuat",
+    "pageTitle": "{page} · {site}"
+  }
+}

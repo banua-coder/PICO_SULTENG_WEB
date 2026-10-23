@@ -1,0 +1,40 @@
+{
+  "app": {
+    "name": "PICO Sulteng",
+    "tagline": "COVID-19 record of Central Sulawesi",
+    "skip": "Skip to content"
+  },
+  "nav": {
+    "label": "Main navigation",
+    "menu": "Menu",
+    "beranda": "Home",
+    "data": "Data",
+    "tabel": "Data table",
+    "vaksin": "Vaccination",
+    "infografis": "Infographics",
+    "kontak": "Contacts",
+    "wiki": "Wiki",
+    "isoman": "Home isolation",
+    "metodologi": "Methodology"
+  },
+  "locale": {
+    "label": "Language",
+    "switchTo": "Bahasa Indonesia",
+    "switchToLabel": "Switch language to Bahasa Indonesia"
+  },
+  "theme": {
+    "label": "Theme",
+    "system": "Follow device",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "format": {
+    "notAvailable": "not available",
+    "rangeJoin": "to"
+  },
+  "common": {
+    "retry": "Try again",
+    "loading": "Loading",
+    "pageTitle": "{page} · {site}"
+  }
+}

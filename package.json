@@ -11,7 +11,7 @@
     "dev": "vite",
     "build": "vite-ssg build",
     "preview": "vite preview",
-    "lint": "eslint . && pnpm lint:tokens && pnpm check:brand",
+    "lint": "eslint . && pnpm lint:tokens && pnpm check:i18n && pnpm check:brand",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -20,7 +20,8 @@
     "fixtures:check": "tsx scripts/record-fixtures.ts --check",
     "sync:brand": "node scripts/sync-brand.mjs",
     "check:brand": "node scripts/sync-brand.mjs --check",
-    "lint:tokens": "tsx scripts/lint-src.ts"
+    "lint:tokens": "tsx scripts/lint-src.ts",
+    "check:i18n": "tsx scripts/check-i18n.ts"
   },
   "dependencies": {
     "@unhead/vue": "^2.1.17",
