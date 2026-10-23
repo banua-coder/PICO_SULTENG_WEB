@@ -1,12 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cache } from '@/api/cache'
+import { provincesLatest } from '@/api/normalize/areas'
 import { nationalSeries, provinceSeries, regencySeries } from '@/api/normalize/series'
-import { INDONESIA, SULTENG } from '@/app/areas'
-import { fx, type WireNationalCase, type WireProvinceCase, type WireRegencyCase } from '../../../test/fixtures/load'
+import type { LatestByArea } from '@/api/types'
+import { KABUPATEN_SNAPSHOT_URL } from '@/api/useSeries'
+import { areaByCode, INDONESIA, SULTENG } from '@/app/areas'
+import snapshot from '../../../test/fixtures/kabupaten-latest.snapshot.json'
+import { fx, type WireNationalCase, type WireProvince, type WireProvinceCase, type WireRegencyCase } from '../../../test/fixtures/load'
 import { flush, mountApp } from '../../../test/support/mount'
 import DataView from './DataView.vue'
+import { mapDate, mapKind, selectedCode, useSubAreaItems } from './useSubAreaItems'
 
 beforeEach(() => {
+  // reduced motion keeps the Lottie player out of the loading states of unseeded resources
+  vi.spyOn(window, 'matchMedia').mockImplementation((q) => ({ matches: q.includes('reduce'), media: q, addEventListener: () => undefined, removeEventListener: () => undefined }) as unknown as MediaQueryList)
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
     return { width: 640, height: 280, top: 0, left: 0, right: 640, bottom: 280, x: 0, y: 0, toJSON: () => ({}) }
   })
@@ -106,5 +113,66 @@ describe('RtSection (W16)', () => {
     const s = wrapper.find('[data-testid="rt-section"]')
     expect(s.find('svg[role="img"]').exists()).toBe(true)
     expect(s.text()).toMatch(/\b1\b/)
+  })
+})
+
+describe('SubAreaMap (W17)', () => {
+  const seedLatest = () =>
+    cache.seed({
+      '/provinces': provincesLatest(fx<WireProvince[]>('provinces')),
+      [KABUPATEN_SNAPSHOT_URL]: snapshot,
+    })
+  const openMap = async (path: string) => {
+    seedLatest()
+    const out = await mountApp(DataView, {}, path)
+    await flush()
+    await flush()
+    return out
+  }
+
+  it('items: the metric per area, from the snapshot, and the map kind per level', () => {
+    const k = snapshot as LatestByArea[]
+    const items = useSubAreaItems(k, 'deceased')
+    expect(items).toHaveLength(13)
+    expect(items.find((i) => i.code === '7204')).toEqual({ code: '7204', name: 'Poso', value: k.find((x) => x.area.code === '7204')!.latest.cumulative.deceased })
+    expect([mapKind(INDONESIA), mapKind(SULTENG), mapKind(areaByCode('kabupaten', '7204')!), mapKind(areaByCode('provinsi', '11')!)]).toEqual(['provinces', 'kabupaten', 'kabupaten', null])
+    expect(selectedCode(areaByCode('kabupaten', '7204')!)).toBe('7204')
+    expect(selectedCode(SULTENG)).toBeUndefined()
+    expect(mapDate(k)).toBe('2024-01-14')
+  })
+
+  it('/data/kabupaten/poso: Poso is selected on the map and in the table, values match the snapshot, the caption says the map ignores the window', async () => {
+    const { wrapper } = await openMap('/data/kabupaten/poso?dari=2021-07-01')
+    const s = wrapper.find('[data-testid="submap"]')
+    expect(s.find('g[role="link"][aria-current="true"]').attributes('data-code')).toBe('7204')
+    const k = (snapshot as LatestByArea[]).find((x) => x.area.code === '7204')!
+    expect(s.find('td[data-code="7204"]').text()).toBe(k.latest.cumulative.positive.toLocaleString('id-ID'))
+    expect(s.findAll('tbody tr')).toHaveLength(13)
+    expect(s.find('[data-testid="map-caption"]').text()).toContain('14 Januari 2024')
+    expect(s.find('[data-testid="map-caption"]').text()).toContain('tidak mengikuti rentang tanggal')
+  })
+
+  it('a click on the map and a link in the table keep ?dari and ?sampai', async () => {
+    const { wrapper, router } = await openMap('/data/kabupaten/poso?dari=2021-07-01&sampai=2021-07-31')
+    const link = wrapper.find('[data-testid="submap"] tbody a[href*="kota-palu"]')
+    expect(link.attributes('href')).toBe('/data/kabupaten/kota-palu?dari=2021-07-01&sampai=2021-07-31')
+    await wrapper.find('g[role="link"][data-code="7271"]').trigger('click')
+    await flush()
+    expect(router.currentRoute.value.fullPath).toBe('/data/kabupaten/kota-palu?dari=2021-07-01&sampai=2021-07-31')
+  })
+
+  it('the metric switch changes the numbers', async () => {
+    const { wrapper } = await openMap('/data/provinsi/sulawesi-tengah')
+    const before = wrapper.find('[data-testid="submap"] td[data-code="7271"]').text()
+    await wrapper.find('input[value="deceased"]').setValue()
+    expect(wrapper.find('[data-testid="submap"] td[data-code="7271"]').text()).not.toBe(before)
+  })
+
+  it('the country gets the 34 provinces; another province gets no section and no empty box', async () => {
+    const nat = await openMap('/data/indonesia')
+    expect(nat.wrapper.find('[data-testid="submap"]').findAll('tbody tr')).toHaveLength(34)
+    const aceh = await openMap('/data/provinsi/aceh')
+    expect(aceh.wrapper.find('[data-testid="submap"]').exists()).toBe(false)
+    expect(aceh.wrapper.find('#peta').exists()).toBe(false)
   })
 })

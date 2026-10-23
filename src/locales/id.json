@@ -194,6 +194,14 @@
       "gapReason": "Rt tidak dihitung untuk jendela 7 hari dengan kurang dari {n} kasus baru.",
       "gapMore": "dan {n} rentang lain",
       "gapEnd": "Setelah {date} Rt tidak dihitung lagi: perhitungannya berhenti pada pertengahan 2023."
+    },
+    "map": {
+      "title": "Peta wilayah",
+      "metric": "Ukuran",
+      "positive": "Total kasus positif",
+      "deceased": "Total meninggal",
+      "recovered": "Total sembuh",
+      "caption": "Peta menampilkan data terakhir, {date}. Peta tidak mengikuti rentang tanggal di atas."
     }
   },
   "chart": {

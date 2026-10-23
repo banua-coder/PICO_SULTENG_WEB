@@ -194,6 +194,14 @@
       "gapReason": "Rt is not computed for a 7-day window with fewer than {n} new cases.",
       "gapMore": "and {n} more ranges",
       "gapEnd": "After {date} Rt is no longer computed: the calculation stopped in mid-2023."
+    },
+    "map": {
+      "title": "Area map",
+      "metric": "Measure",
+      "positive": "Total positive cases",
+      "deceased": "Total deceased",
+      "recovered": "Total recovered",
+      "caption": "The map shows the latest data, {date}. It does not follow the date range above."
     }
   },
   "chart": {

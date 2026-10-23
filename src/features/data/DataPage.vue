@@ -6,6 +6,7 @@ import { usePageHead } from '@/app/head'
 import SectionHeading from '@/components/SectionHeading.vue'
 import CaseCurves from './components/CaseCurves.vue'
 import RtSection from './components/RtSection.vue'
+import SubAreaMap from './components/SubAreaMap.vue'
 import AreaSummary from './components/AreaSummary.vue'
 import DataToolbar from './components/DataToolbar.vue'
 import OdpPdpNote from './components/OdpPdpNote.vue'
@@ -37,6 +38,7 @@ usePageHead({
     </section>
     <CaseCurves class="mt-8" />
     <RtSection class="mt-8" />
+    <SubAreaMap class="mt-8" />
     <OdpPdpNote class="mt-8" />
     <ShareLink class="mt-8" />
   </div>
