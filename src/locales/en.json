@@ -107,7 +107,18 @@
     "mapTitle": "Kabupaten/city map",
     "mapMetric": "Cumulative positive",
     "provMetric": "Cumulative positive by province",
-    "picked": "Selected: {name}"
+    "picked": "Selected: {name}",
+    "rtTitle": "Example Rt with a gap and a value above the limit",
+    "rtSummary": "Rt falls below 1, there is a gap with no estimate, then one spike above 4.",
+    "barsTitle": "Example woven bars",
+    "barsSummary": "Women are slightly more than men.",
+    "ageTitle": "Example vertical bars: age groups",
+    "progressDose1": "Dose 1, health workers",
+    "progressDose2": "Dose 2, elderly",
+    "progressOver": "Dose 1, health workers (over target)",
+    "male": "Male",
+    "female": "Female",
+    "unknown": "Unknown"
   },
   "notFound": {
     "title": "Page not found",
@@ -160,7 +171,18 @@
     "week": "Week starting {date}",
     "noData": "No data in this range",
     "plot": "Chart, use the arrow keys",
-    "legend": "Key"
+    "legend": "Key",
+    "rtFocus": "{date}: Rt {value}, range {lo} to {hi}",
+    "rtNone": "{date}: Rt not available",
+    "rtThreshold": "Rt = 1",
+    "rtKey": "Thick line: Rt estimate. Hatched band: 95 percent credible interval. Dashed line: Rt = 1.",
+    "rtClipped": "Rt {value}, above the chart limit",
+    "rtEstimate": "Rt",
+    "rtLow": "Lower bound",
+    "rtHigh": "Upper bound",
+    "rtEmpty": "Rt is not available for this range",
+    "barsPlot": "Bar chart",
+    "tableValue": "Value"
   },
   "map": {
     "legend": "Mark size shows the count",
@@ -169,5 +191,11 @@
     "selected": "selected",
     "noValue": "not available",
     "mapLabel": "Map of {metric}"
+  },
+  "progress": {
+    "of": "{value} of {target}",
+    "over": "over target",
+    "na": "Target not available",
+    "text": "{label}: {pct} percent, {of}"
   }
 }

@@ -107,7 +107,18 @@
     "mapTitle": "Peta kabupaten/kota",
     "mapMetric": "Positif kumulatif",
     "provMetric": "Positif kumulatif provinsi",
-    "picked": "Terpilih: {name}"
+    "picked": "Terpilih: {name}",
+    "rtTitle": "Contoh Rt dengan celah dan nilai di atas batas",
+    "rtSummary": "Rt turun di bawah 1, ada celah tanpa perkiraan, lalu satu lonjakan di atas 4.",
+    "barsTitle": "Contoh batang bertenun",
+    "barsSummary": "Perempuan sedikit lebih banyak dari laki-laki.",
+    "ageTitle": "Contoh batang tegak: kelompok umur",
+    "progressDose1": "Dosis 1, tenaga kesehatan",
+    "progressDose2": "Dosis 2, lansia",
+    "progressOver": "Dosis 1, tenaga kesehatan (lebih dari target)",
+    "male": "Laki-laki",
+    "female": "Perempuan",
+    "unknown": "Tidak diketahui"
   },
   "notFound": {
     "title": "Halaman tidak ditemukan",
@@ -160,7 +171,18 @@
     "week": "Pekan mulai {date}",
     "noData": "Tidak ada data pada rentang ini",
     "plot": "Grafik, gunakan tombol panah",
-    "legend": "Keterangan"
+    "legend": "Keterangan",
+    "rtFocus": "{date}: Rt {value}, rentang {lo} sampai {hi}",
+    "rtNone": "{date}: Rt tidak tersedia",
+    "rtThreshold": "Rt = 1",
+    "rtKey": "Garis tebal: perkiraan Rt. Pita arsir: rentang kepercayaan 95 persen. Garis putus-putus: Rt = 1.",
+    "rtClipped": "Rt {value}, di atas batas grafik",
+    "rtEstimate": "Rt",
+    "rtLow": "Batas bawah",
+    "rtHigh": "Batas atas",
+    "rtEmpty": "Rt tidak tersedia untuk rentang ini",
+    "barsPlot": "Grafik batang",
+    "tableValue": "Nilai"
   },
   "map": {
     "legend": "Ukuran tanda menunjukkan jumlah",
@@ -169,5 +191,11 @@
     "selected": "dipilih",
     "noValue": "tidak tersedia",
     "mapLabel": "Peta {metric}"
+  },
+  "progress": {
+    "of": "{value} dari {target}",
+    "over": "melebihi target",
+    "na": "Target tidak tersedia",
+    "text": "{label}: {pct} persen, {of}"
   }
 }

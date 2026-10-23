@@ -14,8 +14,11 @@ import SectionHeading from '@/components/SectionHeading.vue'
 import StatFigure from '@/components/StatFigure.vue'
 import StateMark from '@/components/StateMark.vue'
 import StatusView from '@/components/StatusView.vue'
+import ProgressWeave from '@/components/charts/ProgressWeave.vue'
+import RtChart from '@/components/charts/RtChart.vue'
 import TimeSeriesChart from '@/components/charts/TimeSeriesChart.vue'
-import type { LineSeries } from '@/components/charts/types'
+import WovenBars from '@/components/charts/WovenBars.vue'
+import type { BandPoint, LineSeries } from '@/components/charts/types'
 import { dayNumber, isoFromDay } from '@/components/charts/core/days'
 import KabupatenMap from '@/components/maps/KabupatenMap.vue'
 import ProvinceMap from '@/components/maps/ProvinceMap.vue'
@@ -49,6 +52,19 @@ const demo = [
   make('d', 'deceased', t('state.deceased'), (i) => Math.round((wave(83, 2)(i) ?? 0) / 8)),
   make('a', 'active', t('state.active'), wave(97, 3, true)),
 ]
+// Rt for 1,414 days: a slow wave, a gap with no estimate, and a spike above the 0..4 axis
+const rtPoints: BandPoint[] = Array.from({ length: DAYS }, (_, i) => {
+  const x = isoFromDay(day0 + i)
+  if (i < 30 || (i > 700 && i < 760)) return { x, y: null, lo: null, hi: null }
+  const v = i === 400 || i === 401 ? 4.8 : 1 + 0.55 * Math.sin(i / 70)
+  return { x, y: v, lo: v - 0.18, hi: v + 0.2 }
+})
+const genderBars = [
+  { key: 'm', label: t('kit.male'), value: 10199, role: 'positive' as const },
+  { key: 'f', label: t('kit.female'), value: 12585, role: 'recovered' as const },
+  { key: 'u', label: t('kit.unknown'), value: null, role: 'deceased' as const },
+]
+const ageBars = [263, 898, 2888, 3180, 1978, 991].map((value, i) => ({ key: `a${i}`, label: ['0 sampai 14 tahun', '15 sampai 19 tahun', '20 sampai 24 tahun', '25 sampai 49 tahun', '50 sampai 54 tahun', '55 tahun ke atas'][i]!, value, role: 'positive' as const }))
 const kind = ref<'line' | 'bar'>('line')
 const chartKey = ref(0)
 const renderMs = ref('')
@@ -120,6 +136,20 @@ const contacts: Contact[] = [
       <p class="mt-3 text-sm text-ink-muted" data-testid="picked">{{ t('kit.picked', { name: pickedName(pickedMap) }) }}</p>
       <div class="mt-5"><KabupatenMap :items="mapItems" :metric="{ label: t('kit.mapMetric'), role: 'positive' }" :selected="pickedMap" @select="pickedMap = $event" /></div>
       <div class="mt-8"><ProvinceMap :items="provItems" :metric="{ label: t('kit.provMetric'), role: 'recovered' }" :selected="pickedProv" @select="pickedProv = $event" /></div>
+    </section>
+
+    <section class="mt-8" aria-labelledby="k-chartb">
+      <SectionHeading id="k-chartb" :level="2">RtChart, WovenBars, ProgressWeave</SectionHeading>
+      <div class="mt-5"><RtChart :points="rtPoints" :a11y="{ title: t('kit.rtTitle'), summary: t('kit.rtSummary') }" /></div>
+      <div class="mt-8 grid gap-8 md:grid-cols-2">
+        <WovenBars :items="genderBars" orientation="horizontal" :a11y="{ title: t('kit.barsTitle'), summary: t('kit.barsSummary') }" />
+        <WovenBars :items="ageBars" orientation="vertical" :a11y="{ title: t('kit.ageTitle'), summary: t('kit.ageTitle') }" />
+      </div>
+      <div class="mt-8 grid gap-5 md:grid-cols-3">
+        <ProgressWeave :value="85441" :target="2240548" :label="t('kit.progressDose1')" role="positive" />
+        <ProgressWeave :value="4103" :target="25292" :label="t('kit.progressDose2')" role="recovered" />
+        <ProgressWeave :value="24885" :target="24698" :label="t('kit.progressOver')" role="positive" />
+      </div>
     </section>
 
     <section class="mt-8" aria-labelledby="k-icons">

@@ -25,9 +25,9 @@ export type SeriesModel = {
   end: { x: number; y: number; labelY: number; value: number } | null
 }
 
-const MARGIN_TOP = 12
-const MARGIN_BOTTOM = 28
-const MARGIN_LEFT = 52
+export const MARGIN_TOP = 12
+export const MARGIN_BOTTOM = 28
+export const MARGIN_LEFT = 52
 
 export const marginRight = (width: number) => (width < 480 ? 84 : 104)
 

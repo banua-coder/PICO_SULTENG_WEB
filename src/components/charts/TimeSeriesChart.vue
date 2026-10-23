@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { computed, ref, useId, watch } from 'vue'
+import { computed, ref, useId } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { IsoDate } from '@/api/types'
 import { useFormat } from '@/app/useFormat'
 import StateMark from '../StateMark.vue'
 import Axis from './Axis.vue'
 import ChartTable from './ChartTable.vue'
-import { moveFocus } from './core/keys'
 import { buildModel } from './core/model'
 import { lineForm, weaveFill } from './core/roles'
-import { nearestIndex } from './core/scales'
 import { useChartSize, useMarkSize } from './core/useChartSize'
+import { useChartFocus } from './core/useFocus'
 import RoleMark from './RoleMark.vue'
 import type { ChartA11y, LineSeries } from './types'
 
@@ -46,10 +45,17 @@ const xLabels = computed(() =>
 const yLabels = computed(() => model.value.yTicks.map((tk) => ({ pos: tk.pos, label: fmt.num(tk.value) })))
 
 // ---- focus: keyboard and pointer share one index into the visible dates ----
-const focusIndex = ref<number | null>(null)
-const keyboard = ref(false)
-const focusDate = computed<IsoDate | null>(() => (focusIndex.value === null ? null : (model.value.dates[focusIndex.value] ?? null)))
-watch(focusDate, (d) => emit('focus-date', d))
+const surfaceRef = surface
+const focus = useChartFocus({
+  dates: computed(() => model.value.dates),
+  surface: surfaceRef,
+  xInvert: (px) => model.value.xInvert(px),
+  marginLeft: () => model.value.margin.left,
+  plotW: () => model.value.plotW,
+  onChange: (d) => emit('focus-date', d),
+})
+const focusDate = focus.date
+const { onKey, onFocus, onBlur, onPointer, onLeave } = focus
 
 const focusValues = computed(() => (focusDate.value ? model.value.valuesAt(focusDate.value) : []))
 const liveText = computed(() => {
@@ -58,37 +64,6 @@ const liveText = computed(() => {
   const values = focusValues.value.map((v) => `${v.label.toLocaleLowerCase(locale.value)} ${fmt.nullable(v.value, (n: number) => fmt.num(n))}`).join(', ')
   return t('chart.focus', { date: fmt.date(d), values })
 })
-
-function onKey(e: KeyboardEvent) {
-  const n = model.value.dates.length
-  if (n === 0) return
-  if (e.key === 'Escape') {
-    focusIndex.value = null
-    return
-  }
-  const next = moveFocus(e.key, focusIndex.value ?? n - 1, n)
-  if (next === null) return
-  e.preventDefault()
-  keyboard.value = true
-  focusIndex.value = next
-}
-function onFocus() {
-  if (focusIndex.value === null && model.value.dates.length) focusIndex.value = model.value.dates.length - 1 // start at the latest date
-}
-function onBlur() {
-  keyboard.value = false
-  focusIndex.value = null
-}
-function onPointer(e: PointerEvent) {
-  const el = surface.value
-  if (!el || empty.value) return
-  const px = e.clientX - el.getBoundingClientRect().left - model.value.margin.left
-  if (px < -8 || px > model.value.plotW + 8) return
-  focusIndex.value = nearestIndex(model.value.dates, model.value.xInvert(px))
-}
-function onLeave() {
-  if (!keyboard.value) focusIndex.value = null
-}
 
 const focusX = computed(() => (focusDate.value ? model.value.x(focusDate.value) : 0))
 const tipLeft = computed(() => {
@@ -101,7 +76,7 @@ const tablePoints = computed(() => model.value.visible)
 </script>
 
 <template>
-  <figure class="m-0">
+  <figure class="m-0" data-chart="timeseries">
     <figcaption class="mb-3 font-display text-md font-heading text-indigo">{{ a11y.title }}</figcaption>
 
     <div ref="box" :style="{ height: `${height}px` }" class="relative w-full" :data-kind="kind">
