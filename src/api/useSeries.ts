@@ -7,7 +7,7 @@ import { isArrayOf, isRecord, isWireNationalCase, isWireProvince, isWireProvince
 import { kabupatenLatest, nationalLatest, provincesLatest } from './normalize/areas'
 import { nationalSeries, provinceSeries, regencySeries } from './normalize/series'
 import { useResource } from './resource'
-import type { AreaRef, LatestByArea, Resource, Series } from './types'
+import type { AreaRef, HomeLatest, LatestByArea, Resource, Series } from './types'
 
 /**
  * URL of a series. Plain paths only: no `sort`, no `start_date`/`end_date`.
@@ -60,6 +60,13 @@ export function useKabupatenLatest(): Resource<LatestByArea[]> {
 export function useNationalLatest(): Resource<LatestByArea> {
   const p = ENDPOINTS.nationalLatest.path
   return useResource(p, (signal) => fetchJson(p, { signal, guard: isWireNationalCase }).then(nationalLatest))
+}
+
+export const HOME_LATEST_URL = `${import.meta.env?.BASE_URL ?? '/'}data/home-latest.json`
+
+/** The build-time cut for the home page (last Rt, last vaccination day, newest infographics). Seeded into the prerender. */
+export function useHomeLatest(): Resource<HomeLatest> {
+  return useResource(HOME_LATEST_URL, (signal) => fetchStatic<HomeLatest>(HOME_LATEST_URL, { signal, guard: isRecord as (v: unknown) => v is HomeLatest }))
 }
 
 export type DownloadSizes = Record<string, { csv: number; xlsx: number }>

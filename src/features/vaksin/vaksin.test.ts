@@ -65,7 +65,7 @@ describe('VaksinView', () => {
 
   it('?wilayah=indonesia shows the national series; the radio writes the query with replace', async () => {
     const { wrapper, router } = await open('/vaksin?wilayah=indonesia')
-    expect(wrapper.find('input[value="indonesia"]').element.checked).toBe(true)
+    expect((wrapper.find('input[value="indonesia"]').element as HTMLInputElement).checked).toBe(true)
     await wrapper.find('input[value="sulawesi-tengah"]').setValue()
     await flush()
     expect(router.currentRoute.value.query.wilayah).toBeUndefined()

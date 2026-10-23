@@ -1,7 +1,7 @@
 import { ViteSSG } from 'vite-ssg'
 import App from './App.vue'
 import { cache } from './api/cache'
-import { DOWNLOAD_SIZES_URL, KABUPATEN_LATEST_SOURCE, KABUPATEN_SNAPSHOT_URL } from './api/useSeries'
+import { DOWNLOAD_SIZES_URL, HOME_LATEST_URL, KABUPATEN_LATEST_SOURCE, KABUPATEN_SNAPSHOT_URL } from './api/useSeries'
 import { SSR_KEYS, STATE_ELEMENT_ID, safeJson } from './api/ssrState'
 import { installI18n } from './app/i18n'
 import { routes, scrollBehavior } from './app/routes'
@@ -34,6 +34,7 @@ export const createApp = ViteSSG(
     const files: [boolean, string, string][] = [
       [KABUPATEN_LATEST_SOURCE === 'snapshot', KABUPATEN_SNAPSHOT_URL, 'public/data/kabupaten-latest.json'],
       [true, DOWNLOAD_SIZES_URL, 'public/unduh/sizes.json'],
+      [true, HOME_LATEST_URL, 'public/data/home-latest.json'],
     ]
     for (const [wanted, key, file] of files) {
       if (!wanted || cache.peek(key) !== undefined) continue

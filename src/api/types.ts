@@ -100,4 +100,15 @@ export type Telemedicine = {
   schedules: { days: string; hours: string; tz: string }[]
   contacts: Contact[]
 }
+/** The last Rt of a series and its interval, with the day it belongs to. */
+export type RtLast = { date: IsoDate; value: number; lower: number; upper: number }
+/**
+ * What the home page needs from the big series, cut at build time (`public/data/home-latest.json`): the last Rt of the country and
+ * of Sulawesi Tengah, the last vaccination day of both, and the 5 newest infographics. Small enough for the prerender's state.
+ */
+export type HomeLatest = {
+  rt: Record<'indonesia' | 'sulawesi-tengah', RtLast | null>
+  vaccination: Record<'indonesia' | 'sulawesi-tengah', VaccinationDay | null>
+  infographics: Infographic[]
+}
 export type Partner = { id: number; name: string; href: string; inFooter: boolean }
