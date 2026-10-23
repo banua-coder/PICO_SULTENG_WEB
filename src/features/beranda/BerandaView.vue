@@ -27,12 +27,13 @@ usePageHead({ title: () => t('beranda.title'), description: () => t('beranda.des
 </script>
 
 <template>
-  <div class="px-5 py-8">
+  <div class="px-5 py-5 sm:py-8">
     <HomeHero />
 
-    <section class="mt-8" aria-labelledby="angka">
-      <SectionHeading id="angka" :level="2">{{ t('beranda.figuresTitle') }}</SectionHeading>
-      <div class="mt-4">
+    <section class="mt-5" aria-labelledby="angka">
+      <!-- the group titles below say what the figures are; on a phone this line would push the first figure under the fold -->
+      <h2 id="angka" class="sr-only">{{ t('beranda.figuresTitle') }}</h2>
+      <div>
         <ResourceBlock :resource="provinces" min-height="14rem">
           <template #default="{ data: provs }">
             <ResourceBlock :resource="national" min-height="14rem">
