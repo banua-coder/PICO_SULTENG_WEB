@@ -1,11 +1,12 @@
 import { expect, test } from './support/test'
+import type { Page } from '@playwright/test'
 import { hydrated } from './support/a11y'
 
 test.beforeEach(async ({ page }) => {
   await page.route('https://i.ibb.co/**', (r) => r.abort())
 })
 
-const plot = (page: import('@playwright/test').Page) => page.locator('figure [role="group"]').first()
+const plot = (page: Page) => page.locator('figure [role="group"]').first()
 
 test('keyboard: Tab reaches the plot, arrows and Page keys move through dates, the live region reads the values', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
@@ -62,7 +63,9 @@ test('4 series x 1,414 points render in under 50 ms with the CPU throttled 4x', 
     await page.getByRole('button', { name: 'Render ulang' }).click()
     await expect(page.getByTestId('render-ms')).not.toHaveText('')
     ms.push(parseFloat((await page.getByTestId('render-ms').textContent())!))
-    await page.evaluate(() => (document.querySelector('[data-testid="render-ms"]')!.textContent = ''))
+    await page.evaluate(() => {
+      document.querySelector('[data-testid="render-ms"]')!.textContent = ''
+    })
   }
   await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 })
   ms.sort((a, b) => a - b)

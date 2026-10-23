@@ -36,7 +36,13 @@ export function xTicks(range: [IsoDate, IsoDate], width: number): { kind: 'month
     if (dayNumber(iso) > b) break
     if (dayNumber(iso) >= a) all.push(iso)
     if (kind === 'year') y++
-    else if (++m === 12) ((m = 0), y++)
+    else {
+      m++
+      if (m === 12) {
+        m = 0
+        y++
+      }
+    }
   }
   const fit = Math.max(1, Math.floor(width / 56))
   const step = Math.max(1, Math.ceil(all.length / fit))
