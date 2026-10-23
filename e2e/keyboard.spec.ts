@@ -42,3 +42,21 @@ test('every focusable control on a Data page has a visible focus ring', async ({
     await page.keyboard.press('Tab')
   }
 })
+
+test('Tabel Data: Tab reaches the scroll region, the pager and both export buttons; the region scrolls with the arrow keys', async ({ page }) => {
+  await visit(page, '/tabel-data')
+  await expect(page.locator('tbody tr')).toHaveCount(50)
+  const region = page.getByRole('region', { name: /Tabel data harian/ })
+  await region.focus()
+  await expect(region).toBeFocused()
+  const ring = await region.evaluate((e) => getComputedStyle(e).outlineStyle)
+  expect(ring).toBe('solid')
+  const top = await region.evaluate((e) => e.scrollTop)
+  await page.keyboard.press('ArrowDown')
+  await expect.poll(() => region.evaluate((e) => e.scrollTop)).toBeGreaterThan(top)
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('button', { name: 'Halaman 1', exact: true })).toBeFocused() // "Sebelumnya" is disabled on page 1
+  await page.getByRole('button', { name: 'Unduh CSV (tampilan ini)' }).focus()
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('button', { name: 'Unduh XLSX (tampilan ini)' })).toBeFocused()
+})

@@ -56,10 +56,13 @@
   "copy": {
     "action": "Salin {what}",
     "done": "Disalin",
-    "short": "Salin"
+    "short": "Salin",
+    "doneAccount": "Nomor rekening disalin"
   },
   "image": {
-    "missing": "Gambar tidak tersedia"
+    "missing": "Gambar tidak tersedia",
+    "failed": "Gambar tidak dapat dimuat",
+    "retry": "Coba lagi"
   },
   "status": {
     "loading": "Memuat data",
@@ -197,5 +200,51 @@
     "over": "melebihi target",
     "na": "Target tidak tersedia",
     "text": "{label}: {pct} persen, {of}"
+  },
+  "todo": {
+    "label": "TODO"
+  },
+  "toc": {
+    "label": "Daftar isi halaman",
+    "title": "Di halaman ini"
+  },
+  "tabel": {
+    "title": "Tabel Data",
+    "description": "Data harian COVID-19 per wilayah: kasus positif, sembuh, meninggal, dirawat, Rt, dan unduhan CSV serta Excel.",
+    "level": "Tingkat",
+    "levelIndonesia": "Indonesia",
+    "levelProvinsi": "Provinsi",
+    "levelKabupaten": "Kabupaten/Kota Sulawesi Tengah",
+    "caption": "Data harian {area}, {range}, {count} baris, terbaru di atas",
+    "region": "Tabel data harian. Geser untuk melihat kolom lain.",
+    "colDate": "Tanggal",
+    "groupDaily": "Harian",
+    "groupCumulative": "Kumulatif",
+    "colRt": "Rt (rentang 95%)",
+    "groupObservation": "Pemantauan awal pandemi (kumulatif)",
+    "colOdp": "ODP total",
+    "colPdp": "PDP total",
+    "rtCell": "{value} ({lo} sampai {hi})",
+    "noRows": "Tidak ada baris pada rentang ini",
+    "loading": "Memuat tabel",
+    "pager": "Halaman tabel",
+    "prev": "Sebelumnya",
+    "next": "Berikutnya",
+    "pageOf": "Halaman {page} dari {pages}",
+    "pageN": "Halaman {n}",
+    "jump": "Ke tanggal",
+    "jumpGo": "Buka halamannya",
+    "csv": "Unduh CSV (tampilan ini)",
+    "xlsx": "Unduh XLSX (tampilan ini)",
+    "ready": "Berkas siap: {name}",
+    "failed": "Berkas gagal dibuat",
+    "preparing": "Menyiapkan berkas",
+    "full": "Unduh data lengkap",
+    "fullNote": "Satu berkas per tingkat, semua tanggal. Format panjang: satu baris per wilayah per hari.",
+    "fullIndonesia": "Indonesia",
+    "fullProvinsi": "34 provinsi",
+    "fullKabupaten": "13 kabupaten/kota Sulawesi Tengah",
+    "api": "Untuk akses lewat program, pakai API terbuka",
+    "apiDocs": "Dokumentasi Swagger"
   }
 }

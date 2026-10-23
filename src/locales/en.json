@@ -56,10 +56,13 @@
   "copy": {
     "action": "Copy {what}",
     "done": "Copied",
-    "short": "Copy"
+    "short": "Copy",
+    "doneAccount": "Account number copied"
   },
   "image": {
-    "missing": "Image not available"
+    "missing": "Image not available",
+    "failed": "Image could not be loaded",
+    "retry": "Try again"
   },
   "status": {
     "loading": "Loading data",
@@ -197,5 +200,51 @@
     "over": "over target",
     "na": "Target not available",
     "text": "{label}: {pct} percent, {of}"
+  },
+  "todo": {
+    "label": "TODO"
+  },
+  "toc": {
+    "label": "Page contents",
+    "title": "On this page"
+  },
+  "tabel": {
+    "title": "Data table",
+    "description": "Daily COVID-19 data by area: positive, recovered, deceased, active, Rt, and CSV and Excel downloads.",
+    "level": "Level",
+    "levelIndonesia": "Indonesia",
+    "levelProvinsi": "Province",
+    "levelKabupaten": "Regency/City of Central Sulawesi",
+    "caption": "Daily data for {area}, {range}, {count} rows, newest first",
+    "region": "Daily data table. Scroll to see other columns.",
+    "colDate": "Date",
+    "groupDaily": "Daily",
+    "groupCumulative": "Cumulative",
+    "colRt": "Rt (95% range)",
+    "groupObservation": "Early-pandemic monitoring (cumulative)",
+    "colOdp": "ODP total",
+    "colPdp": "PDP total",
+    "rtCell": "{value} ({lo} to {hi})",
+    "noRows": "No rows in this range",
+    "loading": "Loading the table",
+    "pager": "Table pages",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {pages}",
+    "pageN": "Page {n}",
+    "jump": "Go to date",
+    "jumpGo": "Open its page",
+    "csv": "Download CSV (this view)",
+    "xlsx": "Download XLSX (this view)",
+    "ready": "File ready: {name}",
+    "failed": "The file could not be made",
+    "preparing": "Preparing the file",
+    "full": "Download the full data",
+    "fullNote": "One file per level, every date. Long format: one row per area per day.",
+    "fullIndonesia": "Indonesia",
+    "fullProvinsi": "34 provinces",
+    "fullKabupaten": "13 regencies/cities of Central Sulawesi",
+    "api": "For programs, use the open API",
+    "apiDocs": "Swagger documentation"
   }
 }

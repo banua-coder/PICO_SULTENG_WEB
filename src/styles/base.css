@@ -33,6 +33,7 @@
 
   a {
     color: var(--pico-primary-strong);
+    text-decoration: underline; /* Tailwind's reset removes it, and a link inside text needs more than colour (WCAG 1.4.1) */
     text-underline-offset: 0.2em;
   }
 
