@@ -6,7 +6,7 @@ import { weaveFill } from './core/roles'
 import type { Role } from './types'
 
 // Coverage of a target: a woven bar, the percentage, and "x dari y" as text. Over 100 %: a full bar and "melebihi target".
-const props = defineProps<{ value: number; target: number; label: string; role: Role }>()
+const props = withDefaults(defineProps<{ value: number; target: number; label: string; role: Role; /** decimals of the percentage */ digits?: number }>(), { digits: 1 })
 const { t } = useI18n()
 const fmt = useFormat()
 
@@ -16,7 +16,7 @@ const over = computed(() => pct.value !== null && pct.value > 100)
 const fill = computed(() => Math.min(100, Math.max(0, pct.value ?? 0)))
 const of = computed(() => t('progress.of', { value: fmt.num(props.value), target: fmt.num(props.target) }))
 const valueText = computed(() =>
-  pct.value === null ? t('progress.na') : `${t('progress.text', { label: props.label, pct: fmt.num(pct.value, 1), of: of.value })}${over.value ? `, ${t('progress.over')}` : ''}`,
+  pct.value === null ? t('progress.na') : `${t('progress.text', { label: props.label, pct: fmt.num(pct.value, props.digits), of: of.value })}${over.value ? `, ${t('progress.over')}` : ''}`,
 )
 </script>
 
@@ -37,7 +37,7 @@ const valueText = computed(() =>
       </svg>
     </div>
     <p class="num mt-2 text-sm" data-testid="progress-text">
-      <template v-if="pct !== null"><span class="font-strong">{{ fmt.pct(pct, 1) }}</span> · {{ of }}<span v-if="over"> · <span class="font-strong">{{ t('progress.over') }}</span></span></template>
+      <template v-if="pct !== null"><span class="font-strong">{{ fmt.pct(pct, digits) }}</span> · {{ of }}<span v-if="over"> · <span class="font-strong">{{ t('progress.over') }}</span></span></template>
       <template v-else>{{ t('progress.na') }}</template>
     </p>
   </div>

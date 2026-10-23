@@ -106,14 +106,14 @@ const tablePoints = computed(() => model.value.visible)
 
               <template v-for="s in model.series" :key="s.id">
                 <g v-if="kind === 'line' || s.overlay" fill="none" stroke-linejoin="round" :data-series="s.id" :data-role="s.role">
-                  <template v-if="lineForm(s.role).doubled">
+                  <template v-if="!s.form && lineForm(s.role).doubled">
                     <path :d="s.path" transform="translate(0 -1.75)" :style="{ stroke: `var(--pico-${s.role})` }" stroke-width="1.5" data-line />
                     <path :d="s.path" transform="translate(0 1.75)" :style="{ stroke: `var(--pico-${s.role})` }" stroke-width="1.5" data-line />
                   </template>
                   <path
                     v-else
                     :d="s.path"
-                    :style="{ stroke: `var(--pico-${s.role})`, strokeDasharray: lineForm(s.role).dash, strokeLinecap: lineForm(s.role).cap, strokeWidth: 'var(--pico-line-width)' }"
+                    :style="{ stroke: s.form?.color ?? `var(--pico-${s.role})`, strokeDasharray: s.form?.dash ?? lineForm(s.role).dash, strokeLinecap: s.form ? 'butt' : lineForm(s.role).cap, strokeWidth: 'var(--pico-line-width)' }"
                     data-line
                   />
                 </g>
@@ -143,7 +143,7 @@ const tablePoints = computed(() => model.value.visible)
                   stroke-width="1"
                   aria-hidden="true"
                 />
-                <RoleMark :role="s.role" :x="model.plotW + 14" :y="s.end!.labelY" :size="markPx" />
+                <RoleMark :role="s.form?.shape ?? s.role" :color="s.form?.color" :x="model.plotW + 14" :y="s.end!.labelY" :size="markPx" />
                 <text :x="model.plotW + 14 + markPx" :y="s.end!.labelY" dominant-baseline="central" :style="{ fill: 'var(--pico-ink)', fontSize: 'var(--pico-text-xs)' }">{{ s.label }}</text>
               </g>
 
@@ -151,7 +151,7 @@ const tablePoints = computed(() => model.value.visible)
               <g v-if="focusDate" aria-hidden="true" data-crosshair>
                 <line :x1="focusX" :x2="focusX" :y1="0" :y2="model.plotH" :style="{ stroke: 'var(--pico-ink)' }" stroke-width="1" stroke-dasharray="2 3" />
                 <template v-for="v in focusValues" :key="v.id">
-                  <RoleMark v-if="v.value !== null" :role="v.role" :x="focusX" :y="model.y(v.value)" :size="markPx + 4" />
+                  <RoleMark v-if="v.value !== null" :role="v.form?.shape ?? v.role" :color="v.form?.color" :x="focusX" :y="model.y(v.value)" :size="markPx + 4" />
                 </template>
               </g>
             </g>
@@ -166,7 +166,7 @@ const tablePoints = computed(() => model.value.visible)
           >
             <p class="num font-strong">{{ fmt.date(focusDate) }}</p>
             <p v-for="v in focusValues" :key="v.id" class="num flex items-center gap-2">
-              <StateMark :state="v.role" :size="2" />
+              <StateMark :state="v.form?.shape ?? v.role" :color="v.form?.color" :size="2" />
               <span>{{ v.label }} {{ fmt.nullable(v.value, (n: number) => fmt.num(n)) }}</span>
             </p>
           </div>

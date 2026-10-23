@@ -47,14 +47,17 @@ async function start() {
   live.value = true
 }
 
+// a player that fails to load leaves the static SVG in place: never an unhandled error
+const safeStart = () => void start().catch(() => (live.value = false))
+
 onMounted(() => {
-  void start()
+  safeStart()
   // light and dark switch by data-theme or by the system: rebuild with the new token values
-  observer = new MutationObserver(() => void start())
+  observer = new MutationObserver(safeStart)
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 })
-watch(reduced, () => void start())
-watch(() => props.name, () => void start())
+watch(reduced, safeStart)
+watch(() => props.name, safeStart)
 onBeforeUnmount(() => {
   run++
   observer?.disconnect()

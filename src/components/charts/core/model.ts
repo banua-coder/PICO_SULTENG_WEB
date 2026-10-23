@@ -1,7 +1,7 @@
 import { line } from 'd3-shape'
 import { scaleLinear } from 'd3-scale'
 import type { IsoDate } from '@/api/types'
-import type { LineSeries, Point, Role } from '../types'
+import type { LineSeries, Point, Role, SeriesForm } from '../types'
 import { dayNumber } from './days'
 import { downsampleMax } from './downsample'
 import { spreadLabels, weeklySums, xTicks, yDomain, yTicks } from './scales'
@@ -21,6 +21,7 @@ export type SeriesModel = {
   id: string
   role: Role
   label: string
+  form?: SeriesForm
   /** SVG path data. A null value starts a new sub-path (the line breaks). Empty when there is nothing to draw. */
   path: string
   bars: Bar[]
@@ -67,7 +68,7 @@ export function buildModel({ series: base, kind, overlay, range, width, height }
     const pts = visible[si]!
     const lastReal = [...pts].reverse().find((p) => p.y !== null)
     const end = lastReal ? { x: x(dayNumber(lastReal.x)), y: y(lastReal.y as number), labelY: 0, value: lastReal.y as number } : null
-    if (kind === 'line' || si >= base.length) return { id: s.id, role: s.role, label: s.label, path: toPath(downsampleMax(pts, Math.round(plotW))) ?? '', bars: [], overlay: kind === 'bar', end }
+    if (kind === 'line' || si >= base.length) return { id: s.id, role: s.role, label: s.label, form: s.form, path: toPath(downsampleMax(pts, Math.round(plotW))) ?? '', bars: [], overlay: kind === 'bar', end }
     const src = weekly ? weeklySums(pts) : pts
     const per = base.length
     const barW = Math.max(1, (slotW * 0.8) / per)
@@ -77,7 +78,7 @@ export function buildModel({ series: base, kind, overlay, range, width, height }
         ? []
         : [{ x: x(dayNumber(p.x)) - slotW * 0.4 + si * barW, y: y(p.y), w: barW, h: Math.max(0, zero - y(p.y)), value: p.y, date: p.x }],
     )
-    return { id: s.id, role: s.role, label: s.label, path: '', bars, overlay: false, end }
+    return { id: s.id, role: s.role, label: s.label, form: s.form, path: '', bars, overlay: false, end }
   })
 
   // direct labels at the line ends, pushed apart so they never overlap
@@ -103,7 +104,7 @@ export function buildModel({ series: base, kind, overlay, range, width, height }
     series: models,
     /** Value of every series on a date, for the tooltip, the live region and the table. */
     valuesAt: (date: IsoDate) =>
-      series.map((s, si) => ({ id: s.id, role: s.role, label: s.label, value: visible[si]!.find((p) => p.x === date)?.y ?? null })),
+      series.map((s, si) => ({ id: s.id, role: s.role, label: s.label, form: s.form, value: visible[si]!.find((p) => p.x === date)?.y ?? null })),
     visible,
   }
 }
