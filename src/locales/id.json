@@ -334,5 +334,10 @@
     "holder": "a/n {name}",
     "copyWhat": "nomor rekening {bank}",
     "number": "Nomor rekening"
+  },
+  "metodologi": {
+    "title": "Metodologi",
+    "heading": "Metodologi dan sumber",
+    "description": "Dari mana angka PICO berasal, bagaimana nilai harian dan angka reproduksi (Rt) dihitung, apa yang kosong, cara mengunduh data, dan siapa yang berjasa."
   }
 }

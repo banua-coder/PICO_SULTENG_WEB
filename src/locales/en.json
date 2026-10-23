@@ -334,5 +334,10 @@
     "holder": "in the name of {name}",
     "copyWhat": "account number {bank}",
     "number": "Account number"
+  },
+  "metodologi": {
+    "title": "Methodology",
+    "heading": "Methodology and sources",
+    "description": "Where the PICO numbers come from, how daily values and the reproduction number (Rt) are computed, what is missing, how to download the data, and whose work this builds on."
   }
 }
