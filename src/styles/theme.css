@@ -80,6 +80,8 @@
   --spacing-7: var(--pico-space-7);
   --spacing-8: var(--pico-space-8);
   --spacing-9: var(--pico-space-9);
+  /* C3: every interactive target is at least 44 x 44 px */
+  --spacing-touch: 2.75rem;
 
   --ease-out: var(--pico-ease-out);
   --ease-in: var(--pico-ease-in);

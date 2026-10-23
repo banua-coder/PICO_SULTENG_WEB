@@ -36,5 +36,67 @@
     "retry": "Coba lagi",
     "loading": "Memuat",
     "pageTitle": "{page} · {site}"
+  },
+  "state": {
+    "positive": "Positif",
+    "recovered": "Sembuh",
+    "deceased": "Meninggal",
+    "active": "Dirawat",
+    "rt": "Rt"
+  },
+  "stat": {
+    "delta": "Perubahan harian: {value}",
+    "deltaNone": "Perubahan harian tidak tersedia"
+  },
+  "freshness": {
+    "asOf": "Data per {date} · Sumber: {source}",
+    "archive": "Arsip, tidak diperbarui lagi"
+  },
+  "copy": {
+    "action": "Salin {what}",
+    "done": "Disalin",
+    "short": "Salin"
+  },
+  "image": {
+    "missing": "Gambar tidak tersedia"
+  },
+  "status": {
+    "loading": "Memuat data",
+    "empty": "Belum ada data",
+    "error": "Data gagal dimuat",
+    "offline": "Tidak ada koneksi",
+    "notFound": "Halaman tidak ditemukan"
+  },
+  "area": {
+    "label": "Wilayah",
+    "indonesia": "Indonesia",
+    "provinsi": "Provinsi",
+    "kabupaten": "Kabupaten/Kota Sulawesi Tengah"
+  },
+  "range": {
+    "group": "Rentang tanggal",
+    "from": "Dari",
+    "to": "Sampai",
+    "presets": "Pilihan cepat",
+    "all": "Semua"
+  },
+  "heading": {
+    "link": "Tautan ke bagian ini"
+  },
+  "contact": {
+    "phone": "Telepon",
+    "email": "Email",
+    "fax": "Faks",
+    "website": "Situs web",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "twitter": "Twitter",
+    "instagram": "Instagram",
+    "line": "Line",
+    "newTab": "(membuka tab baru)"
+  },
+  "kit": {
+    "title": "Contoh komponen",
+    "intro": "Halaman uji untuk kit komponen. Tidak ada di peta situs."
   }
 }

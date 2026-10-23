@@ -36,5 +36,67 @@
     "retry": "Try again",
     "loading": "Loading",
     "pageTitle": "{page} · {site}"
+  },
+  "state": {
+    "positive": "Positive",
+    "recovered": "Recovered",
+    "deceased": "Deceased",
+    "active": "Active",
+    "rt": "Rt"
+  },
+  "stat": {
+    "delta": "Daily change: {value}",
+    "deltaNone": "Daily change not available"
+  },
+  "freshness": {
+    "asOf": "Data as of {date} · Source: {source}",
+    "archive": "Archive, no longer updated"
+  },
+  "copy": {
+    "action": "Copy {what}",
+    "done": "Copied",
+    "short": "Copy"
+  },
+  "image": {
+    "missing": "Image not available"
+  },
+  "status": {
+    "loading": "Loading data",
+    "empty": "No data yet",
+    "error": "Data could not be loaded",
+    "offline": "No connection",
+    "notFound": "Page not found"
+  },
+  "area": {
+    "label": "Area",
+    "indonesia": "Indonesia",
+    "provinsi": "Province",
+    "kabupaten": "Regency/City of Central Sulawesi"
+  },
+  "range": {
+    "group": "Date range",
+    "from": "From",
+    "to": "To",
+    "presets": "Quick picks",
+    "all": "All"
+  },
+  "heading": {
+    "link": "Link to this section"
+  },
+  "contact": {
+    "phone": "Phone",
+    "email": "Email",
+    "fax": "Fax",
+    "website": "Website",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "twitter": "Twitter",
+    "instagram": "Instagram",
+    "line": "Line",
+    "newTab": "(opens a new tab)"
+  },
+  "kit": {
+    "title": "Component examples",
+    "intro": "Test page for the component kit. Not in the sitemap."
   }
 }
