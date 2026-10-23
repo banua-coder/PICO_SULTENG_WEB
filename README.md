@@ -69,7 +69,7 @@ Shared components are in `src/components/` (contract C3). `/_kit` and `/en/_kit`
 - `public/data/kabupaten-latest.json` is the build-time workaround for API ask A3. Set `VITE_REGENCY_LATEST=api` once `/regencies?include_latest_case=true` is deployed, then delete `scripts/snapshot-kabupaten.ts`.
 - `public/unduh/{indonesia,provinsi,kabupaten-sulteng}.{csv,xlsx}` are built at deploy time. The on-click XLSX export in the table (W20) stays a lazy chunk.
 - e2e: `pnpm e2e` builds with `VITE_KIT=1` and serves with `scripts/serve-dist.ts`. The smoke suite runs every route in id/en and light/dark at 1280 px (Chromium) and 360 px (Chromium and WebKit): `pnpm exec playwright install chromium webkit` once.
-- The nightly job (`.github/workflows/nightly-contract.yml`) runs `pnpm fixtures:check` and `LIVE_API=1 pnpm vitest run src/api/live.test.ts`, and opens an `api-drift` issue on failure.
+- The nightly job (`.github/workflows/nightly-contract.yml`) runs `pnpm fixtures:check` and `LIVE_API=1 pnpm vitest run` on `src/api/live.test.ts` and the two feature live tests (the Tabel CSV line count, the Methodology dates), and opens an `api-drift` issue on failure.
 
 ## Review markers
 

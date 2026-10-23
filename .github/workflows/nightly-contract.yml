@@ -29,7 +29,7 @@ jobs:
         continue-on-error: true
       - name: Full-series acceptance tests against the live API
         id: live
-        run: LIVE_API=1 pnpm vitest run src/api/live.test.ts 2>&1 | tee -a contract.log
+        run: LIVE_API=1 pnpm vitest run src/api/live.test.ts src/features/tabel/tabel.live.test.ts src/features/metodologi/facts.live.test.ts 2>&1 | tee -a contract.log
         continue-on-error: true
       - name: Open or update the api-drift issue
         if: steps.fixtures.outcome == 'failure' || steps.live.outcome == 'failure'
