@@ -1,1 +1,64 @@
 @import 'tailwindcss';
+@import './fonts.css';
+@import './theme.css';
+
+@layer base {
+  html {
+    background: var(--pico-paper);
+    color: var(--pico-ink);
+    font-family: var(--pico-font-text);
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--pico-paper);
+    color: var(--pico-ink);
+    font-size: var(--pico-text-md);
+    line-height: 1.55;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--pico-font-display);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--pico-indigo);
+    text-wrap: balance;
+  }
+
+  a {
+    color: var(--pico-primary-strong);
+    text-underline-offset: 0.2em;
+  }
+
+  /* Figures: tabular numerals wherever a number appears in a column or a table */
+  .num,
+  table {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  /* C3: 2px primary-strong ring, offset 2px, on every interactive element */
+  :focus-visible {
+    outline: 2px solid var(--pico-primary-strong);
+    outline-offset: 2px;
+  }
+
+  /* The durations in pico-tokens.css are 0 under reduced motion. Cover what they do not. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}

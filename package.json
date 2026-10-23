@@ -11,13 +11,16 @@
     "dev": "vite",
     "build": "vite-ssg build",
     "preview": "vite preview",
-    "lint": "eslint .",
+    "lint": "eslint . && pnpm lint:tokens && pnpm check:brand",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
     "fixtures:record": "tsx scripts/record-fixtures.ts",
-    "fixtures:check": "tsx scripts/record-fixtures.ts --check"
+    "fixtures:check": "tsx scripts/record-fixtures.ts --check",
+    "sync:brand": "node scripts/sync-brand.mjs",
+    "check:brand": "node scripts/sync-brand.mjs --check",
+    "lint:tokens": "tsx scripts/lint-src.ts"
   },
   "dependencies": {
     "@unhead/vue": "^2.1.17",
@@ -31,6 +34,7 @@
     "@eslint/js": "^10.0.1",
     "@intlify/unplugin-vue-i18n": "^11.2.7",
     "@playwright/test": "^1.64.1",
+    "@tailwindcss/node": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^26.6.5",
     "@vitejs/plugin-vue": "^6.0.10",
