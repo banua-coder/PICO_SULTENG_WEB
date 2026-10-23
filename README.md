@@ -14,7 +14,7 @@ Needs Node 22 and pnpm 10 (`corepack enable`).
 | `pnpm dev` | Vite dev server |
 | `pnpm build` | Snapshot and downloads from the live API, then prerender 114 pages + 404 with vite-ssg, then sitemap (`dist/`). Fails when the API stays down |
 | `pnpm build:data` | Only the data step: `public/data/kabupaten-latest.json` and `public/unduh/*.csv|xlsx` (one-day disk cache in `.cache/`, `PICO_NO_CACHE=1` to skip it) |
-| `pnpm check:dist` | The built site: 114 pages, unique titles, canonical, hreflang, sitemap, no broken internal link |
+| `pnpm check:dist` | The built site: 114 pages, unique titles, canonical, hreflang, sitemap, no broken internal link, and no unreviewed `data-todo` marker (see Review markers) |
 | `pnpm check:budget` | Size budget (spec 80). Fails when xlsx, d3 or lottie are in a page's initial JS |
 | `pnpm preview` | Serve `dist/` on port 4173 (SPA fallback: use `pnpm exec tsx scripts/serve-dist.ts` to route like nginx) |
 | `pnpm lint` | ESLint (feature-boundary rule), raw-colour lint, locale key parity, brand manifest check |
@@ -70,3 +70,11 @@ Shared components are in `src/components/` (contract C3). `/_kit` and `/en/_kit`
 - `public/unduh/{indonesia,provinsi,kabupaten-sulteng}.{csv,xlsx}` are built at deploy time. The on-click XLSX export in the table (W20) stays a lazy chunk.
 - e2e: `pnpm e2e` builds with `VITE_KIT=1` and serves with `scripts/serve-dist.ts`. The smoke suite runs every route in id/en and light/dark at 1280 px (Chromium) and 360 px (Chromium and WebKit): `pnpm exec playwright install chromium webkit` once.
 - The nightly job (`.github/workflows/nightly-contract.yml`) runs `pnpm fixtures:check` and `LIVE_API=1 pnpm vitest run src/api/live.test.ts`, and opens an `api-drift` issue on failure.
+
+## Review markers
+
+Wording that nobody has reviewed yet (health copy, the 119 line, licence text, the cultural note) is marked in the page with
+`<ReviewTodo id="..." note="..."/>`. It shows a dashed "TODO" box and writes `data-todo="<id>"` into the HTML.
+`pnpm check:dist` fails when the built site has any marker. A branch build sets `PICO_ALLOW_TODO=1` (CI does) and lists them;
+a release build must not set it, so the site cannot ship with a marker. The register of markers, who owns each and what closes it,
+is in `PICO/specs/web/README.md` ("Review markers").
