@@ -1,0 +1,37 @@
+# Reference copy for the owner (ADR-0104). Not applied by anything in this repo.
+# Place it as /opt/docker/apps/pico-web/docker-compose.yml on the VPS, next to a .env that holds PICO_WEB_VERSION=<x.y.z>.
+# The release workflow rewrites that .env on each deploy, then runs `docker compose pull && docker compose up -d`.
+services:
+  pico-web:
+    image: ghcr.io/banua-coder/pico-web:${PICO_WEB_VERSION:-latest}
+    container_name: pico-web
+    restart: unless-stopped
+    mem_limit: 64m
+    environment:
+      - TZ=Asia/Jakarta
+    networks:
+      - traefik-public
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/healthz"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-public"
+      - "traefik.http.routers.pico-web.rule=Host(`pico.banuacoder.com`)"
+      - "traefik.http.routers.pico-web.entrypoints=websecure"
+      - "traefik.http.routers.pico-web.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.pico-web.middlewares=secure-headers@file"
+      # CUTOVER: the file provider (traefik/config/dynamic.yml) still has router `pico-hub` with the same Host rule.
+      # Equal rule length means equal default priority, so the winner is undefined. 100 makes this router win.
+      # After launch, remove the pico-hub router (and container) and this line can go.
+      - "traefik.http.routers.pico-web.priority=100"
+      - "traefik.http.services.pico-web.loadbalancer.server.port=8080"
+      # ADR-0104: deploys come from CI over SSH (it gates on a health check). Watchtower must ignore this container.
+      - "com.centurylinklabs.watchtower.enable=false"
+
+networks:
+  traefik-public:
+    external: true
