@@ -21,7 +21,8 @@
     "sync:brand": "node scripts/sync-brand.mjs",
     "check:brand": "node scripts/sync-brand.mjs --check",
     "lint:tokens": "tsx scripts/lint-src.ts",
-    "check:i18n": "tsx scripts/check-i18n.ts"
+    "check:i18n": "tsx scripts/check-i18n.ts",
+    "build:geo": "tsx scripts/build-geo.ts"
   },
   "dependencies": {
     "@unhead/vue": "^2.1.17",
