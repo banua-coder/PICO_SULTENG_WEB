@@ -60,6 +60,14 @@ test('a custom window shows the figures of its last day, the ODP/PDP note shows 
   await expect(page).toHaveURL(/\/data\/provinsi\/sulawesi-tengah$/) // defaults leave the URL
 })
 
+test('/data/kabupaten/kota-palu?dari=2021-07-01&sampai=2021-07-31 shows Kota Palu as of 2021-07-31', async ({ page }) => {
+  await page.goto('/data/kabupaten/kota-palu?dari=2021-07-01&sampai=2021-07-31')
+  await hydrated(page)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Data Kota Palu')
+  await expect(page.getByTestId('summary')).toContainText('31 Juli 2021')
+  await expect(page.getByTestId('summary').locator('svg[data-state]')).toHaveCount(3) // no "dirawat" for a kabupaten
+})
+
 test('?dari=1999-01-01 clamps and ?dari=abc falls back, with no error', async ({ page }) => {
   await page.goto('/data/provinsi/sulawesi-tengah?dari=1999-01-01')
   await hydrated(page)

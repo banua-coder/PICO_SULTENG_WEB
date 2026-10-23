@@ -51,5 +51,8 @@ describe('lastObservationRow', () => {
     const r = [row('2022-05-07', 1, { active: 1, finished: 1, total: 2 }), row('2022-05-08', 1, { active: 0, finished: 3, total: 3 }), row('2022-05-09'), row('2024-01-14')]
     expect(lastObservationRow(r)?.date).toBe('2022-05-08')
     expect(lastObservationRow([row('2024-01-14')])).toBeUndefined()
+    // rows of zeros are not reports
+    expect(lastObservationRow([row('2021-01-01', 1, { active: 0, finished: 0, total: 0 })])).toBeUndefined()
+    expect(lastObservationRow([row('2021-01-01', 1, { active: null, finished: 2, total: null }), row('2021-01-02', 1, { active: 0, finished: 0, total: 0 })])?.date).toBe('2021-01-01')
   })
 })

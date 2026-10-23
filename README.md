@@ -12,8 +12,11 @@ Needs Node 22 and pnpm 10 (`corepack enable`).
 |---|---|
 | `pnpm install` | Install dependencies |
 | `pnpm dev` | Vite dev server |
-| `pnpm build` | Prerender with vite-ssg into `dist/` |
-| `pnpm preview` | Serve `dist/` on port 4173 |
+| `pnpm build` | Snapshot and downloads from the live API, then prerender 114 pages + 404 with vite-ssg, then sitemap (`dist/`). Fails when the API stays down |
+| `pnpm build:data` | Only the data step: `public/data/kabupaten-latest.json` and `public/unduh/*.csv|xlsx` (one-day disk cache in `.cache/`, `PICO_NO_CACHE=1` to skip it) |
+| `pnpm check:dist` | The built site: 114 pages, unique titles, canonical, hreflang, sitemap, no broken internal link |
+| `pnpm check:budget` | Size budget (spec 80). Fails when xlsx, d3 or lottie are in a page's initial JS |
+| `pnpm preview` | Serve `dist/` on port 4173 (SPA fallback: use `pnpm exec tsx scripts/serve-dist.ts` to route like nginx) |
 | `pnpm lint` | ESLint (feature-boundary rule), raw-colour lint, locale key parity, brand manifest check |
 | `pnpm typecheck` | `vue-tsc --noEmit` |
 | `pnpm test` | Vitest unit and component tests |
@@ -59,3 +62,11 @@ Shared components are in `src/components/` (contract C3). `/_kit` and `/en/_kit`
 - Magnitude is a mark size on the `--pico-mark-1..6` ramp (by quantile) plus its number, never a colour ramp. Every map has its table next to it.
 - The kabupaten band patterns are interpretations that wait for the cultural review. The map draws one only as the identity fill of the selected area, and only with `VITE_MAP_BANDS=1`. Off by default.
 - Charts are hand-rolled SVG on d3-scale, d3-shape and d3-array. Every series has its line form, mark and a direct label, and every chart has a table view.
+
+## Prerender and data
+
+- Every page is prerendered with its own title, description, canonical, hreflang, Open Graph tags and, on data pages, JSON-LD (`usePageHead`). Series (0.4 to 0.9 MB each) are never prerendered or embedded. Small resources (partners, province and national latest rows, the kabupaten snapshot) go into each page as a `<script type="application/json" id="pico-state">` block, and the client seeds its cache from it, so hydration makes no request for them.
+- `public/data/kabupaten-latest.json` is the build-time workaround for API ask A3. Set `VITE_REGENCY_LATEST=api` once `/regencies?include_latest_case=true` is deployed, then delete `scripts/snapshot-kabupaten.ts`.
+- `public/unduh/{indonesia,provinsi,kabupaten-sulteng}.{csv,xlsx}` are built at deploy time. The on-click XLSX export in the table (W20) stays a lazy chunk.
+- e2e: `pnpm e2e` builds with `VITE_KIT=1` and serves with `scripts/serve-dist.ts`. The smoke suite runs every route in id/en and light/dark at 1280 px (Chromium) and 360 px (Chromium and WebKit): `pnpm exec playwright install chromium webkit` once.
+- The nightly job (`.github/workflows/nightly-contract.yml`) runs `pnpm fixtures:check` and `LIVE_API=1 pnpm vitest run src/api/live.test.ts`, and opens an `api-drift` issue on failure.
