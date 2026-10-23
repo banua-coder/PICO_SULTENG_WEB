@@ -267,5 +267,27 @@
     "source": "Lihat sumber",
     "noImages": "Infografis ini tidak punya gambar yang dapat dimuat.",
     "imageAlt": "{title}, gambar {n} dari {m}"
+  },
+  "kontak": {
+    "title": "Kontak",
+    "description": "Rumah sakit rujukan COVID-19 di Sulawesi Tengah beserta tempat tidur, dan kontak satgas per kabupaten/kota. Data arsip masa pandemi.",
+    "notice": "Data kontak ini adalah arsip dari masa pandemi dan bisa sudah tidak berlaku.",
+    "emergency": "Untuk keadaan darurat, hubungi 119.",
+    "filter": "Kabupaten/Kota",
+    "all": "Semua kabupaten/kota",
+    "hospitals": "Rumah sakit rujukan",
+    "hospitalsEmpty": "Tidak ada rumah sakit di wilayah ini dalam data.",
+    "igd": "Jumlah IGD: {n}",
+    "bedsCaption": "Tempat tidur {hospital}, per data terakhir",
+    "bedType": "Jenis",
+    "bedAvailable": "Tersedia",
+    "bedTotal": "Total",
+    "noBeds": "Data tempat tidur tidak ada.",
+    "map": "Lihat di peta",
+    "mapFor": "Lihat {hospital} di peta",
+    "address": "Alamat",
+    "taskForces": "Satgas per kabupaten/kota",
+    "taskForcesEmpty": "Tidak ada kontak satgas di wilayah ini dalam data.",
+    "noContacts": "Tidak ada kontak."
   }
 }

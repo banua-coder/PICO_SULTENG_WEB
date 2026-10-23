@@ -267,5 +267,27 @@
     "source": "See the source",
     "noImages": "This infographic has no image that can be loaded.",
     "imageAlt": "{title}, image {n} of {m}"
+  },
+  "kontak": {
+    "title": "Contacts",
+    "description": "Referral hospitals for COVID-19 in Central Sulawesi with their beds, and task force contacts by regency. Archive data from the pandemic.",
+    "notice": "This contact data is an archive from the pandemic and may be out of date.",
+    "emergency": "In an emergency, call 119.",
+    "filter": "Regency/City",
+    "all": "All regencies and cities",
+    "hospitals": "Referral hospitals",
+    "hospitalsEmpty": "No hospital in this area in the data.",
+    "igd": "Emergency units: {n}",
+    "bedsCaption": "Beds at {hospital}, as of the last data",
+    "bedType": "Type",
+    "bedAvailable": "Available",
+    "bedTotal": "Total",
+    "noBeds": "No bed data.",
+    "map": "See on the map",
+    "mapFor": "See {hospital} on the map",
+    "address": "Address",
+    "taskForces": "Task forces by regency/city",
+    "taskForcesEmpty": "No task force contact in this area in the data.",
+    "noContacts": "No contacts."
   }
 }

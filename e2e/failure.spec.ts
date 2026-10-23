@@ -42,5 +42,21 @@ test.describe('Data page: the series request fails', () => {
   })
 })
 
-// A content page (Kontak, Wiki, Isoman) reading the API is part B: each of those tasks adds its own failure test here.
-test.fixme('a content page shows StatusView on API 500 and retry works (W23 Kontak)', async () => {})
+// A content page reads small resources from the state block the prerender wrote. Without that block (stripped here) the client
+// asks the API itself: a 500 gives the error state and retry brings the content.
+test('a content page shows StatusView on API 500 and retry works (Kontak)', async ({ page }) => {
+  await page.route('**/kontak', async (route) => {
+    const res = await route.fetch()
+    await route.fulfill({ response: res, body: (await res.text()).replace(/<script id="pico-state"[\s\S]*?<\/script>/, '') })
+  })
+  await page.route('**/api/v1/hospitals**', (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{"status":"error","error":"boom"}' }))
+  await page.goto('/kontak')
+  const alert = page.getByRole('alert')
+  await expect(alert).toContainText('Data gagal dimuat')
+  await expect(page.getByRole('article')).toHaveCount(0)
+  await page.unroute('**/api/v1/hospitals**')
+  await page.route('**/api/v1/hospitals**', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: fixture('hospitals') }))
+  await alert.getByRole('button', { name: 'Coba lagi' }).click()
+  await expect(page.getByRole('article').first()).toBeVisible()
+  await expect(alert).toHaveCount(0)
+})
