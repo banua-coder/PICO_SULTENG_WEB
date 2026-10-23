@@ -23,14 +23,14 @@ const items = computed<NavItem[]>(() =>
   <header class="border-b border-line bg-surface">
     <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-5 gap-y-3 px-5 py-3">
       <RouterLink :to="localize('/')" class="inline-flex min-h-touch items-center" :aria-label="t('app.homeLink')">
-        <img :src="lockup" alt="" width="169" height="40" class="logo-light h-10 w-auto" decoding="async">
-        <img :src="lockupDark" alt="" width="169" height="40" class="logo-dark h-10 w-auto" loading="lazy" decoding="async">
+        <img :src="lockup" alt="" width="203" height="48" class="logo-light h-8 w-auto" decoding="async">
+        <img :src="lockupDark" alt="" width="203" height="48" class="logo-dark h-8 w-auto" loading="lazy" decoding="async">
       </RouterLink>
       <div class="flex flex-wrap items-center gap-3">
         <LocaleSwitch />
         <ThemeSwitch />
       </div>
-      <div class="w-full md:w-auto"><AppNav :items="items" /></div>
+      <div class="w-full"><AppNav :items="items" /></div>
     </div>
   </header>
 </template>

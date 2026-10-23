@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AreaPicker from '@/components/AreaPicker.vue'
 import ContactLink from '@/components/ContactLink.vue'
@@ -14,6 +14,9 @@ import SectionHeading from '@/components/SectionHeading.vue'
 import StatFigure from '@/components/StatFigure.vue'
 import StateMark from '@/components/StateMark.vue'
 import StatusView from '@/components/StatusView.vue'
+import TimeSeriesChart from '@/components/charts/TimeSeriesChart.vue'
+import type { LineSeries } from '@/components/charts/types'
+import { dayNumber, isoFromDay } from '@/components/charts/core/days'
 import { SULTENG } from '@/app/areas'
 import { ICON_KEYS } from '@/assets/brand/icon-keys'
 import { useLocale } from '@/app/useLocale'
@@ -24,6 +27,35 @@ import type { AreaRef, Contact } from '@/api/types'
 const { t } = useI18n()
 const { theme, cycle } = useTheme()
 const { switchPath, other } = useLocale()
+
+// 4 series x 1,414 days of made-up waves, ending on the last day of the record. One series has a gap.
+const DAYS = 1414
+const day0 = dayNumber('2024-01-14') - (DAYS - 1)
+const wave = (k: number, phase: number, gap = false) => (i: number): number | null =>
+  gap && i > 600 && i < 680 ? null : Math.max(0, Math.round(40 + 38 * Math.sin(i / k + phase) + 25 * Math.sin(i / (k / 3.1) + phase * 2)))
+const make = (id: string, role: LineSeries['role'], label: string, f: (i: number) => number | null): LineSeries => ({
+  id,
+  role,
+  label,
+  points: Array.from({ length: DAYS }, (_, i) => ({ x: isoFromDay(day0 + i), y: f(i) })),
+})
+const demo = [
+  make('p', 'positive', t('state.positive'), wave(61, 0)),
+  make('r', 'recovered', t('state.recovered'), wave(67, 1.2)),
+  make('d', 'deceased', t('state.deceased'), (i) => Math.round((wave(83, 2)(i) ?? 0) / 8)),
+  make('a', 'active', t('state.active'), wave(97, 3, true)),
+]
+const kind = ref<'line' | 'bar'>('line')
+const chartKey = ref(0)
+const renderMs = ref('')
+// For the performance check: remount the chart and time the render until the DOM is patched (2 ticks: mount, then width)
+async function rerender() {
+  const t0 = performance.now()
+  chartKey.value++
+  await nextTick()
+  await nextTick()
+  renderMs.value = (performance.now() - t0).toFixed(1)
+}
 
 const area = ref<AreaRef>(SULTENG)
 const win = ref<DateWindow>({ from: '2020-03-02', to: '2024-01-14' })
@@ -57,6 +89,18 @@ const contacts: Contact[] = [
         <li v-for="s in states" :key="s" class="flex items-center gap-3"><StateMark :state="s" :size="5" /> {{ t(`state.${s}`) }}</li>
       </ul>
       <DataFreshness class="mt-5" as-of="2024-01-14" source="situs pihak ketiga" />
+    </section>
+
+    <section class="mt-8" aria-labelledby="k-chart">
+      <SectionHeading id="k-chart" :level="2">TimeSeriesChart</SectionHeading>
+      <div class="mt-5 flex flex-wrap gap-3">
+        <button type="button" class="min-h-touch rounded-sm border border-line-strong bg-surface px-4 text-sm font-strong" @click="kind = kind === 'line' ? 'bar' : 'line'">{{ kind === 'line' ? t('kit.bars') : t('kit.lines') }}</button>
+        <button type="button" class="min-h-touch rounded-sm border border-line-strong bg-surface px-4 text-sm font-strong" @click="rerender">{{ t('kit.rerender') }}</button>
+        <span class="num self-center text-sm text-ink-muted" data-testid="render-ms">{{ renderMs }}</span>
+      </div>
+      <div class="mt-5">
+        <TimeSeriesChart :key="chartKey" :series="demo" :kind="kind" :a11y="{ title: t('kit.chartTitle'), summary: t('kit.chartSummary') }" />
+      </div>
     </section>
 
     <section class="mt-8" aria-labelledby="k-icons">

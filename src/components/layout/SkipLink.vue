@@ -13,8 +13,8 @@ function jump() {
 <template>
   <a
     href="#konten"
-    @click.prevent="jump"
     class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:inline-flex focus:min-h-touch focus:items-center focus:rounded-sm focus:bg-indigo focus:px-5 focus:text-on-indigo"
+    @click.prevent="jump"
   >
     {{ t('app.skip') }}
   </a>
