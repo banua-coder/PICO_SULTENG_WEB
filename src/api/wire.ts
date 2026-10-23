@@ -55,6 +55,8 @@ export type WireHospital = {
   name: string
   hospital_code: string
   address: string
+  latitude?: number
+  longitude?: number
   contacts: WireFlatContact[]
   igd_count: number
   beds: { id: number; bed_type_name: string; available: number; total: number }[]

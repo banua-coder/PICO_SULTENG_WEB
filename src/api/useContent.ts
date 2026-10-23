@@ -24,7 +24,7 @@ export const useBanners = (): Resource<Banner[]> =>
   useResource(ENDPOINTS.banners.path, (signal) => fetchJson(ENDPOINTS.banners.path, { signal, guard: isArrayOf(isWireBanner) }).then(banners))
 
 export const useInfographics = (): Resource<Infographic[]> =>
-  useResource(ENDPOINTS.infographics.path, (signal) => fetchJson(ENDPOINTS.infographics.path, { signal, guard: isArrayOf(isWireInfographic) }).then(infographics))
+  useResource(ENDPOINTS.infographics.path, (signal) => fetchJson(ENDPOINTS.infographics.path, { signal, guard: isArrayOf(isWireInfographic) }).then(infographics), { large: true })
 
 export const useDonations = (): Resource<Donation[]> =>
   useResource(ENDPOINTS.donations.path, (signal) => fetchJson(ENDPOINTS.donations.path, { signal, guard: isArrayOf(isWireDonation) }).then(donations))

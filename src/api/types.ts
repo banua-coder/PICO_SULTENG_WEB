@@ -68,6 +68,8 @@ export type Contact = { kind: ContactKind; label: string; href: string } // href
 
 export type Hospital = {
   code: string
+  /** coordinates for the "see on the map" link, null when the API has none */
+  location: { lat: number; lon: number } | null
   name: string
   kabupaten: AreaRef | null
   address: string

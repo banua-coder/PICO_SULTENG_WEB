@@ -2,7 +2,7 @@
 import { onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-const props = defineProps<{ value: string; /** what is copied, e.g. "nomor rekening" */ label: string }>()
+const props = defineProps<{ value: string; /** what is copied, e.g. "nomor rekening" */ label: string; /** announced after copying, default "Disalin" */ doneText?: string }>()
 const emit = defineEmits<{ copied: [] }>()
 
 const { t } = useI18n()
@@ -15,7 +15,7 @@ async function copy() {
   } catch {
     return // no clipboard access (insecure origin or denied): say nothing rather than claim success
   }
-  announced.value = t('copy.done')
+  announced.value = props.doneText ?? t('copy.done')
   emit('copied')
   clearTimeout(timer)
   timer = setTimeout(() => (announced.value = ''), 2000)

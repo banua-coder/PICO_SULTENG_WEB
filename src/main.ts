@@ -1,7 +1,7 @@
 import { ViteSSG } from 'vite-ssg'
 import App from './App.vue'
 import { cache } from './api/cache'
-import { KABUPATEN_LATEST_SOURCE, KABUPATEN_SNAPSHOT_URL } from './api/useSeries'
+import { DOWNLOAD_SIZES_URL, KABUPATEN_LATEST_SOURCE, KABUPATEN_SNAPSHOT_URL } from './api/useSeries'
 import { SSR_KEYS, STATE_ELEMENT_ID, safeJson } from './api/ssrState'
 import { installI18n } from './app/i18n'
 import { routes, scrollBehavior } from './app/routes'
@@ -30,13 +30,18 @@ export const createApp = ViteSSG(
     // prerender (Node)
     const keys = new Set<string>()
     app.provide(SSR_KEYS, keys)
-    if (KABUPATEN_LATEST_SOURCE === 'snapshot' && cache.peek(KABUPATEN_SNAPSHOT_URL) === undefined) {
-      // the build-time snapshot is a file on disk, not a URL Node can fetch: seed it straight into the cache
+    // build-time files are on disk, not at a URL Node can fetch: seed them straight into the cache
+    const files: [boolean, string, string][] = [
+      [KABUPATEN_LATEST_SOURCE === 'snapshot', KABUPATEN_SNAPSHOT_URL, 'public/data/kabupaten-latest.json'],
+      [true, DOWNLOAD_SIZES_URL, 'public/unduh/sizes.json'],
+    ]
+    for (const [wanted, key, file] of files) {
+      if (!wanted || cache.peek(key) !== undefined) continue
       const { readFile } = await import('node:fs/promises')
       try {
-        cache.seed({ [KABUPATEN_SNAPSHOT_URL]: JSON.parse(await readFile('public/data/kabupaten-latest.json', 'utf8')) })
+        cache.seed({ [key]: JSON.parse(await readFile(file, 'utf8')) })
       } catch {
-        // build:snapshot has not run (unit tests, kit-only builds): the resource errors and the build's error check reports it
+        // the data step has not run (unit tests): the resource errors and the build's error check reports it
       }
     }
     onSSRAppRendered(() => {

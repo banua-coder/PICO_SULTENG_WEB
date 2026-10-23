@@ -61,3 +61,11 @@ export function useNationalLatest(): Resource<LatestByArea> {
   const p = ENDPOINTS.nationalLatest.path
   return useResource(p, (signal) => fetchJson(p, { signal, guard: isWireNationalCase }).then(nationalLatest))
 }
+
+export type DownloadSizes = Record<string, { csv: number; xlsx: number }>
+export const DOWNLOAD_SIZES_URL = `${import.meta.env?.BASE_URL ?? '/'}unduh/sizes.json`
+
+/** Byte sizes of the prebuilt download files, written by scripts/build-downloads.ts. Small, so it is seeded into the prerender. */
+export function useDownloadSizes(): Resource<DownloadSizes> {
+  return useResource(DOWNLOAD_SIZES_URL, (signal) => fetchStatic<DownloadSizes>(DOWNLOAD_SIZES_URL, { signal, guard: isRecord as (v: unknown) => v is DownloadSizes }))
+}

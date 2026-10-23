@@ -40,11 +40,16 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   try {
     const dir = fileURLToPath(new URL('../public/unduh/', import.meta.url))
     mkdirSync(dir, { recursive: true })
+    const sizes: Record<string, { csv: number; xlsx: number }> = {}
     for (const f of await buildFiles()) {
-      writeFileSync(`${dir}${f.name}.csv`, toCsv(DOWNLOAD_HEADER, f.rows))
-      writeFileSync(`${dir}${f.name}.xlsx`, toXlsx(f.name.slice(0, 31), f.rows))
+      const csv = toCsv(DOWNLOAD_HEADER, f.rows)
+      const xlsx = toXlsx(f.name.slice(0, 31), f.rows)
+      writeFileSync(`${dir}${f.name}.csv`, csv)
+      writeFileSync(`${dir}${f.name}.xlsx`, xlsx)
+      sizes[f.name] = { csv: Buffer.byteLength(csv), xlsx: xlsx.length }
       console.log(`unduh/${f.name}: ${f.rows.length} rows (csv + xlsx)`)
     }
+    writeFileSync(`${dir}sizes.json`, JSON.stringify(sizes) + '\n')
   } catch (e) {
     console.error(`build-downloads failed: ${(e as Error).message}`)
     process.exit(1)

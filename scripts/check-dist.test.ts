@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { sitePaths } from '../src/app/siteRoutes'
-import { checkDist } from './check-dist'
+import { checkDist, findTodos } from './check-dist'
 import { fileForPath, sitemapXml } from './site'
 
 let dist: string
@@ -69,5 +69,12 @@ describe('checkDist', () => {
     const p = checkDist(dist)
     expect(p).toContain('inline state script: /metodologi')
     expect(p).toContain('kabupaten snapshot has 0 rows, expected 13')
+  })
+
+  it('an unreviewed TODO marker fails the check, unless the build allows TODOs', () => {
+    put('wiki/index.html', page('Wiki', '<span data-todo="wiki-terms">TODO</span>'))
+    expect(findTodos(dist)).toEqual([['wiki-terms', expect.stringContaining('wiki')]])
+    expect(checkDist(dist).some((p) => p.startsWith('unreviewed TODO "wiki-terms"'))).toBe(true)
+    expect(checkDist(dist, { allowTodo: true })).toEqual([])
   })
 })

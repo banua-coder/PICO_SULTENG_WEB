@@ -9,12 +9,19 @@ const props = withDefaults(
     ratio: '16/9' | '4/5' | '1/1'
     fallback?: 'plate' | 'initials'
     loading?: 'lazy' | 'eager'
+    /** After a failed load, say so and offer a retry button inside the same box */
+    retryable?: boolean
   }>(),
-  { fallback: 'plate', loading: 'lazy' },
+  { fallback: 'plate', loading: 'lazy', retryable: false },
 )
 
 const { t } = useI18n()
 const failed = ref(false)
+const attempt = ref(0)
+function retry() {
+  failed.value = false
+  attempt.value++ // a new <img> element: the browser tries the address again
+}
 const img = ref<HTMLImageElement>()
 const shown = computed(() => !!props.src && !failed.value)
 const initials = computed(() =>
@@ -39,6 +46,7 @@ onMounted(() => {
   <div class="relative w-full overflow-hidden rounded-md bg-tint" :style="{ aspectRatio: ratio }">
     <img
       v-if="shown"
+      :key="attempt"
       ref="img"
       :src="src!"
       :alt="alt"
@@ -60,6 +68,10 @@ onMounted(() => {
         </g>
         <circle cx="60" cy="60" r="7" :style="{ fill: 'var(--pico-crimson)' }" />
       </svg>
+    </div>
+    <div v-if="failed && retryable" class="absolute inset-x-0 bottom-0 flex flex-col items-center gap-2 bg-surface p-3 text-center text-xs" data-failed>
+      <span class="text-ink">{{ t('image.failed') }}</span>
+      <button type="button" class="min-h-touch min-w-touch rounded-sm border border-line-strong bg-surface px-3 font-strong text-primary-strong" @click="retry">{{ t('image.retry') }}</button>
     </div>
   </div>
 </template>

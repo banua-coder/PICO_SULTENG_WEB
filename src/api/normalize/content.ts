@@ -4,9 +4,13 @@ import type { WireBanner, WireDonation, WireHospital, WireInfographic, WirePartn
 import { flatContacts, nestedContacts } from './contacts'
 import { resolveImage, resolveLink } from './images'
 
+const validLocation = (lat?: number, lon?: number) =>
+  Number.isFinite(lat) && Number.isFinite(lon) && Math.abs(lat!) <= 90 && Math.abs(lon!) <= 180 && !(lat === 0 && lon === 0) ? { lat: lat!, lon: lon! } : null
+
 export const hospitals = (wire: WireHospital[]): Hospital[] =>
   wire.map((h) => ({
     code: h.hospital_code,
+    location: validLocation(h.latitude, h.longitude),
     name: h.name.trim(),
     kabupaten: kabupatenRef(h.regency_id),
     address: h.address.trim(),

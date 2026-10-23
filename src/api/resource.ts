@@ -9,6 +9,8 @@ import type { ApiError, Resource, ResourceStatus } from './types'
 export type ResourceOptions = {
   /** Counts toward the series LRU cap and stays out of the SSG initial state. */
   series?: boolean
+  /** A big list (infographics): never prerendered or embedded in a page, loaded by the client after hydration. Same rule as a series. */
+  large?: boolean
 }
 
 const toApiError = (e: unknown): ApiError =>
@@ -36,7 +38,7 @@ export function createUseResource(cache: Cache) {
       const hadData = data.value !== undefined
       if (!hadData) status.value = 'loading'
       // Prerender: a series is never fetched or embedded (0.4 to 0.9 MB each). The client starts in the same loading state.
-      if (import.meta.env.SSR && opts.series) return
+      if (import.meta.env.SSR && (opts.series || opts.large)) return
       try {
         const value = await cache.fetch<T>(k, loader, { signal: mine.signal, series: opts.series ?? false, force })
         if (mine.signal.aborted) return
@@ -62,7 +64,7 @@ export function createUseResource(cache: Cache) {
         status.value = 'idle'
         return Promise.resolve()
       }
-      if (ssrKeys && !opts.series) ssrKeys.add(k)
+      if (ssrKeys && !opts.series && !opts.large) ssrKeys.add(k)
       const cached = cache.peek<T>(k)
       // show the cached value (seeded or earlier) on the very first render
       data.value = cached

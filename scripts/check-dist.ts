@@ -14,7 +14,12 @@ import { fileForPath, read, walkHtml } from './site'
 
 const decode = (s: string) => s.replace(/&amp;/g, '&')
 
-export function checkDist(dist: string, { kit = false }: { kit?: boolean } = {}): string[] {
+/** Every `data-todo="id"` in the built pages: [id, page file]. */
+export function findTodos(dist: string): [string, string][] {
+  return walkHtml(dist).flatMap((f) => [...read(f).matchAll(/data-todo="([^"]+)"/g)].map((m) => [m[1]!, f.replace(dist, '')] as [string, string]))
+}
+
+export function checkDist(dist: string, { kit = false, allowTodo = false }: { kit?: boolean; allowTodo?: boolean } = {}): string[] {
   const problems: string[] = []
   const paths = sitePaths()
   const titles = new Map<string, string>()
@@ -57,11 +62,17 @@ export function checkDist(dist: string, { kit = false }: { kit?: boolean } = {})
     const rows = JSON.parse(read(snap)) as { latest: { date: string } }[]
     if (rows.length !== 13) problems.push(`kabupaten snapshot has ${rows.length} rows, expected 13`)
   } else problems.push('missing data/kabupaten-latest.json')
+  // Unreviewed content (open item O-5): a visible TODO marker in a page. Branch builds may carry them, releases may not.
+  if (!allowTodo) for (const [id, file] of findTodos(dist)) problems.push(`unreviewed TODO "${id}" in ${file} (PICO_ALLOW_TODO=1 lets a branch build pass, a release must not)`)
   return problems
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const problems = checkDist(fileURLToPath(new URL('../dist/', import.meta.url)), { kit: !!process.env.VITE_KIT })
+  const dist = fileURLToPath(new URL('../dist/', import.meta.url))
+  const todos = findTodos(dist)
+  const ids = [...new Set(todos.map(([id]) => id))]
+  if (ids.length) console.log(`TODO markers in the build (${ids.length}): ${ids.join(', ')}`)
+  const problems = checkDist(dist, { kit: !!process.env.VITE_KIT, allowTodo: !!process.env.PICO_ALLOW_TODO })
   if (problems.length) {
     console.error(problems.join('\n') + `\n${problems.length} problem(s) in dist/`)
     process.exit(1)
