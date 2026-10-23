@@ -36,6 +36,12 @@ test.describe('Wiki', () => {
     expect(log).toEqual([])
   })
 
+  test('sections are spaced: an h2 has at least 32 px above it (a utility that is not in the brand scale gives 0)', async ({ page }) => {
+    await visit(page, '/wiki')
+    const mt = await page.locator('article h2').nth(1).evaluate((e) => parseFloat(getComputedStyle(e).marginTop))
+    expect(mt).toBeGreaterThanOrEqual(32)
+  })
+
   test('360 px: no sideways scroll, and the four tips have captions', async ({ page }) => {
     await page.setViewportSize({ width: 360, height: 740 })
     await visit(page, '/wiki')

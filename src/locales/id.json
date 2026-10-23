@@ -261,12 +261,14 @@
     "cardNoImage": "tanpa gambar",
     "viewer": "Penampil infografis",
     "close": "Tutup",
-    "prev": "Gambar sebelumnya",
-    "next": "Gambar berikutnya",
+    "prev": "Sebelumnya",
+    "next": "Berikutnya",
     "position": "{n} dari {m}",
     "source": "Lihat sumber",
     "noImages": "Infografis ini tidak punya gambar yang dapat dimuat.",
-    "imageAlt": "{title}, gambar {n} dari {m}"
+    "imageAlt": "{title}, gambar {n} dari {m}",
+    "prevLabel": "Gambar sebelumnya",
+    "nextLabel": "Gambar berikutnya"
   },
   "kontak": {
     "title": "Kontak",

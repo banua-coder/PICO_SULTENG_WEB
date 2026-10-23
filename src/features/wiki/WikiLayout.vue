@@ -16,6 +16,6 @@ const { t } = useI18n()
   </ArchiveNotice>
   <ProseLayout class="mt-8" :items="items">
     <slot />
-    <p class="mt-10 text-sm text-ink-muted">{{ t('wiki.source') }} <a href="https://pikobar.jabarprov.go.id" rel="noopener">pikobar.jabarprov.go.id</a></p>
+    <p class="mt-8 text-sm text-ink-muted">{{ t('wiki.source') }} <a href="https://pikobar.jabarprov.go.id" rel="noopener">pikobar.jabarprov.go.id</a></p>
   </ProseLayout>
 </template>

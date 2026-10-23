@@ -43,7 +43,7 @@ const retry = () => Promise.all([s.hospitals.refresh(), s.taskForces.refresh()])
           <HospitalCard v-for="h in s.hospitalRows.value" :key="h.code" :hospital="h" />
         </div>
       </section>
-      <section class="mt-10" aria-labelledby="satgas">
+      <section class="mt-8" aria-labelledby="satgas">
         <h2 id="satgas" class="text-xl">{{ t('kontak.taskForces') }}</h2>
         <p v-if="s.taskForceRows.value.length === 0" class="mt-3 text-ink-muted">{{ t('kontak.taskForcesEmpty') }}</p>
         <TaskForceList v-else class="mt-4" :groups="s.taskForceRows.value" />

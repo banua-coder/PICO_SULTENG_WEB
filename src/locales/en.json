@@ -261,12 +261,14 @@
     "cardNoImage": "no image",
     "viewer": "Infographic viewer",
     "close": "Close",
-    "prev": "Previous image",
-    "next": "Next image",
+    "prev": "Previous",
+    "next": "Next",
     "position": "{n} of {m}",
     "source": "See the source",
     "noImages": "This infographic has no image that can be loaded.",
-    "imageAlt": "{title}, image {n} of {m}"
+    "imageAlt": "{title}, image {n} of {m}",
+    "prevLabel": "Previous image",
+    "nextLabel": "Next image"
   },
   "kontak": {
     "title": "Contacts",

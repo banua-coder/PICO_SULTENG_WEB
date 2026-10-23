@@ -69,9 +69,9 @@ const btn = 'min-h-touch min-w-touch rounded-sm border border-line-strong bg-sur
       <p v-else class="m-0 text-ink-muted">{{ t('infografis.noImages') }}</p>
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div v-if="n > 1" class="flex items-center gap-3">
-          <button type="button" :class="btn" @click="go(-1)">{{ t('infografis.prev') }}</button>
+          <button type="button" :class="btn" :aria-label="t('infografis.prevLabel')" @click="go(-1)">{{ t('infografis.prev') }}</button>
           <span role="status" aria-live="polite" class="text-sm tabular-nums">{{ t('infografis.position', { n: index + 1, m: n }) }}</span>
-          <button type="button" :class="btn" @click="go(1)">{{ t('infografis.next') }}</button>
+          <button type="button" :class="btn" :aria-label="t('infografis.nextLabel')" @click="go(1)">{{ t('infografis.next') }}</button>
         </div>
         <a v-if="item.source" :href="item.source" rel="noopener noreferrer" target="_blank">{{ t('infografis.source') }}</a>
       </div>
