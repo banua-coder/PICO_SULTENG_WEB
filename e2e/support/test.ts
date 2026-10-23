@@ -16,6 +16,12 @@ export const test = base.extend({
       if (!name) return route.fulfill({ status: 404, contentType: 'application/json', body: '{"status":"error","error":"not in fixtures"}' })
       return route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: readFileSync(`${dir}${name}.json`, 'utf8') })
     })
+    // Third-party images (i.ibb.co and others) are not under test and some hosts are unreachable from some networks: a hanging
+    // image holds back the `load` event for the whole test timeout. Fail them at once. A spec can route them itself, which wins.
+    await page.route(
+      (u) => !['localhost', 'pico-api.banuacoder.com'].includes(u.hostname),
+      (r) => (r.request().resourceType() === 'image' ? r.abort('failed') : r.continue()),
+    )
     await use(page)
   },
 })
