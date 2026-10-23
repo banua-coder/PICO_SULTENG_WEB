@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@unhead/vue": "^2.1.17",
+    "lottie-web": "^5.13.0",
     "vite-ssg": "^28.3.0",
     "vue": "^3.5.44",
     "vue-i18n": "^11.4.16",

@@ -17,7 +17,7 @@ Needs Node 22 and pnpm 10 (`corepack enable`).
 | `pnpm lint` | ESLint (feature-boundary rule), raw-colour lint, locale key parity, brand manifest check |
 | `pnpm typecheck` | `vue-tsc --noEmit` |
 | `pnpm test` | Vitest unit and component tests |
-| `pnpm e2e` | Playwright against `vite preview` (run `pnpm build` first, once: `pnpm exec playwright install chromium`) |
+| `pnpm e2e` | Playwright. Builds with `VITE_KIT=1` (adds the `/_kit` component page) and serves it with `vite preview`. First time: `pnpm exec playwright install chromium` |
 | `pnpm sync:brand` | Copy brand assets from the PICO repo (`$PICO_BRAND_DIR`, default `../../PICO/brand`) and rewrite `brand.manifest.json` |
 | `pnpm fixtures:record` | Record the live API into `test/fixtures/api/` (series trimmed) |
 | `pnpm fixtures:check` | Drift check against the live API (nightly job) |
@@ -43,3 +43,11 @@ Copy `.env.example` to `.env` to override the API base URL. Archive mode is the 
 ## i18n
 
 Bahasa Indonesia has no URL prefix, English is `/en`. The route is the single source of truth for the locale. `src/locales/id.json` and `en.json` must have the same keys (`pnpm check:i18n`). Numbers and dates go through `useFormat()`.
+
+## Component kit
+
+Shared components are in `src/components/` (contract C3). `/_kit` and `/en/_kit` show all of them. The page exists in dev and in builds made with `VITE_KIT=1`. Production builds do not contain it. It is covered by axe in light and dark, in both locales.
+
+## Kabupaten latest figures
+
+`useKabupatenLatest()` reads the build-time snapshot `/data/kabupaten-latest.json` by default. Set `VITE_REGENCY_LATEST=api` to read `/regencies?include_latest_case=true` instead (pico-api PR #91, once deployed).
