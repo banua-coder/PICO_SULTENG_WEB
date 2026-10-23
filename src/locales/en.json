@@ -2,7 +2,8 @@
   "app": {
     "name": "PICO Sulteng",
     "tagline": "COVID-19 record of Central Sulawesi",
-    "skip": "Skip to content"
+    "skip": "Skip to content",
+    "homeLink": "PICO Sulteng, go to Home"
   },
   "nav": {
     "label": "Main navigation",
@@ -98,5 +99,27 @@
   "kit": {
     "title": "Component examples",
     "intro": "Test page for the component kit. Not in the sitemap."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "This address does not exist on PICO Sulteng. Try one of these pages.",
+    "home": "Go to Home",
+    "data": "Go to Data"
+  },
+  "footer": {
+    "label": "Site information",
+    "partners": "Partners",
+    "links": "Links",
+    "api": "Open API",
+    "swagger": "Swagger documentation",
+    "methodology": "Methodology",
+    "culture": "Kaili weaving motifs are the shared heritage of the Kaili people. The patterns on this site are interpretations of written descriptions, not reproductions of real cloth.",
+    "archive": "Archive: the record stops on {date} and is no longer updated."
+  },
+  "placeholder": {
+    "soon": "This page is being prepared."
+  },
+  "data": {
+    "areaTitle": "{area} data"
   }
 }

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './support/test'
 
 for (const [path, lang, heading] of [
   ['/', 'id', 'PICO Sulteng'],

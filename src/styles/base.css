@@ -62,3 +62,33 @@
     }
   }
 }
+
+@layer components {
+  /* Header logo: the colour lockup on light grounds, the dark-ground version on dark. Hidden images with loading=lazy are not fetched. */
+  .logo-dark {
+    display: none;
+  }
+  [data-theme='dark'] .logo-light {
+    display: none;
+  }
+  [data-theme='dark'] .logo-dark {
+    display: block;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .logo-light {
+      display: none;
+    }
+    :root:not([data-theme='light']) .logo-dark {
+      display: block;
+    }
+  }
+
+  /* Selvedge (DESIGN.md): an indigo band with sky and primary warp blocks and one crimson knot. Decorative. */
+  .selvedge {
+    height: var(--pico-space-4);
+    background:
+      radial-gradient(circle at 12% 50%, var(--pico-crimson) 0 3px, transparent 3.5px),
+      repeating-linear-gradient(90deg, var(--pico-sky) 0 var(--pico-space-4), transparent var(--pico-space-4) 36px, var(--pico-primary) 36px 48px, transparent 48px 72px),
+      var(--pico-indigo);
+  }
+}

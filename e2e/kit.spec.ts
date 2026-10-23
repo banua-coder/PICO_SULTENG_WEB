@@ -1,5 +1,5 @@
-import { expect, test } from '@playwright/test'
-import { expectNoA11yViolations } from './support/a11y'
+import { expect, test } from './support/test'
+import { expectNoA11yViolations, hydrated } from './support/a11y'
 
 // the blocked image host of C1 Q7 / A5: the request fails, the page must still look finished
 test.beforeEach(async ({ page }) => {
@@ -75,6 +75,7 @@ test('prerendered kit page has no console warnings (hydration)', async ({ page }
 
 test('the axe helper really fails on a violation (proof the scans are live)', async ({ page }) => {
   await page.goto('/_kit')
+  await hydrated(page)
   await page.evaluate(() => {
     const p = document.createElement('p')
     p.textContent = 'low contrast'

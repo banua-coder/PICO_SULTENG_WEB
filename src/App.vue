@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useHead } from '@unhead/vue'
+import AppLayout from '@/components/layout/AppLayout.vue'
 import { useLocale } from '@/app/useLocale'
 import { useTheme } from '@/app/useTheme'
 
@@ -11,5 +12,7 @@ useHead({ htmlAttrs: { lang: locale } })
 </script>
 
 <template>
-  <RouterView />
+  <AppLayout>
+    <RouterView />
+  </AppLayout>
 </template>

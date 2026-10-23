@@ -1,0 +1,21 @@
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
+// A plain #hash jump scrolls but does not always move focus (the router also handles hash changes). Do both.
+function jump() {
+  const main = document.getElementById('konten')
+  main?.focus()
+  main?.scrollIntoView()
+}
+</script>
+
+<template>
+  <a
+    href="#konten"
+    @click.prevent="jump"
+    class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:inline-flex focus:min-h-touch focus:items-center focus:rounded-sm focus:bg-indigo focus:px-5 focus:text-on-indigo"
+  >
+    {{ t('app.skip') }}
+  </a>
+</template>

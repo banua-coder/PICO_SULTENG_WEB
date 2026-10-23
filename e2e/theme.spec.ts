@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './support/test'
 
 test('a saved dark theme is applied before first paint', async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('pico-theme', 'dark'))
@@ -29,7 +29,7 @@ test('fonts are self-hosted and within budget', async ({ page }) => {
   })
   const external: string[] = []
   page.on('request', (r) => {
-    if (!r.url().startsWith('http://localhost')) external.push(r.url())
+    if (!r.url().startsWith('http://localhost') && !r.url().startsWith('https://pico-api.banuacoder.com/')) external.push(r.url())
   })
   await page.goto('/')
   await page.evaluate(() => document.fonts.ready)

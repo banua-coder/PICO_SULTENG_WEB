@@ -2,7 +2,8 @@
   "app": {
     "name": "PICO Sulteng",
     "tagline": "Catatan COVID-19 Sulawesi Tengah",
-    "skip": "Lompat ke konten"
+    "skip": "Lompat ke konten",
+    "homeLink": "PICO Sulteng, ke Beranda"
   },
   "nav": {
     "label": "Navigasi utama",
@@ -98,5 +99,27 @@
   "kit": {
     "title": "Contoh komponen",
     "intro": "Halaman uji untuk kit komponen. Tidak ada di peta situs."
+  },
+  "notFound": {
+    "title": "Halaman tidak ditemukan",
+    "body": "Alamat ini tidak ada di PICO Sulteng. Coba salah satu halaman berikut.",
+    "home": "Ke Beranda",
+    "data": "Ke Data"
+  },
+  "footer": {
+    "label": "Informasi situs",
+    "partners": "Mitra",
+    "links": "Tautan",
+    "api": "API terbuka",
+    "swagger": "Dokumentasi Swagger",
+    "methodology": "Metodologi",
+    "culture": "Motif tenun Kaili adalah warisan bersama masyarakat Kaili. Pola di situs ini adalah tafsiran dari deskripsi tertulis, bukan reproduksi kain asli.",
+    "archive": "Arsip: catatan berhenti pada {date} dan tidak diperbarui lagi."
+  },
+  "placeholder": {
+    "soon": "Halaman ini sedang disiapkan."
+  },
+  "data": {
+    "areaTitle": "Data {area}"
   }
 }

@@ -5,7 +5,7 @@ import LottiePlayer from './LottiePlayer.vue'
 
 export type StatusKind = 'loading' | 'empty' | 'error' | 'offline' | 'not-found'
 
-const props = defineProps<{ kind: StatusKind; title?: string; compact?: boolean }>()
+const props = defineProps<{ kind: StatusKind; title?: string; compact?: boolean; /** element for the title: 'h1' on a page of its own */ heading?: 'p' | 'h1' | 'h2' }>()
 const emit = defineEmits<{ retry: [] }>()
 
 const { t } = useI18n()
@@ -21,7 +21,7 @@ async function loadArt() {
 }
 watch(() => props.kind, loadArt, { immediate: true })
 
-const heading = computed(() => props.title ?? t(`status.${props.kind === 'not-found' ? 'notFound' : props.kind}`))
+const shownTitle = computed(() => props.title ?? t(`status.${props.kind === 'not-found' ? 'notFound' : props.kind}`))
 const retryable = computed(() => props.kind === 'error' || props.kind === 'offline')
 </script>
 
@@ -32,10 +32,10 @@ const retryable = computed(() => props.kind === 'error' || props.kind === 'offli
     :role="kind === 'loading' ? 'status' : kind === 'error' || kind === 'offline' ? 'alert' : undefined"
     :data-kind="kind"
   >
-    <LottiePlayer v-if="kind === 'loading'" name="loading" :label="heading" />
+    <LottiePlayer v-if="kind === 'loading'" name="loading" :label="shownTitle" />
     <!-- eslint-disable-next-line vue/no-v-html -- trusted brand illustration, inlined so it follows the theme -->
     <div v-else class="w-full [&>svg]:block [&>svg]:size-full" :style="{ aspectRatio: '4 / 3', maxWidth: compact ? '10rem' : '16rem' }" aria-hidden="true" v-html="art" />
-    <p class="font-display text-lg font-heading text-indigo">{{ heading }}</p>
+    <component :is="props.heading ?? 'p'" class="font-display text-lg font-heading text-indigo">{{ shownTitle }}</component>
     <div class="flex flex-wrap items-center justify-center gap-3">
       <button
         v-if="retryable"

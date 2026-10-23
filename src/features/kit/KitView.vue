@@ -14,7 +14,6 @@ import SectionHeading from '@/components/SectionHeading.vue'
 import StatFigure from '@/components/StatFigure.vue'
 import StateMark from '@/components/StateMark.vue'
 import StatusView from '@/components/StatusView.vue'
-import WeaveDefs from '@/components/WeaveDefs.vue'
 import { SULTENG } from '@/app/areas'
 import { ICON_KEYS } from '@/assets/brand/icon-keys'
 import { useLocale } from '@/app/useLocale'
@@ -38,8 +37,7 @@ const contacts: Contact[] = [
 </script>
 
 <template>
-  <WeaveDefs />
-  <main id="konten" class="mx-auto max-w-4xl p-6">
+  <div class="mx-auto max-w-4xl p-6">
     <h1 class="text-2xl">{{ t('kit.title') }}</h1>
     <p class="mt-3 text-ink-muted">{{ t('kit.intro') }}</p>
     <div class="mt-5 flex flex-wrap gap-3">
@@ -102,5 +100,5 @@ const contacts: Contact[] = [
         <LottiePlayer name="success" :label="t('copy.done')" />
       </div>
     </section>
-  </main>
+  </div>
 </template>
