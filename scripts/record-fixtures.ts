@@ -3,13 +3,37 @@
  *   pnpm fixtures:record           write fixtures from the live API
  *   pnpm fixtures:check            drift check, used by the nightly job (spec 80). Exits 1 on drift.
  * Drift = the endpoint fails, the envelope no longer unwraps, the payload is empty, or the key set of
- * the first row differs from the recorded fixture. W08 adds the wire guards to the check.
+ * the first row differs from the recorded fixture, or the payload fails its wire guard (src/api/guards.ts).
  */
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { ENDPOINTS } from '../src/api/endpoints'
 import { unwrap } from '../src/api/envelope'
+import * as g from '../src/api/guards'
 import { trimEnvelope } from './trim'
+
+// Wire guards of C1, run on the live payload in --check mode
+const GUARDS: Record<string, (v: unknown) => boolean> = {
+  national: g.isArrayOf(g.isWireNationalCase),
+  'national-latest': g.isWireNationalCase,
+  provinces: g.isArrayOf(g.isWireProvince),
+  'province-72-cases': g.isArrayOf(g.isWireProvinceCase),
+  regencies: g.isArrayOf(g.isWireRegency),
+  'regency-7271-cases': g.isArrayOf(g.isWireRegencyCase),
+  hospitals: g.isArrayOf(g.isWireHospital),
+  'task-forces': g.isArrayOf(g.isWireTaskForceGroup),
+  'vaccination-national': g.isArrayOf(g.isWireVaccinationDay),
+  'vaccination-province': g.isArrayOf(g.isWireVaccinationDay),
+  'vaccine-locations': g.isArrayOf(g.isWireVaccineLocation),
+  'gender-latest': g.isWireGenderLatest,
+  tests: g.isArrayOf(g.isWireTestRow),
+  'test-types': g.isArrayOf(g.isWireTestType),
+  banners: g.isArrayOf(g.isWireBanner),
+  infographics: g.isArrayOf(g.isWireInfographic),
+  donations: g.isArrayOf(g.isWireDonation),
+  telemedicines: g.isArrayOf(g.isWireTelemedicine),
+  partners: g.isArrayOf(g.isWirePartner),
+}
 
 const BASE = (process.env.VITE_API_BASE_URL || 'https://pico-api.banuacoder.com/api/v1').replace(/\/+$/, '')
 const DIR = fileURLToPath(new URL('../test/fixtures/api/', import.meta.url))
@@ -45,6 +69,8 @@ for (const ep of Object.values(ENDPOINTS)) {
     const payload = unwrap(body)
     if (Array.isArray(payload) && payload.length === 0 && ep.name !== 'banners') throw new Error('empty list')
     if (check) {
+      const guard = GUARDS[ep.name]
+      if (guard && !guard(payload)) throw new Error('payload fails its wire guard')
       const recorded = unwrap(JSON.parse(await readFile(file, 'utf8')))
       if (keys(firstRow(payload)) !== keys(firstRow(recorded))) throw new Error(`row keys changed: ${keys(firstRow(payload))}`)
       console.log(`ok    ${ep.name}`)

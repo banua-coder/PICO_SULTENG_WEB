@@ -29,7 +29,9 @@ function sleep(ms: number, signal?: AbortSignal): Promise<void> {
 }
 
 /** One attempt. Maps every failure to an `ApiException` or, for a caller abort, an `AbortError`. */
-async function attempt(url: string, signal: AbortSignal | undefined, timeoutMs: number): Promise<unknown> {
+type Parse = (body: unknown, status: number) => unknown
+
+async function attempt(url: string, signal: AbortSignal | undefined, timeoutMs: number, parse: Parse): Promise<unknown> {
   if (signal?.aborted) throw abortError()
   const ctl = new AbortController()
   let timedOut = false
@@ -58,28 +60,36 @@ async function attempt(url: string, signal: AbortSignal | undefined, timeoutMs: 
       throw new ApiException('shape', undefined, 'body is not JSON')
     }
     if (!res.ok) throw new ApiException('http', res.status)
-    return unwrap(body, res.status)
+    return parse(body, res.status)
   } finally {
     clearTimeout(timer)
     signal?.removeEventListener('abort', onCallerAbort)
   }
 }
 
+async function request<T>(url: string, opts: FetchJsonOptions<T>, parse: Parse, label: string): Promise<T> {
+  const { signal, guard, timeoutMs = TIMEOUT_MS, retryDelayMs = RETRY_DELAY_MS } = opts
+  let payload: unknown
+  try {
+    payload = await attempt(url, signal, timeoutMs, parse)
+  } catch (e) {
+    if (!(e instanceof ApiException) || e.kind !== 'network') throw e
+    await sleep(retryDelayMs, signal)
+    payload = await attempt(url, signal, timeoutMs, parse)
+  }
+  if (guard && !guard(payload)) throw new ApiException('shape', undefined, `guard failed for ${label}`)
+  return payload as T
+}
+
 /**
  * GET a pico-api path and return the unwrapped payload (C1 envelopes V1 to V4).
  * 15 s timeout, one retry after 1 s for network errors only.
  */
-export async function fetchJson<T = unknown>(path: string, opts: FetchJsonOptions<T> = {}): Promise<T> {
-  const { signal, guard, timeoutMs = TIMEOUT_MS, retryDelayMs = RETRY_DELAY_MS } = opts
-  const url = `${apiBaseUrl()}${path.startsWith('/') ? path : `/${path}`}`
-  let payload: unknown
-  try {
-    payload = await attempt(url, signal, timeoutMs)
-  } catch (e) {
-    if (!(e instanceof ApiException) || e.kind !== 'network') throw e
-    await sleep(retryDelayMs, signal)
-    payload = await attempt(url, signal, timeoutMs)
-  }
-  if (guard && !guard(payload)) throw new ApiException('shape', undefined, `guard failed for ${path}`)
-  return payload as T
+export function fetchJson<T = unknown>(path: string, opts: FetchJsonOptions<T> = {}): Promise<T> {
+  return request(`${apiBaseUrl()}${path.startsWith('/') ? path : `/${path}`}`, opts, unwrap, path)
+}
+
+/** GET a same-origin static JSON file (no API envelope), such as the build-time kabupaten snapshot. Same errors and retry. */
+export function fetchStatic<T = unknown>(url: string, opts: FetchJsonOptions<T> = {}): Promise<T> {
+  return request(url, opts, (body) => body, url)
 }

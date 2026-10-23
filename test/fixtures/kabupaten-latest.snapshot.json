@@ -1,0 +1,340 @@
+[
+ {
+  "area": {
+   "level": "kabupaten",
+   "code": "7201",
+   "slug": "banggai-kepulauan",
+   "name": "Banggai Kepulauan"
+  },
+  "latest": {
+   "date": "2024-01-14",
+   "daily": {
+    "positive": 0,
+    "recovered": 0,
+    "deceased": 0,
+    "active": null
+   },
+   "cumulative": {
+    "positive": 13824,
+    "recovered": 13578,
+    "deceased": 243,
+    "active": null
+   },
+   "rt": null,
+   "odp": null,
+   "pdp": null
+  }
+ },
+ {
+  "area": {
+   "level": "kabupaten",
+   "code": "7202",
+   "slug": "banggai",
+   "name": "Banggai"
+  },
+  "latest": {
+   "date": "2024-01-14",
+   "daily": {
+    "positive": 0,
+    "recovered": 0,
+    "deceased": 0,
+    "active": null
+   },
+   "cumulative": {
+    "positive": 13824,
+    "recovered": 13578,
+    "deceased": 243,
+    "active": null
+   },
+   "rt": null,
+   "odp": null,
+   "pdp": null
+  }
+ },
+ {
+  "area": {
+   "level": "kabupaten",
+   "code": "7203",
+   "slug": "morowali",
+   "name": "Morowali"
+  },
+  "latest": {
+   "date": "2024-01-14",
+   "daily": {
+    "positive": 0,
+    "recovered": 0,
+    "deceased": 0,
+    "active": null
+   },
+   "cumulative": {
+    "positive": 13824,
+    "recovered": 13578,
+    "deceased": 243,
+    "active": null
+   },
+   "rt": null,
+   "odp": null,
+   "pdp": null
+  }
+ },
+ {
+  "area": {
+   "level": "kabupaten",
+   "code": "7204",
+   "slug": "poso",
+   "name": "Poso"
+  },
+  "latest": {
+   "date": "2024-01-14",
+   "daily": {
+    "positive": 0,
+    "recovered": 0,
+    "deceased": 0,
+    "active": null
+   },
+   "cumulative": {
+    "positive": 13824,
+    "recovered": 13578,
+    "deceased": 243,
+    "active": null
+   },
+   "rt": null,
+   "odp": null,
+   "pdp": null
+  }
+ },
+ {
+  "area": {
+   "level": "kabupaten",
+   "code": "7205",
+   "slug": "donggala",
+   "name": "Donggala"
+  },
+  "latest": {
+   "date": "2024-01-14",
+   "daily": {
+    "positive": 0,
+    "recovered": 0,
+    "deceased": 0,
+    "active": null
+   },
+   "cumulative": {
+    "positive": 13824,
+    "recovered": 13578,
+    "deceased": 243,
+    "active": null
+   },
+   "rt": null,
+   "odp": null,
+   "pdp": null
+  }
+ },
+ {
+  "area": {
+   "level": "kabupaten",
+   "code": "7206",
+   "slug": "tolitoli",
+   "name": "Tolitoli"
+  },
+  "latest": {
+   "date": "2024-01-14",
+   "daily": {
+    "positive": 0,
+    "recovered": 0,
+    "deceased": 0,
+    "active": null
+   },
+   "cumulative": {
+    "positive": 13824,
+    "recovered": 13578,
+    "deceased": 243,
+    "active": null
+   },
+   "rt": null,
+   "odp": null,
+   "pdp": null
+  }
+ },
+ {
+  "area": {
+   "level": "kabupaten",
+   "code": "7207",
+   "slug": "buol",
+   "name": "Buol"
+  },
+  "latest": {
+   "date": "2024-01-14",
+   "daily": {
+    "positive": 0,
+    "recovered": 0,
+    "deceased": 0,
+    "active": null
+   },
+   "cumulative": {
+    "positive": 13824,
+    "recovered": 13578,
+    "deceased": 243,
+    "active": null
+   },
+   "rt": null,
+   "odp": null,
+   "pdp": null
+  }
+ },
+ {
+  "area": {
+   "level": "kabupaten",
+   "code": "7208",
+   "slug": "parigi-moutong",
+   "name": "Parigi Moutong"
+  },
+  "latest": {
+   "date": "2024-01-14",
+   "daily": {
+    "positive": 0,
+    "recovered": 0,
+    "deceased": 0,
+    "active": null
+   },
+   "cumulative": {
+    "positive": 13824,
+    "recovered": 13578,
+    "deceased": 243,
+    "active": null
+   },
+   "rt": null,
+   "odp": null,
+   "pdp": null
+  }
+ },
+ {
+  "area": {
+   "level": "kabupaten",
+   "code": "7209",
+   "slug": "tojo-una-una",
+   "name": "Tojo Una-Una"
+  },
+  "latest": {
+   "date": "2024-01-14",
+   "daily": {
+    "positive": 0,
+    "recovered": 0,
+    "deceased": 0,
+    "active": null
+   },
+   "cumulative": {
+    "positive": 13824,
+    "recovered": 13578,
+    "deceased": 243,
+    "active": null
+   },
+   "rt": null,
+   "odp": null,
+   "pdp": null
+  }
+ },
+ {
+  "area": {
+   "level": "kabupaten",
+   "code": "7210",
+   "slug": "sigi",
+   "name": "Sigi"
+  },
+  "latest": {
+   "date": "2024-01-14",
+   "daily": {
+    "positive": 0,
+    "recovered": 0,
+    "deceased": 0,
+    "active": null
+   },
+   "cumulative": {
+    "positive": 13824,
+    "recovered": 13578,
+    "deceased": 243,
+    "active": null
+   },
+   "rt": null,
+   "odp": null,
+   "pdp": null
+  }
+ },
+ {
+  "area": {
+   "level": "kabupaten",
+   "code": "7211",
+   "slug": "banggai-laut",
+   "name": "Banggai Laut"
+  },
+  "latest": {
+   "date": "2024-01-14",
+   "daily": {
+    "positive": 0,
+    "recovered": 0,
+    "deceased": 0,
+    "active": null
+   },
+   "cumulative": {
+    "positive": 13824,
+    "recovered": 13578,
+    "deceased": 243,
+    "active": null
+   },
+   "rt": null,
+   "odp": null,
+   "pdp": null
+  }
+ },
+ {
+  "area": {
+   "level": "kabupaten",
+   "code": "7212",
+   "slug": "morowali-utara",
+   "name": "Morowali Utara"
+  },
+  "latest": {
+   "date": "2024-01-14",
+   "daily": {
+    "positive": 0,
+    "recovered": 0,
+    "deceased": 0,
+    "active": null
+   },
+   "cumulative": {
+    "positive": 13824,
+    "recovered": 13578,
+    "deceased": 243,
+    "active": null
+   },
+   "rt": null,
+   "odp": null,
+   "pdp": null
+  }
+ },
+ {
+  "area": {
+   "level": "kabupaten",
+   "code": "7271",
+   "slug": "kota-palu",
+   "name": "Kota Palu"
+  },
+  "latest": {
+   "date": "2024-01-14",
+   "daily": {
+    "positive": 0,
+    "recovered": 0,
+    "deceased": 0,
+    "active": null
+   },
+   "cumulative": {
+    "positive": 13824,
+    "recovered": 13578,
+    "deceased": 243,
+    "active": null
+   },
+   "rt": null,
+   "odp": null,
+   "pdp": null
+  }
+ }
+]
