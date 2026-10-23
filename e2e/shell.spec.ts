@@ -1,25 +1,7 @@
 import { expect, test } from './support/test'
-import { expectNoA11yViolations, hydrated } from './support/a11y'
-
-const PATHS = ['/', '/data', '/data/indonesia', '/data/provinsi/aceh', '/data/kabupaten/kota-palu', '/tabel-data', '/vaksin', '/infografis', '/kontak', '/wiki', '/isoman', '/metodologi', '/tidak-ada']
+import { hydrated } from './support/a11y'
 
 test.use({ viewport: { width: 360, height: 740 } })
-
-for (const base of PATHS) {
-  for (const locale of ['id', 'en'] as const) {
-    const path = locale === 'id' ? base : base === '/' ? '/en/' : `/en${base}`
-    for (const theme of ['light', 'dark'] as const) {
-      test(`${path} (${theme}): axe, one h1, no horizontal scroll`, async ({ page }) => {
-        await page.addInitScript((t) => localStorage.setItem('pico-theme', t), theme)
-        await page.goto(path)
-        await expect(page.locator('h1')).toHaveCount(1)
-        await page.evaluate(() => document.fonts.ready)
-        await expectNoA11yViolations(page)
-        expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBe(0)
-      })
-    }
-  }
-}
 
 test('no horizontal scroll at 320 px on a content-heavy page', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 640 })

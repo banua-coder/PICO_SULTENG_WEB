@@ -1,4 +1,3 @@
-/* eslint-disable vue/one-component-per-file -- test hosts */
 import { afterEach, describe, expect, it } from 'vitest'
 import { defineComponent, h, provide } from 'vue'
 import { cache } from '@/api/cache'

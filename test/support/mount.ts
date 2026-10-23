@@ -1,4 +1,3 @@
-/* eslint-disable vue/one-component-per-file -- test helper builds a throwaway host component */
 import { createApp, defineComponent, h } from 'vue'
 import type { Component } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'

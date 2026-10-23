@@ -7,7 +7,13 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? 'github' : 'list',
   use: { baseURL: 'http://localhost:4173' },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    // all specs at 1280 x 800
+    { name: 'chromium', use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 800 } } },
+    // the smoke suite again on a narrow phone screen, in Chromium and WebKit (spec 80)
+    { name: 'mobile-chromium', testMatch: 'smoke.spec.ts', use: { ...devices['Desktop Chrome'], viewport: { width: 360, height: 740 } } },
+    { name: 'mobile-webkit', testMatch: 'smoke.spec.ts', use: { ...devices['Desktop Safari'], viewport: { width: 360, height: 740 } } },
+  ],
   webServer: {
     // the kit build adds the /_kit test page, which production builds never have.
     // serve-dist routes like nginx will: per-route prerendered HTML, 404.html with status 404

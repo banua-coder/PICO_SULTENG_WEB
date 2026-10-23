@@ -1,0 +1,49 @@
+name: Nightly API contract
+
+# 02:00 WITA is 18:00 UTC. The job checks the live pico-api against the recorded fixtures and the data layer's wire
+# guards, and runs the full-series acceptance tests. On drift it opens (or updates) a GitHub issue labelled `api-drift`.
+on:
+  schedule:
+    - cron: '0 18 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Fixture and wire-guard check against the live API
+        id: fixtures
+        run: pnpm fixtures:check 2>&1 | tee contract.log
+        continue-on-error: true
+      - name: Full-series acceptance tests against the live API
+        id: live
+        run: LIVE_API=1 pnpm vitest run src/api/live.test.ts 2>&1 | tee -a contract.log
+        continue-on-error: true
+      - name: Open or update the api-drift issue
+        if: steps.fixtures.outcome == 'failure' || steps.live.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create api-drift --color B5174B --description "pico-api changed under the web" 2>/dev/null || true
+          body="The nightly contract job found drift against the live API.\n\nRun: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}\n\n\`\`\`\n$(tail -c 6000 contract.log)\n\`\`\`"
+          existing=$(gh issue list --label api-drift --state open --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$(printf "$body")"
+          else
+            gh issue create --title "API drift detected by the nightly contract job" --label api-drift --body "$(printf "$body")"
+          fi
+      - name: Fail the job when there was drift
+        if: steps.fixtures.outcome == 'failure' || steps.live.outcome == 'failure'
+        run: exit 1

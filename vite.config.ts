@@ -13,6 +13,18 @@ export default defineConfig({
     VueI18nPlugin({ include: [fileURLToPath(new URL('./src/locales/**', import.meta.url))], runtimeOnly: true, compositionOnly: true, strictMessage: true }),
   ],
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
+  build: {
+    rollupOptions: {
+      output: {
+        // Named chunks, so check-budget can see a heavy library in a page's initial JS: d3 (charts, Data and Vaksin only)
+        // and xlsx (the lazy export). Lottie is already named lottie_light by its module.
+        manualChunks(id) {
+          if (/node_modules\/(\.pnpm\/)?d3-/.test(id) || id.includes('/node_modules/d3-')) return 'd3'
+          if (id.includes('node_modules/xlsx') || id.includes('/xlsx@')) return 'xlsx'
+        },
+      },
+    },
+  },
   ssgOptions: {
     script: 'async',
     formatting: 'minify',
