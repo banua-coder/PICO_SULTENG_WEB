@@ -289,5 +289,12 @@
     "taskForces": "Satgas per kabupaten/kota",
     "taskForcesEmpty": "Tidak ada kontak satgas di wilayah ini dalam data.",
     "noContacts": "Tidak ada kontak."
+  },
+  "wiki": {
+    "title": "Wiki COVID-19",
+    "description": "Penjelasan singkat tentang COVID-19: penularan, gejala, pencegahan, istilah penting, dan mitos. Disusun pada masa pandemi dan tidak diperbarui.",
+    "heading": "Wiki COVID-19",
+    "note": "Konten ini disusun pada 2020 sampai 2022 dan tidak diperbarui. Ikuti panduan Kementerian Kesehatan terbaru.",
+    "source": "Sumber materi asli: Pikobar Jawa Barat. Disusun ulang oleh PICO Sulteng."
   }
 }

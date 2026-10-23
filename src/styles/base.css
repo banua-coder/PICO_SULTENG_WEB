@@ -31,6 +31,11 @@
     text-wrap: balance;
   }
 
+  /* the dimmed page behind a modal dialog: Tailwind's colour/opacity shorthand drops the alpha for a token colour */
+  dialog::backdrop {
+    background: color-mix(in srgb, var(--pico-ink) 60%, transparent);
+  }
+
   a {
     color: var(--pico-primary-strong);
     text-decoration: underline; /* Tailwind's reset removes it, and a link inside text needs more than colour (WCAG 1.4.1) */

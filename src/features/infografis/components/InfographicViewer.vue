@@ -54,7 +54,7 @@ const btn = 'min-h-touch min-w-touch rounded-sm border border-line-strong bg-sur
   <dialog
     ref="dialog"
     :aria-label="item ? item.title : t('infografis.viewer')"
-    class="m-auto w-[min(94vw,30rem)] rounded-md border border-line bg-surface p-5 text-ink backdrop:bg-ink/60"
+    class="m-auto w-[min(94vw,30rem)] rounded-md border border-line bg-surface p-5 text-ink"
     @close="item && emit('close')"
     @keydown="onKey"
   >

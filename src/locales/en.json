@@ -289,5 +289,12 @@
     "taskForces": "Task forces by regency/city",
     "taskForcesEmpty": "No task force contact in this area in the data.",
     "noContacts": "No contacts."
+  },
+  "wiki": {
+    "title": "Health wiki",
+    "description": "A short guide to COVID-19: how it spreads, symptoms, prevention, key terms and myths. Written during the pandemic and not updated.",
+    "heading": "COVID-19 health wiki",
+    "note": "This content was written between 2020 and 2022 and is not updated. Follow the latest guidance of the Ministry of Health.",
+    "source": "Original material: Pikobar West Java. Rearranged by PICO Sulteng."
   }
 }

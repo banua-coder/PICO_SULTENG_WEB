@@ -66,3 +66,17 @@ describe('PicoImage retryable', () => {
     expect(wrapper.find('[data-failed]').exists()).toBe(false)
   })
 })
+
+describe('inlineSvg', () => {
+  const raw = '<svg xmlns="x" viewBox="0 0 320 240" width="320" height="240" role="img" aria-labelledby="t d"><title id="t">A</title><desc id="d">B</desc><defs><clipPath id="th"><circle/></clipPath></defs><g clip-path="url(#th)"/></svg>'
+  it('is decorative, unique per use, and keeps the viewBox', async () => {
+    const { inlineSvg } = await import('./inlineSvg')
+    const out = inlineSvg(raw, 'u1')
+    expect(out).toContain('aria-hidden="true"')
+    expect(out).not.toMatch(/<title|<desc|role=|aria-labelledby|width="320"/)
+    expect(out).toContain('viewBox="0 0 320 240"')
+    expect(out).toContain('id="u1-th"')
+    expect(out).toContain('url(#u1-th)')
+    expect(inlineSvg(raw, 'u2')).toContain('url(#u2-th)')
+  })
+})
