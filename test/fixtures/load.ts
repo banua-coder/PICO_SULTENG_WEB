@@ -8,3 +8,6 @@ export function fx<T = unknown>(name: string): T {
   if (!raw) throw new Error(`no fixture ${name}`)
   return unwrap<T>(structuredClone(raw))
 }
+
+// Wire types for tests outside src/api (the lint rule keeps wire.ts out of app, components and features).
+export type { WireNationalCase, WireProvince, WireProvinceCase, WireRegencyCase } from '@/api/wire'

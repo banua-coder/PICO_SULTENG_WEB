@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { dayNumber, isoFromDay } from '../src/components/charts/core/days'
 import { trimEnvelope, trimSeries } from './trim'
 
 const rows = (n: number) => Array.from({ length: n }, (_, i) => ({ day: i + 1, date: `d${i + 1}` }))
@@ -25,6 +26,15 @@ describe('trimSeries', () => {
     for (let i = 100; i < 400; i += 3) r[i] = { ...r[i]!, day: r[i]!.day + 2 } // many small jumps
     r[700] = { day: 5000, date: 'odd' } // one huge jump
     expect(trimSeries(r).some((x) => x.day === 5000)).toBe(true)
+  })
+})
+
+describe('trimSeries keepDates', () => {
+  it('keeps rows on the dates the logic depends on, even mid-series', () => {
+    const r = Array.from({ length: 400 }, (_, i) => ({ day: i + 1, date: `${isoFromDay(dayNumber('2021-01-01') + i)}T00:00:00+07:00` }))
+    const out = trimSeries(r, 10, 6, ['2021-07-31'])
+    expect(out.some((x) => x.date.startsWith('2021-07-31'))).toBe(true)
+    expect(out).toHaveLength(21)
   })
 })
 

@@ -1,4 +1,5 @@
 /** Fixture trimming, kept pure so it is unit tested. */
+export const KEEP_DATES = ['2022-05-07', '2022-05-08', '2022-05-09', '2023-06-24', '2023-07-09', '2023-07-10', '2021-07-30', '2021-07-31', '2021-08-01'] as const
 
 type Row = Record<string, unknown>
 
@@ -6,9 +7,13 @@ type Row = Record<string, unknown>
  * Keep the first `edge` and last `edge` rows (in served order) plus rows where `day` jumps by
  * more than 1, which are the out-of-order rows of C1 quirk Q1. At most `maxExtra` extras, biggest jumps first.
  */
-export function trimSeries<T extends Row>(rows: T[], edge = 60, maxExtra = 6): T[] {
+export function trimSeries<T extends Row>(rows: T[], edge = 60, maxExtra = 6, keepDates: readonly string[] = KEEP_DATES): T[] {
   if (rows.length <= edge * 2) return rows
   const keep = new Set<number>()
+  // dates the page logic and its tests rely on: the ODP/PDP cut-off, the end of Rt, a month inside the Delta wave
+  rows.forEach((r, i) => {
+    if (typeof r.date === 'string' && keepDates.includes(r.date.slice(0, 10))) keep.add(i)
+  })
   for (let i = 0; i < edge; i++) keep.add(i).add(rows.length - 1 - i)
   const extras: { i: number; jump: number }[] = []
   for (let i = edge; i < rows.length - edge; i++) {

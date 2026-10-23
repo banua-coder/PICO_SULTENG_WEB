@@ -11,3 +11,6 @@ test-results
 .codegraph
 .playwright-mcp
 .vite-ssg-temp
+.cache
+public/unduh
+public/data
