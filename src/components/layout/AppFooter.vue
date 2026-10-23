@@ -30,15 +30,13 @@ const link = 'inline-flex min-h-touch items-center'
       </div>
       <div>
         <h2 class="text-md">{{ t('footer.partners') }}</h2>
-        <!-- partners come from the API after hydration; W09 seeds them into the prerender and drops ClientOnly -->
-        <ClientOnly>
-          <ul class="m-0 list-none p-0">
-            <li v-for="p in partners.data.value?.filter((x) => x.inFooter)" :key="p.id">
-              <a v-if="p.href" :class="link" :href="p.href" rel="noopener">{{ p.name }}</a>
-              <span v-else :class="link">{{ p.name }}</span>
-            </li>
-          </ul>
-        </ClientOnly>
+        <!-- partners are in the prerendered HTML and in the page's initial state -->
+        <ul class="m-0 list-none p-0">
+          <li v-for="p in partners.data.value?.filter((x) => x.inFooter)" :key="p.id">
+            <a v-if="p.href" :class="link" :href="p.href" rel="noopener">{{ p.name }}</a>
+            <span v-else :class="link">{{ p.name }}</span>
+          </li>
+        </ul>
       </div>
       <div class="text-ink-muted">
         <p>{{ t('footer.culture') }}</p>

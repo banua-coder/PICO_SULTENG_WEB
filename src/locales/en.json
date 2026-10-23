@@ -14,7 +14,7 @@
     "vaksin": "Vaccination",
     "infografis": "Infographics",
     "kontak": "Contacts",
-    "wiki": "Wiki",
+    "wiki": "Health wiki",
     "isoman": "Home isolation",
     "metodologi": "Methodology"
   },
@@ -123,13 +123,33 @@
     "swagger": "Swagger documentation",
     "methodology": "Methodology",
     "culture": "Kaili weaving motifs are the shared heritage of the Kaili people. The patterns on this site are interpretations of written descriptions, not reproductions of real cloth.",
-    "archive": "Archive: the record stops on {date} and is no longer updated."
+    "archive": "Archive: the record stops on {date} and is no longer updated.",
+    "thirdParty": "a third-party site"
   },
   "placeholder": {
     "soon": "This page is being prepared."
   },
   "data": {
-    "areaTitle": "{area} data"
+    "areaTitle": "{area} data",
+    "title": "COVID-19 data: {area}",
+    "description": "Positive, recovered and deceased cases and the reproduction number in {area}, 2 March 2020 to 14 January 2024.",
+    "summary": "Summary",
+    "asOfWindow": "Up to {date}",
+    "cfr": "Case fatality rate",
+    "recoveryRate": "Recovery rate",
+    "delta": "Delta wave",
+    "loadingSummary": "Loading figures for this range",
+    "share": "Share",
+    "shareCopy": "link to this page",
+    "shareNative": "Share through an app",
+    "odpTitle": "ODP and PDP, early pandemic",
+    "odpLine": "{kind}: total {total}, finished {finished}",
+    "odpOdp": "ODP (people under monitoring)",
+    "odpPdp": "PDP (patients under supervision)",
+    "odpAsOf": "Last figures on {date}.",
+    "odpNote": "ODP/PDP data is not available after {date}, because the source stopped reporting it.",
+    "toolbar": "Data options",
+    "rootTitle": "COVID-19 data"
   },
   "chart": {
     "table": "View as table",

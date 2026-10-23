@@ -4,7 +4,7 @@ import { INDONESIA } from '@/app/areas'
 import { fetchJson, fetchStatic } from './client'
 import { ENDPOINTS } from './endpoints'
 import { isArrayOf, isRecord, isWireNationalCase, isWireProvince, isWireProvinceCase, isWireRegency, isWireRegencyCase } from './guards'
-import { kabupatenLatest, provincesLatest } from './normalize/areas'
+import { kabupatenLatest, nationalLatest, provincesLatest } from './normalize/areas'
 import { nationalSeries, provinceSeries, regencySeries } from './normalize/series'
 import { useResource } from './resource'
 import type { AreaRef, LatestByArea, Resource, Series } from './types'
@@ -54,4 +54,10 @@ export function kabupatenLatestLoader(source: 'snapshot' | 'api' = KABUPATEN_LAT
 
 export function useKabupatenLatest(): Resource<LatestByArea[]> {
   return useResource(KABUPATEN_LATEST_SOURCE === 'api' ? KABUPATEN_API_PATH : KABUPATEN_SNAPSHOT_URL, kabupatenLatestLoader())
+}
+
+/** The latest national row (`/national/latest`), small enough for the prerender's initial state. */
+export function useNationalLatest(): Resource<LatestByArea> {
+  const p = ENDPOINTS.nationalLatest.path
+  return useResource(p, (signal) => fetchJson(p, { signal, guard: isWireNationalCase }).then(nationalLatest))
 }

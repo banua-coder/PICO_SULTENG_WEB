@@ -1,8 +1,9 @@
-import { getCurrentInstance, getCurrentScope, onScopeDispose, onServerPrefetch, readonly, shallowRef, toValue, watch } from 'vue'
+import { getCurrentInstance, getCurrentScope, inject, onScopeDispose, onServerPrefetch, readonly, shallowRef, toValue, watch } from 'vue'
 import type { MaybeRefOrGetter } from 'vue'
 import { cache as defaultCache } from './cache'
 import type { Cache } from './cache'
 import { ApiException, isAbort } from './errors'
+import { SSR_ERRORS_KEY, SSR_KEYS } from './ssrState'
 import type { ApiError, Resource, ResourceStatus } from './types'
 
 export type ResourceOptions = {
@@ -27,12 +28,15 @@ export function createUseResource(cache: Cache) {
     const error = shallowRef<ApiError | null>(null)
     const status = shallowRef<ResourceStatus>('idle')
     let ctl: AbortController | undefined
+    const ssrKeys = getCurrentInstance() ? inject(SSR_KEYS, null) : null
 
     async function load(k: string, force = false) {
       ctl?.abort()
       const mine = (ctl = new AbortController())
       const hadData = data.value !== undefined
       if (!hadData) status.value = 'loading'
+      // Prerender: a series is never fetched or embedded (0.4 to 0.9 MB each). The client starts in the same loading state.
+      if (import.meta.env.SSR && opts.series) return
       try {
         const value = await cache.fetch<T>(k, loader, { signal: mine.signal, series: opts.series ?? false, force })
         if (mine.signal.aborted) return
@@ -42,6 +46,10 @@ export function createUseResource(cache: Cache) {
       } catch (e) {
         if (mine.signal.aborted || isAbort(e)) return // superseded: a late result must not land
         error.value = toApiError(e)
+        if (import.meta.env.SSR) {
+          const g = globalThis as unknown as Record<string, string[]>
+          ;(g[SSR_ERRORS_KEY] ??= []).push(`${k}: ${(e as Error).message}`)
+        }
         status.value = 'error' // old data, if any, stays in `data`
       }
     }
@@ -54,6 +62,7 @@ export function createUseResource(cache: Cache) {
         status.value = 'idle'
         return Promise.resolve()
       }
+      if (ssrKeys && !opts.series) ssrKeys.add(k)
       const cached = cache.peek<T>(k)
       // show the cached value (seeded or earlier) on the very first render
       data.value = cached

@@ -113,7 +113,7 @@ describe('app shell', () => {
 
   it('English routes render English chrome', async () => {
     const { el } = await shell('/en/wiki')
-    expect(el.querySelector('h1')!.textContent).toBe('Wiki')
+    expect(el.querySelector('h1')!.textContent).toBe('Health wiki')
     expect(el.textContent).toContain('Skip to content')
     expect(el.querySelector('html, [lang]')).toBeDefined()
   })

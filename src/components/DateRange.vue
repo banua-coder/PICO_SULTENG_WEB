@@ -5,7 +5,7 @@ import type { IsoDate } from '@/api/types'
 
 export type DateWindow = { from: IsoDate; to: IsoDate }
 
-const props = defineProps<{ modelValue: DateWindow; min: IsoDate; max: IsoDate }>()
+const props = defineProps<{ modelValue: DateWindow; min: IsoDate; max: IsoDate; /** named windows after the years, e.g. a wave */ extraPresets?: { key: string; label: string; from: IsoDate; to: IsoDate }[] }>()
 const emit = defineEmits<{ 'update:modelValue': [DateWindow] }>()
 
 const { t } = useI18n()
@@ -33,6 +33,7 @@ function setTo(v: string) {
   const to = clamp(v)
   emit('update:modelValue', { from: props.modelValue.from > to ? to : props.modelValue.from, to })
 }
+const isNamed = (x: { from: IsoDate; to: IsoDate }) => props.modelValue.from === clamp(x.from) && props.modelValue.to === clamp(x.to)
 const pick = (w: DateWindow) => emit('update:modelValue', w)
 const btn = 'min-h-touch min-w-touch rounded-sm border px-4 text-sm font-strong'
 </script>
@@ -51,6 +52,16 @@ const btn = 'min-h-touch min-w-touch rounded-sm border px-4 text-sm font-strong'
     <div role="group" :aria-label="t('range.presets')" class="flex flex-wrap gap-3">
       <button type="button" :class="[btn, isAll ? 'border-indigo bg-indigo text-on-indigo' : 'border-line-strong bg-surface text-ink']" :aria-pressed="isAll" @click="pick({ from: min, to: max })">{{ t('range.all') }}</button>
       <button v-for="y in years" :key="y" type="button" :class="[btn, isYear(y) ? 'border-indigo bg-indigo text-on-indigo' : 'border-line-strong bg-surface text-ink']" :aria-pressed="isYear(y)" @click="pick(yearWindow(y))">{{ y }}</button>
+      <button
+        v-for="x in extraPresets ?? []"
+        :key="x.key"
+        type="button"
+        :class="[btn, isNamed(x) ? 'border-indigo bg-indigo text-on-indigo' : 'border-line-strong bg-surface text-ink']"
+        :aria-pressed="isNamed(x)"
+        @click="pick({ from: clamp(x.from), to: clamp(x.to) })"
+      >
+        {{ x.label }}
+      </button>
     </div>
   </fieldset>
 </template>

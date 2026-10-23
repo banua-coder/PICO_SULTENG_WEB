@@ -23,11 +23,13 @@ import { KABUPATEN_AREAS, PROVINCE_AREAS, SULTENG } from '@/app/areas'
 import { ICON_KEYS } from '@/assets/brand/icon-keys'
 import { useLocale } from '@/app/useLocale'
 import { useTheme } from '@/app/useTheme'
+import { usePageHead } from '@/app/head'
 import type { AreaRef, Contact } from '@/api/types'
 
 // Test page for the component kit (spec 12). Only in dev and in builds made with VITE_KIT=1. Never in the sitemap.
 const { t } = useI18n()
 const { theme, cycle } = useTheme()
+usePageHead({ title: () => t('kit.title'), noindex: true })
 const { switchPath, other } = useLocale()
 
 // 4 series x 1,414 days of made-up waves, ending on the last day of the record. One series has a gap.

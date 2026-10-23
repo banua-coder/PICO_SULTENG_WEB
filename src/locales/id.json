@@ -123,13 +123,33 @@
     "swagger": "Dokumentasi Swagger",
     "methodology": "Metodologi",
     "culture": "Motif tenun Kaili adalah warisan bersama masyarakat Kaili. Pola di situs ini adalah tafsiran dari deskripsi tertulis, bukan reproduksi kain asli.",
-    "archive": "Arsip: catatan berhenti pada {date} dan tidak diperbarui lagi."
+    "archive": "Arsip: catatan berhenti pada {date} dan tidak diperbarui lagi.",
+    "thirdParty": "situs pihak ketiga"
   },
   "placeholder": {
     "soon": "Halaman ini sedang disiapkan."
   },
   "data": {
-    "areaTitle": "Data {area}"
+    "areaTitle": "Data {area}",
+    "title": "Data COVID-19 {area}",
+    "description": "Kasus positif, sembuh, meninggal dan angka reproduksi di {area}, 2 Maret 2020 sampai 14 Januari 2024.",
+    "summary": "Ringkasan",
+    "asOfWindow": "Sampai {date}",
+    "cfr": "Tingkat kematian kasus",
+    "recoveryRate": "Tingkat kesembuhan",
+    "delta": "Gelombang Delta",
+    "loadingSummary": "Memuat angka untuk rentang ini",
+    "share": "Bagikan",
+    "shareCopy": "tautan halaman ini",
+    "shareNative": "Bagikan lewat aplikasi",
+    "odpTitle": "ODP dan PDP awal pandemi",
+    "odpLine": "{kind}: total {total}, selesai {finished}",
+    "odpOdp": "ODP (orang dalam pemantauan)",
+    "odpPdp": "PDP (pasien dalam pengawasan)",
+    "odpAsOf": "Angka terakhir pada {date}.",
+    "odpNote": "Data ODP/PDP tidak tersedia setelah {date}, karena sumber berhenti melaporkannya.",
+    "toolbar": "Pilihan data",
+    "rootTitle": "Data COVID-19"
   },
   "chart": {
     "table": "Lihat sebagai tabel",

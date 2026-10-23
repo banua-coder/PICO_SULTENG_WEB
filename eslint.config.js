@@ -28,5 +28,6 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', ignoreRestSiblings: true }],
     },
   },
+  { files: ['**/*.test.ts', 'test/**/*.ts'], rules: { 'vue/one-component-per-file': 'off' } }, // tests build throwaway host components
   ...featureBoundary(fileURLToPath(new URL('.', import.meta.url))),
 )
