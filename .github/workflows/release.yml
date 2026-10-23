@@ -1,0 +1,143 @@
+name: Release
+
+# Tag vX.Y.Z -> build the image (the build runs the real data steps against the live API and FAILS while review
+# markers remain), smoke-test it, push to GHCR, deploy over SSH, health-check, roll back if the check fails.
+# Manual run (workflow_dispatch) is a dry run: build and smoke test only, never push, never deploy.
+
+on:
+  push:
+    tags: ['v*.*.*']
+  workflow_dispatch:
+    inputs:
+      allow_todo:
+        description: 'Dry run only: let the build pass with review markers (sets PICO_ALLOW_TODO=1). Never used by a tag release.'
+        type: boolean
+        default: false
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  IMAGE: ghcr.io/banua-coder/pico-web
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    env:
+      PUBLISH: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        if: env.PUBLISH == 'true'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest,enable=${{ env.PUBLISH }}
+            type=raw,value=dryrun,enable=${{ env.PUBLISH != 'true' }}
+      # 1. Build and load locally. A tag build never sets PICO_ALLOW_TODO, so check:dist fails the build on any data-todo marker.
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: pico-web:ci
+          build-args: |
+            VITE_API_BASE_URL=https://pico-api.banuacoder.com/api/v1
+            VITE_SITE_URL=https://pico.banuacoder.com
+            PICO_ALLOW_TODO=${{ github.event_name == 'workflow_dispatch' && inputs.allow_todo && '1' || '' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      # 2. Smoke test the container before it can reach the registry
+      - name: Smoke test
+        run: |
+          docker run -d --name pico-web -p 8080:8080 pico-web:ci
+          for _ in $(seq 1 20); do curl -fsS http://127.0.0.1:8080/healthz && break; sleep 1; done
+          check() { got=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:8080$1"); [ "$got" = "$2" ] || { echo "FAIL $1: got $got, want $2"; exit 1; }; echo "ok $1 $got"; }
+          check / 200; check /en/ 200; check /data 200; check /tabel-data 200
+          check /data/ 301; check /id/data 301; check /nope 404; check /sitemap.xml 200
+          curl -sI -H 'Accept-Encoding: gzip' http://127.0.0.1:8080/data | tee /dev/stderr | grep -qi '^content-encoding: gzip'
+          curl -sI http://127.0.0.1:8080/data | grep -qi '^content-security-policy:'
+      # 3. Push (tag only). Layers are cached, so this does not rebuild.
+      - name: Push image
+        if: env.PUBLISH == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VITE_API_BASE_URL=https://pico-api.banuacoder.com/api/v1
+            VITE_SITE_URL=https://pico.banuacoder.com
+          cache-from: type=gha
+
+  deploy:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    steps:
+      - name: Prepare SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H -p "${{ secrets.DEPLOY_PORT }}" "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
+      - name: Deploy (compose pull + up)
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "${{ secrets.DEPLOY_PORT }}" "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+            "VERSION=${VERSION#v} DEPLOY_PATH='${{ secrets.DEPLOY_PATH }}' bash -s" <<'ENDSSH'
+          set -e
+          cd "$DEPLOY_PATH"
+          # remember the running version so the health gate can roll back
+          grep '^PICO_WEB_VERSION=' .env > .env.previous 2>/dev/null || true
+          echo "PICO_WEB_VERSION=$VERSION" > .env
+          docker compose pull
+          docker compose up -d
+          docker ps --filter name=pico-web
+          ENDSSH
+      - name: Health gate
+        id: health
+        run: |
+          base="${{ secrets.HEALTH_CHECK_URL }}"; base="${base%/healthz}"
+          sleep 10
+          for url in "$base/healthz" "$base/data"; do
+            for _ in 1 2 3 4 5 6; do
+              code=$(curl -s -o /dev/null -w '%{http_code}' "$url" || true)
+              [ "$code" = 200 ] && { echo "ok $url"; continue 2; }
+              sleep 5
+            done
+            echo "FAIL $url ($code)"; exit 1
+          done
+      - name: Roll back to the previous version
+        if: failure() && steps.health.outcome == 'failure'
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "${{ secrets.DEPLOY_PORT }}" "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+            "DEPLOY_PATH='${{ secrets.DEPLOY_PATH }}' bash -s" <<'ENDSSH'
+          set -e
+          cd "$DEPLOY_PATH"
+          [ -s .env.previous ] || { echo "no previous version recorded; redeploy a known tag by hand"; exit 1; }
+          cp .env.previous .env
+          docker compose up -d
+          ENDSSH
+          echo "::error::Health gate failed. Rolled back to the previous version (see docs/deploy.md)."
+          exit 1

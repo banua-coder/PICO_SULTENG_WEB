@@ -28,6 +28,10 @@ Needs Node 22 and pnpm 10 (`corepack enable`).
 
 Copy `.env.example` to `.env` to override the API base URL. Archive mode is the default (`VITE_LIVE_MODE` unset).
 
+## Deploy
+
+A tag `vX.Y.Z` builds the Docker image (nginx, prerendered `dist/`) and deploys it. The image build fails while review markers remain. See `docs/deploy.md`.
+
 ## Rules
 
 - A feature never imports from another feature. Move shared code to `components/`, `api/` or `app/`.
