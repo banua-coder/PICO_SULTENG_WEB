@@ -30,4 +30,12 @@ describe('feature boundary rule', () => {
   it('allows an import inside the same feature', async () => {
     expect(await lint('src/features/a/ok.ts')).toEqual([])
   })
+
+  it('fails an import of api/wire.ts from outside src/api (relative and alias)', async () => {
+    expect((await lint('src/app/bad.ts')).map((m) => m.ruleId)).toContain('import-x/no-restricted-paths')
+    expect((await lint('src/components/alias.ts')).map((m) => m.ruleId)).toContain('no-restricted-imports')
+  })
+  it('allows wire.ts inside src/api', async () => {
+    expect(await lint('src/api/ok.ts')).toEqual([])
+  })
 })

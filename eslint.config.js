@@ -19,7 +19,13 @@ export default tseslint.config(
     rules: {
       'vue/block-order': ['error', { order: ['script', 'template', 'style'] }],
       'vue/multi-word-component-names': 'off',
+      // no Prettier in this repo: layout rules would only produce noise
+      'vue/max-attributes-per-line': 'off',
+      'vue/singleline-html-element-content-newline': 'off',
+      'vue/html-closing-bracket-newline': 'off',
+      'vue/html-indent': 'off',
       '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', ignoreRestSiblings: true }],
     },
   },
   ...featureBoundary(fileURLToPath(new URL('.', import.meta.url))),
