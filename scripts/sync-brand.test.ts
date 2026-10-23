@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { beforeEach, describe, expect, it } from 'vitest'
@@ -30,13 +30,18 @@ beforeEach(() => {
   ])
     put(source, rel, `file ${rel}`)
   put(source, 'icons/mono/a.svg', '<svg/>')
-  put(source, 'icons/index.json', '{}')
+  put(source, 'icons/index.json', JSON.stringify({ icons: [{ key: 'state.positive' }, { key: 'map' }] }))
 })
 
 describe('sync-brand', () => {
   it('copies the planned files and the check passes', () => {
-    expect(syncBrand({ source, root })).toBe(plan(source).length)
+    expect(syncBrand({ source, root })).toBe(plan(source).length + 1) // + generated icon-keys.ts
     expect(checkBrand({ root, source })).toEqual([])
+  })
+
+  it('generates the IconKey union from the icon index', () => {
+    syncBrand({ source, root })
+    expect(readFileSync(join(root, 'src/assets/brand/icon-keys.ts'), 'utf8')).toContain('["state.positive","map"]')
   })
 
   it('fails when a committed copy is edited by hand', () => {

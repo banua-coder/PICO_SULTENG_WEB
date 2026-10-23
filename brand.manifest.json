@@ -498,5 +498,9 @@
   "public/og-image-1200x630.png": {
     "from": "logo/og/og-image-1200x630.png",
     "sha256": "51d0ade5266a4e75dace9a79445e59fe536ff22236e364d1f716ab453eab6896"
+  },
+  "src/assets/brand/icon-keys.ts": {
+    "from": "icons/index.json (generated)",
+    "sha256": "147f4e435dd9547c7f13bcaa30cfc42c63ce04a1e38cfb633d46e68e45bc3c6b"
   }
 }
