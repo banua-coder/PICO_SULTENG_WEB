@@ -5,7 +5,7 @@ import { visit } from './support/visit'
 // map selection (map.spec). The infographic viewer and the table pager join this file with their pages (part B).
 test('Data toolbar: Tab reaches the area select, both dates and every preset, in order, and keys operate them', async ({ page }) => {
   await visit(page, '/data/provinsi/sulawesi-tengah')
-  await page.getByLabel('Wilayah').focus()
+  await page.getByLabel('Wilayah', { exact: true }).focus()
   const order: string[] = []
   for (let i = 0; i < 24; i++) { // a date input has three Tab stops (day, month, year)
     order.push(await page.evaluate(() => { const e = document.activeElement as HTMLElement; return e.tagName === 'SELECT' ? 'select' : e.getAttribute('type') === 'date' ? 'date' : (e.textContent ?? '').trim() }))
@@ -26,7 +26,7 @@ test('Data toolbar: Tab reaches the area select, both dates and every preset, in
 
 test('Data toolbar: the area select changes the page with the keyboard and keeps the window', async ({ page }) => {
   await visit(page, '/data/indonesia?dari=2021-01-01')
-  const select = page.getByLabel('Wilayah')
+  const select = page.getByLabel('Wilayah', { exact: true })
   await select.focus()
   await select.selectOption('provinsi:bali')
   await expect(page).toHaveURL(/\/data\/provinsi\/bali\?dari=2021-01-01/)

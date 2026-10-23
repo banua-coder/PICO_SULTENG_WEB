@@ -29,7 +29,8 @@ test('fonts are self-hosted and within budget', async ({ page }) => {
   })
   const external: string[] = []
   page.on('request', (r) => {
-    if (!r.url().startsWith('http://localhost') && !r.url().startsWith('https://pico-api.banuacoder.com/')) external.push(r.url())
+    // third-party content images (infographics on i.ibb.co) are allowed; fonts, scripts and styles are not
+    if (r.resourceType() !== 'image' && !r.url().startsWith('http://localhost') && !r.url().startsWith('https://pico-api.banuacoder.com/')) external.push(r.url())
   })
   await page.goto('/')
   await page.evaluate(() => document.fonts.ready)

@@ -27,7 +27,7 @@ test('keyboard: the menu opens, Escape closes it and returns focus to its button
   await hydrated(page)
   const menu = page.getByRole('button', { name: 'Menu' })
   await expect(menu).toHaveAttribute('aria-expanded', 'false')
-  await expect(page.getByRole('link', { name: 'Kontak' })).toBeHidden() // collapsed on a narrow screen
+  await expect(page.getByRole('link', { name: 'Kontak', exact: true })).toBeHidden() // collapsed on a narrow screen
   await menu.focus()
   await page.keyboard.press('Enter')
   await expect(menu).toHaveAttribute('aria-expanded', 'true')

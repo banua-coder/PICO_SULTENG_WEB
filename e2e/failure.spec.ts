@@ -12,26 +12,28 @@ test.describe('Data page: the series request fails', () => {
   test('HTTP 500: an error state with a retry button, and retry brings the figures', async ({ page }) => {
     await page.route(SERIES, (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{"status":"error","error":"boom"}' }))
     await page.goto(CUSTOM_END)
-    const alert = page.getByRole('alert')
+    const alerts = page.getByRole('alert')
+    const alert = alerts.first()
     await expect(alert).toContainText('Data gagal dimuat')
+    await expect(alerts).toHaveCount(3) // the summary, the curves and the Rt section each say it themselves
     await expect(page.getByTestId('summary')).toHaveCount(0)
     await page.unroute(SERIES)
     await page.route(SERIES, (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: fixture('province-72-cases') }))
     await alert.getByRole('button', { name: 'Coba lagi' }).click()
     await expect(page.getByTestId('summary')).toContainText('31 Juli 2021')
-    await expect(alert).toHaveCount(0)
+    await expect(alerts).toHaveCount(0) // one retry refreshes the shared series for all three
   })
 
   test('offline: the same, in English', async ({ page }) => {
     await page.route(SERIES, (r) => r.abort('failed'))
     await visit(page, '/data/provinsi/sulawesi-tengah?dari=2021-07-01&sampai=2021-07-31', { locale: 'id' })
-    await expect(page.getByRole('alert')).toBeVisible()
+    await expect(page.getByRole('alert').first()).toBeVisible()
     await page.unroute(SERIES)
     await page.goto('/en/data/provinsi/sulawesi-tengah?dari=2021-07-01&sampai=2021-07-31')
     await page.route(SERIES, (r) => r.abort('failed'))
     await page.reload()
-    await expect(page.getByRole('alert')).toContainText(/Data could not be loaded|No connection/)
-    await expect(page.getByRole('button', { name: 'Try again' })).toBeVisible()
+    await expect(page.getByRole('alert').first()).toContainText(/Data could not be loaded|No connection/)
+    await expect(page.getByRole('button', { name: 'Try again' }).first()).toBeVisible()
   })
 
   test('the page keeps working when only the series fails: the prerendered figures stay', async ({ page }) => {
