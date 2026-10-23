@@ -15,7 +15,9 @@
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "fixtures:record": "tsx scripts/record-fixtures.ts",
+    "fixtures:check": "tsx scripts/record-fixtures.ts --check"
   },
   "dependencies": {
     "@unhead/vue": "^2.1.17",
@@ -39,6 +41,7 @@
     "globals": "^17.13.0",
     "happy-dom": "^21.0.4",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.72.0",
     "unhead": "2.1.17",
