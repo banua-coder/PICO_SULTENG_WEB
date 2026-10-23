@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 import type { AreaRef } from '@/api/types'
 import { usePageHead } from '@/app/head'
 import SectionHeading from '@/components/SectionHeading.vue'
+import CaseCurves from './components/CaseCurves.vue'
+import RtSection from './components/RtSection.vue'
 import AreaSummary from './components/AreaSummary.vue'
 import DataToolbar from './components/DataToolbar.vue'
 import OdpPdpNote from './components/OdpPdpNote.vue'
@@ -33,6 +35,8 @@ usePageHead({
       <SectionHeading id="ringkasan" :level="2">{{ t('data.summary') }}</SectionHeading>
       <AreaSummary class="mt-5" />
     </section>
+    <CaseCurves class="mt-8" />
+    <RtSection class="mt-8" />
     <OdpPdpNote class="mt-8" />
     <ShareLink class="mt-8" />
   </div>

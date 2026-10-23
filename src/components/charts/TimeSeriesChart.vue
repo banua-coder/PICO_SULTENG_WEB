@@ -17,11 +17,15 @@ const props = withDefaults(
   defineProps<{
     series: LineSeries[]
     kind: 'line' | 'bar'
+    /** a line over the bars (a moving average) */
+    overlay?: LineSeries
+    /** the date whose bar gets the one crimson accent of the view */
+    peak?: IsoDate
     range?: [IsoDate, IsoDate]
     a11y: ChartA11y
     height?: number
   }>(),
-  { range: undefined, height: 280 },
+  { overlay: undefined, peak: undefined, range: undefined, height: 280 },
 )
 const emit = defineEmits<{ 'focus-date': [date: IsoDate | null] }>()
 
@@ -35,7 +39,7 @@ const width = useChartSize(box)
 const markPx = useMarkSize(3)
 const asTable = ref(false)
 
-const model = computed(() => buildModel({ series: props.series, kind: props.kind, range: props.range, width: width.value, height: props.height }))
+const model = computed(() => buildModel({ series: props.series, kind: props.kind, overlay: props.overlay, range: props.range, width: width.value, height: props.height }))
 const drawn = computed(() => width.value > 0)
 const empty = computed(() => model.value.dates.length === 0)
 
@@ -71,7 +75,7 @@ const tipLeft = computed(() => {
   return x > model.value.width / 2 ? { right: `${model.value.width - x + 12}px` } : { left: `${x + 12}px` }
 })
 const hintId = `${uid}-hint`
-const tableCols = computed(() => props.series.map((s) => ({ id: s.id, label: s.label })))
+const tableCols = computed(() => (props.overlay && props.kind === 'bar' ? [...props.series, props.overlay] : props.series).map((s) => ({ id: s.id, label: s.label })))
 const tablePoints = computed(() => model.value.visible)
 </script>
 
@@ -101,7 +105,7 @@ const tablePoints = computed(() => model.value.visible)
               <Axis :plot-w="model.plotW" :plot-h="model.plotH" :x="xLabels" :y="yLabels" />
 
               <template v-for="s in model.series" :key="s.id">
-                <g v-if="kind === 'line'" fill="none" stroke-linejoin="round" :data-series="s.id" :data-role="s.role">
+                <g v-if="kind === 'line' || s.overlay" fill="none" stroke-linejoin="round" :data-series="s.id" :data-role="s.role">
                   <template v-if="lineForm(s.role).doubled">
                     <path :d="s.path" transform="translate(0 -1.75)" :style="{ stroke: `var(--pico-${s.role})` }" stroke-width="1.5" data-line />
                     <path :d="s.path" transform="translate(0 1.75)" :style="{ stroke: `var(--pico-${s.role})` }" stroke-width="1.5" data-line />
@@ -121,9 +125,10 @@ const tablePoints = computed(() => model.value.visible)
                     :y="b.y"
                     :width="b.w"
                     :height="b.h"
-                    :fill="weaveFill(s.role)"
-                    :style="{ stroke: `var(--pico-${s.role})` }"
+                    :fill="b.date === peak ? 'var(--pico-crimson)' : weaveFill(s.role)"
+                    :style="{ stroke: b.date === peak ? 'var(--pico-crimson)' : `var(--pico-${s.role})` }"
                     stroke-width="0.5"
+                    :data-peak="b.date === peak ? '' : undefined"
                     data-bar
                   />
                 </g>

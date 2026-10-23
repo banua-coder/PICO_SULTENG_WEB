@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, provide } from 'vue'
 import { cache } from '@/api/cache'
 import { KABUPATEN_SNAPSHOT_URL } from '@/api/useSeries'
@@ -13,7 +13,14 @@ import OdpPdpNote from './components/OdpPdpNote.vue'
 import { DataPageKey } from './useDataPage'
 import type { DataPageState } from './useDataPage'
 
-afterEach(() => cache.clear())
+// The series is not seeded here, so the new sections show their loading state. Reduced motion keeps the Lottie player out of it.
+beforeEach(() => {
+  vi.spyOn(window, 'matchMedia').mockImplementation((q) => ({ matches: q.includes('reduce'), media: q, addEventListener: () => undefined, removeEventListener: () => undefined }) as unknown as MediaQueryList)
+})
+afterEach(() => {
+  vi.restoreAllMocks()
+  cache.clear()
+})
 
 function seedLatest() {
   cache.seed({

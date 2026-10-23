@@ -9,6 +9,8 @@ import { spreadLabels, weeklySums, xTicks, yDomain, yTicks } from './scales'
 export type ModelInput = {
   series: LineSeries[]
   kind: 'line' | 'bar'
+  /** A line drawn over bars (a moving average). It shares the y scale, the tooltip and the table. Ignored in line mode. */
+  overlay?: LineSeries
   range?: [IsoDate, IsoDate]
   width: number
   height: number
@@ -22,6 +24,8 @@ export type SeriesModel = {
   /** SVG path data. A null value starts a new sub-path (the line breaks). Empty when there is nothing to draw. */
   path: string
   bars: Bar[]
+  /** drawn as a line over the bars */
+  overlay: boolean
   end: { x: number; y: number; labelY: number; value: number } | null
 }
 
@@ -32,7 +36,8 @@ export const MARGIN_LEFT = 52
 export const marginRight = (width: number) => (width < 480 ? 84 : 104)
 
 /** Everything a chart draws, as numbers. Pure, so gaps, ticks and bucketing are unit tested. */
-export function buildModel({ series, kind, range, width, height }: ModelInput) {
+export function buildModel({ series: base, kind, overlay, range, width, height }: ModelInput) {
+  const series = overlay && kind === 'bar' ? [...base, overlay] : base
   const right = marginRight(width)
   const plotW = Math.max(1, width - MARGIN_LEFT - right)
   const plotH = Math.max(1, height - MARGIN_TOP - MARGIN_BOTTOM)
@@ -62,9 +67,9 @@ export function buildModel({ series, kind, range, width, height }: ModelInput) {
     const pts = visible[si]!
     const lastReal = [...pts].reverse().find((p) => p.y !== null)
     const end = lastReal ? { x: x(dayNumber(lastReal.x)), y: y(lastReal.y as number), labelY: 0, value: lastReal.y as number } : null
-    if (kind === 'line') return { id: s.id, role: s.role, label: s.label, path: toPath(downsampleMax(pts, Math.round(plotW))) ?? '', bars: [], end }
+    if (kind === 'line' || si >= base.length) return { id: s.id, role: s.role, label: s.label, path: toPath(downsampleMax(pts, Math.round(plotW))) ?? '', bars: [], overlay: kind === 'bar', end }
     const src = weekly ? weeklySums(pts) : pts
-    const per = series.length
+    const per = base.length
     const barW = Math.max(1, (slotW * 0.8) / per)
     const zero = y(0)
     const bars = src.flatMap((p): Bar[] =>
@@ -72,7 +77,7 @@ export function buildModel({ series, kind, range, width, height }: ModelInput) {
         ? []
         : [{ x: x(dayNumber(p.x)) - slotW * 0.4 + si * barW, y: y(p.y), w: barW, h: Math.max(0, zero - y(p.y)), value: p.y, date: p.x }],
     )
-    return { id: s.id, role: s.role, label: s.label, path: '', bars, end }
+    return { id: s.id, role: s.role, label: s.label, path: '', bars, overlay: false, end }
   })
 
   // direct labels at the line ends, pushed apart so they never overlap

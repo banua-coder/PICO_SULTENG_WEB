@@ -4,7 +4,7 @@ import { usePartners } from '@/api/useContent'
 import { useFormat } from '@/app/useFormat'
 import ProseLayout from '@/components/ProseLayout.vue'
 import ReviewTodo from '@/components/ReviewTodo.vue'
-import { API_BASE, COLUMN_DOCS, FACTS, REPO_URL, SWAGGER_URL } from './facts'
+import { API_BASE, COLUMN_DOCS, FACTS, REPO_URL, SWAGGER_URL } from '@/app/facts'
 
 // English text of the Methodology page (spec 74). Same sections and anchors as the Indonesian text.
 const f = useFormat()

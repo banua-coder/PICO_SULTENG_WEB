@@ -163,7 +163,38 @@
     "odpAsOf": "Last figures on {date}.",
     "odpNote": "ODP/PDP data is not available after {date}, because the source stopped reporting it.",
     "toolbar": "Data options",
-    "rootTitle": "COVID-19 data"
+    "rootTitle": "COVID-19 data",
+    "curves": {
+      "title": "Case curves",
+      "view": "View",
+      "harian": "Daily",
+      "kumulatif": "Cumulative",
+      "average": "7-day average",
+      "dailyPositive": "New positive cases per day",
+      "dailyOthers": "Recovered and deceased per day",
+      "cumulative": "Total cases",
+      "noRows": "No data in this range",
+      "summaryDaily": "Peak daily cases {peak} on {peakDate}. Last value {last} on {lastDate}.",
+      "summaryDailyNoPeak": "No new cases in this range. Last value {last} on {lastDate}.",
+      "summaryCumulative": "Total positive cases {value} on {date}.",
+      "summaryOthers": "Recovered and deceased per day in this range, up to {date}."
+    },
+    "rt": {
+      "title": "Reproduction number (Rt)",
+      "explain": "Rt is the average number of people infected by one case. Above 1, cases grow. Below 1, cases shrink.",
+      "explain2": "Each value belongs to the end of its 7-day window. The 95% credible interval matters more than the single number.",
+      "method": "How it is computed",
+      "last": "Rt {value} ({lo} to {hi}) on {date}",
+      "none": "Rt is not available for this range",
+      "chartTitle": "Rt with its 95% credible interval",
+      "summary": "Last Rt in this range {value} on {date}.",
+      "summaryNone": "No Rt value in this range.",
+      "gaps": "Not computed",
+      "gapRange": "{range}",
+      "gapReason": "Rt is not computed for a 7-day window with fewer than {n} new cases.",
+      "gapMore": "and {n} more ranges",
+      "gapEnd": "After {date} Rt is no longer computed: the calculation stopped in mid-2023."
+    }
   },
   "chart": {
     "table": "View as table",

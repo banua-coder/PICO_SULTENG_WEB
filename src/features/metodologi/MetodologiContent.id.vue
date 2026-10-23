@@ -4,7 +4,7 @@ import { usePartners } from '@/api/useContent'
 import { useFormat } from '@/app/useFormat'
 import ProseLayout from '@/components/ProseLayout.vue'
 import ReviewTodo from '@/components/ReviewTodo.vue'
-import { API_BASE, COLUMN_DOCS, FACTS, REPO_URL, SWAGGER_URL } from './facts'
+import { API_BASE, COLUMN_DOCS, FACTS, REPO_URL, SWAGGER_URL } from '@/app/facts'
 
 // Indonesian text of the Methodology page (spec 74). Every figure comes from FACTS, which facts.test.ts checks against the data.
 const f = useFormat()

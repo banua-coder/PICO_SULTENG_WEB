@@ -163,7 +163,38 @@
     "odpAsOf": "Angka terakhir pada {date}.",
     "odpNote": "Data ODP/PDP tidak tersedia setelah {date}, karena sumber berhenti melaporkannya.",
     "toolbar": "Pilihan data",
-    "rootTitle": "Data COVID-19"
+    "rootTitle": "Data COVID-19",
+    "curves": {
+      "title": "Kurva kasus",
+      "view": "Tampilan",
+      "harian": "Harian",
+      "kumulatif": "Kumulatif",
+      "average": "rata-rata 7 hari",
+      "dailyPositive": "Kasus positif baru per hari",
+      "dailyOthers": "Sembuh dan meninggal per hari",
+      "cumulative": "Total kasus",
+      "noRows": "Tidak ada data pada rentang ini",
+      "summaryDaily": "Puncak kasus harian {peak} pada {peakDate}. Nilai terakhir {last} pada {lastDate}.",
+      "summaryDailyNoPeak": "Tidak ada kasus baru pada rentang ini. Nilai terakhir {last} pada {lastDate}.",
+      "summaryCumulative": "Total kasus positif {value} pada {date}.",
+      "summaryOthers": "Sembuh dan meninggal per hari pada rentang ini, sampai {date}."
+    },
+    "rt": {
+      "title": "Angka reproduksi (Rt)",
+      "explain": "Rt adalah rata-rata jumlah orang yang tertular dari satu kasus. Di atas 1, kasus bertambah. Di bawah 1, kasus berkurang.",
+      "explain2": "Setiap nilai dicatat pada akhir jendela 7 harinya. Rentang kredibel 95% lebih penting daripada satu angka.",
+      "method": "Cara menghitungnya",
+      "last": "Rt {value} ({lo} sampai {hi}) pada {date}",
+      "none": "Rt tidak tersedia untuk rentang ini",
+      "chartTitle": "Rt dengan rentang kredibel 95%",
+      "summary": "Rt terakhir pada rentang ini {value} pada {date}.",
+      "summaryNone": "Tidak ada nilai Rt pada rentang ini.",
+      "gaps": "Tidak dihitung",
+      "gapRange": "{range}",
+      "gapReason": "Rt tidak dihitung untuk jendela 7 hari dengan kurang dari {n} kasus baru.",
+      "gapMore": "dan {n} rentang lain",
+      "gapEnd": "Setelah {date} Rt tidak dihitung lagi: perhitungannya berhenti pada pertengahan 2023."
+    }
   },
   "chart": {
     "table": "Lihat sebagai tabel",

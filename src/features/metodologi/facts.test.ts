@@ -6,7 +6,7 @@ import { nationalSeries, provinceSeries } from '@/api/normalize/series'
 import { testPeriods } from '@/api/normalize/stats'
 import { vaccinationSeries } from '@/api/normalize/vaccination'
 import { fx, type WireNationalCase, type WireProvinceCase } from '../../../test/fixtures/load'
-import { COLUMN_DOCS, FACTS } from './facts'
+import { COLUMN_DOCS, FACTS } from '@/app/facts'
 
 // The page states these as facts: they must match what the API serves (the fixtures are recorded from it).
 describe('Methodology facts', () => {

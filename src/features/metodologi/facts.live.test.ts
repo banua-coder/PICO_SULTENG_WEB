@@ -5,7 +5,7 @@ import { fetchJson } from '@/api/client'
 import { isArrayOf, isWireNationalCase, isWireProvinceCase } from '@/api/guards'
 import { nationalSeries, provinceSeries } from '@/api/normalize/series'
 import { INDONESIA, SULTENG } from '@/app/areas'
-import { FACTS } from './facts'
+import { FACTS } from '@/app/facts'
 
 describe.skipIf(!process.env.LIVE_API)('Methodology facts live (spec 74)', () => {
   it('the last Rt dates and the ODP end match the served data', async () => {
