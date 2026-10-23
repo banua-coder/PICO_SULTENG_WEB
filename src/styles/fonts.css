@@ -1,0 +1,16 @@
+/* Self-hosted subsets built by scripts/build-fonts.py. No Google Fonts request. */
+@font-face {
+  font-family: 'Archivo';
+  src: url('../assets/fonts/Archivo-display.woff2') format('woff2');
+  font-weight: 650 760;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('../assets/fonts/SourceSans3-text.woff2') format('woff2');
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
