@@ -1,0 +1,502 @@
+{
+  "src/assets/brand/pico-tokens.css": {
+    "from": "tokens/pico-tokens.css",
+    "sha256": "6e57224b82d6a2fd21a50d3629d9caa02760469e00a9f2e959059d747d32b6c7"
+  },
+  "src/assets/brand/icons/mono/pico-action-download.svg": {
+    "from": "icons/mono/pico-action-download.svg",
+    "sha256": "fbe361bdffc4ea71e36bb98fbcc94f4a8386b13707cfafcddbbeedec96d5e04b"
+  },
+  "src/assets/brand/icons/mono/pico-action-export.svg": {
+    "from": "icons/mono/pico-action-export.svg",
+    "sha256": "f2db6ffbec5760eb3a480c5d0531723ab4bb81ff0797fb27af88a66cdb909698"
+  },
+  "src/assets/brand/icons/mono/pico-action-share.svg": {
+    "from": "icons/mono/pico-action-share.svg",
+    "sha256": "0ce0877bd85f6e5f0b40bb0fc13ab0c3a54b1a36f5a2f5e2734e81131d851299"
+  },
+  "src/assets/brand/icons/mono/pico-calendar-range.svg": {
+    "from": "icons/mono/pico-calendar-range.svg",
+    "sha256": "6f24dbe09a97f499cd78251204167e058578d1520075de08be06343fb0f1ca27"
+  },
+  "src/assets/brand/icons/mono/pico-donation.svg": {
+    "from": "icons/mono/pico-donation.svg",
+    "sha256": "101e1aefcb1a7d6577fcc8bf8e4de4ff182b9f6a7db145eaf58eba7e89e054b1"
+  },
+  "src/assets/brand/icons/mono/pico-facility-bed.svg": {
+    "from": "icons/mono/pico-facility-bed.svg",
+    "sha256": "34be0602fff53509b9f0cac23708697cdd86af032b30673fe0dd9dd8fe399f0c"
+  },
+  "src/assets/brand/icons/mono/pico-facility-hospital.svg": {
+    "from": "icons/mono/pico-facility-hospital.svg",
+    "sha256": "c896985ef6ccbebb505922c84fc37b12dcdfc1d6e96be61c88f1849f000af6d9"
+  },
+  "src/assets/brand/icons/mono/pico-info.svg": {
+    "from": "icons/mono/pico-info.svg",
+    "sha256": "f4d4186bf65f4f21e9129afc593de95c63b6ddba5de8e7713939689500d5ff76"
+  },
+  "src/assets/brand/icons/mono/pico-infographic.svg": {
+    "from": "icons/mono/pico-infographic.svg",
+    "sha256": "fec09d315ef898f74db8c82b9bb93401e890a2a4386d27581c447673bfea7872"
+  },
+  "src/assets/brand/icons/mono/pico-isoman.svg": {
+    "from": "icons/mono/pico-isoman.svg",
+    "sha256": "61efe4e202561bda823d6fcec6529b486c72c1013231d33d6b37ee465caad042"
+  },
+  "src/assets/brand/icons/mono/pico-level-kabupaten.svg": {
+    "from": "icons/mono/pico-level-kabupaten.svg",
+    "sha256": "7b53f71b9a82b7bc6ba9c0948f68d799ba834b24e0d992ee54328aeee5aab08e"
+  },
+  "src/assets/brand/icons/mono/pico-level-national.svg": {
+    "from": "icons/mono/pico-level-national.svg",
+    "sha256": "6c7a8d2d3063e93b4c35a100bd2f4ed88eb8841bdeb324eaf3e4e01835cbda57"
+  },
+  "src/assets/brand/icons/mono/pico-level-province.svg": {
+    "from": "icons/mono/pico-level-province.svg",
+    "sha256": "d7245c55fd830cfa3c8a49b91f386eddf98e90a5937ca1f76b798eb268893831"
+  },
+  "src/assets/brand/icons/mono/pico-map.svg": {
+    "from": "icons/mono/pico-map.svg",
+    "sha256": "653cf456468071011293c7b922404bf6b86acc9229c04c44e8e1a918fb5c2a55"
+  },
+  "src/assets/brand/icons/mono/pico-metric-rt.svg": {
+    "from": "icons/mono/pico-metric-rt.svg",
+    "sha256": "8ce91adc455f70af0845792eab50f02d0e5e0ed1c034357ad59090c309dc24e4"
+  },
+  "src/assets/brand/icons/mono/pico-prevention-distancing.svg": {
+    "from": "icons/mono/pico-prevention-distancing.svg",
+    "sha256": "1a7946acc87e969d03206e8e4737167e62c395f885b05f5254ec377730d1eab2"
+  },
+  "src/assets/brand/icons/mono/pico-prevention-handwash.svg": {
+    "from": "icons/mono/pico-prevention-handwash.svg",
+    "sha256": "e9b54d3cdb3e5c3258080e469af0444fbe141a6d4b1f3184cb259782157b8e16"
+  },
+  "src/assets/brand/icons/mono/pico-prevention-mask.svg": {
+    "from": "icons/mono/pico-prevention-mask.svg",
+    "sha256": "85259a2477d1396bdc9cd07088dc4911d9b95fb8297cf7872f4ed46999dc6ea1"
+  },
+  "src/assets/brand/icons/mono/pico-state-active.svg": {
+    "from": "icons/mono/pico-state-active.svg",
+    "sha256": "8621b65e6fed9f30e606087ffee1cf5ac90b3d8f45f313372bcc50aefe85b9de"
+  },
+  "src/assets/brand/icons/mono/pico-state-deceased.svg": {
+    "from": "icons/mono/pico-state-deceased.svg",
+    "sha256": "7d53a1d1b12334f8672e8803a7217c9424e08fa455c0f67ff67b7870d012438f"
+  },
+  "src/assets/brand/icons/mono/pico-state-positive.svg": {
+    "from": "icons/mono/pico-state-positive.svg",
+    "sha256": "095d786faf8255e82b2eb05c759f6b397d036c4681d4c23417f3bc5b0f50315b"
+  },
+  "src/assets/brand/icons/mono/pico-state-recovered.svg": {
+    "from": "icons/mono/pico-state-recovered.svg",
+    "sha256": "f4c830d333e777ba9fab4516f1bbdb35f388dabb64a9130580d99c56f4212e15"
+  },
+  "src/assets/brand/icons/mono/pico-symptoms.svg": {
+    "from": "icons/mono/pico-symptoms.svg",
+    "sha256": "a89a360619bb77d60b391247752107ce05448b3172ccc0a948b3662a051cde9a"
+  },
+  "src/assets/brand/icons/mono/pico-task-force.svg": {
+    "from": "icons/mono/pico-task-force.svg",
+    "sha256": "22f5c7eccbf17b5f3f25b024ce1dd1602cfad404297e9400b2fa390ccb464119"
+  },
+  "src/assets/brand/icons/mono/pico-telemedicine.svg": {
+    "from": "icons/mono/pico-telemedicine.svg",
+    "sha256": "03201dba4229c367c79ba020c8579be4a9d6b3c0fed13dc2b684be8bf2752fbd"
+  },
+  "src/assets/brand/icons/mono/pico-test-pcr.svg": {
+    "from": "icons/mono/pico-test-pcr.svg",
+    "sha256": "f557f9676b0fb47395ac64338cd9b9edc1aa4f7aeb01624c62f785e655b3c955"
+  },
+  "src/assets/brand/icons/mono/pico-test-rapid.svg": {
+    "from": "icons/mono/pico-test-rapid.svg",
+    "sha256": "092e3661cb85b880f1cba5febe580177f6377c0e05553364016bd965dc89ac5c"
+  },
+  "src/assets/brand/icons/mono/pico-vaccine.svg": {
+    "from": "icons/mono/pico-vaccine.svg",
+    "sha256": "f63b134099ea82b84d01db6c83b76c6edfd5188cf63c82941882ec4156e6d239"
+  },
+  "src/assets/brand/icons/duotone/pico-action-download.svg": {
+    "from": "icons/duotone/pico-action-download.svg",
+    "sha256": "37b2cfd574cb197db6ead74990c4288c2f7304a6a0fd474b8912483ac77c579c"
+  },
+  "src/assets/brand/icons/duotone/pico-action-export.svg": {
+    "from": "icons/duotone/pico-action-export.svg",
+    "sha256": "4493b88309022717cf04a54f73cea072c00b89bce09d28cee6b4b4ad1d4f6b16"
+  },
+  "src/assets/brand/icons/duotone/pico-action-share.svg": {
+    "from": "icons/duotone/pico-action-share.svg",
+    "sha256": "47362116f8082d63d2acc667c7b904469098a96901807e21f3d7f72d33d6a958"
+  },
+  "src/assets/brand/icons/duotone/pico-calendar-range.svg": {
+    "from": "icons/duotone/pico-calendar-range.svg",
+    "sha256": "71a9a3ae9b19f6c1e2afa8432f356cc2e84ef712aa15300d1e94cef43d6593a0"
+  },
+  "src/assets/brand/icons/duotone/pico-donation.svg": {
+    "from": "icons/duotone/pico-donation.svg",
+    "sha256": "b1bc07faa184ebc51aff71017b998745bf64d367858786d6b1fbe602a8b9def0"
+  },
+  "src/assets/brand/icons/duotone/pico-facility-bed.svg": {
+    "from": "icons/duotone/pico-facility-bed.svg",
+    "sha256": "ed1a6f6b9e13c962cbeb230c3f8d8ae91c2e81dc0c520c56383e3e5a33af465d"
+  },
+  "src/assets/brand/icons/duotone/pico-facility-hospital.svg": {
+    "from": "icons/duotone/pico-facility-hospital.svg",
+    "sha256": "862df42d3694f69f95e86eeca5ef27445bc9147a93c252a564ab45ce42d44915"
+  },
+  "src/assets/brand/icons/duotone/pico-info.svg": {
+    "from": "icons/duotone/pico-info.svg",
+    "sha256": "6f105d9b2d7fa2c730dfa67fa681f9e2d8a75e4120c003cdef17120644a1014e"
+  },
+  "src/assets/brand/icons/duotone/pico-infographic.svg": {
+    "from": "icons/duotone/pico-infographic.svg",
+    "sha256": "9e3df5ae36ff7f5d8a592515da91b5ab28f70c2b01f2c83da9031457ab0716c7"
+  },
+  "src/assets/brand/icons/duotone/pico-isoman.svg": {
+    "from": "icons/duotone/pico-isoman.svg",
+    "sha256": "528a635c66e599935ab5a5c12caaaa119bf77b0ca54a4fe0ccef774a9bb7a7b2"
+  },
+  "src/assets/brand/icons/duotone/pico-level-kabupaten.svg": {
+    "from": "icons/duotone/pico-level-kabupaten.svg",
+    "sha256": "7589a30a33f06816caef3e53d860802d68bba799da720c907cad143c9f85a95b"
+  },
+  "src/assets/brand/icons/duotone/pico-level-national.svg": {
+    "from": "icons/duotone/pico-level-national.svg",
+    "sha256": "69bfe45781a049a6bbe8dca32777422b9624e29ed1353bdac03d12ea55bd7f2e"
+  },
+  "src/assets/brand/icons/duotone/pico-level-province.svg": {
+    "from": "icons/duotone/pico-level-province.svg",
+    "sha256": "20de32aef0ad67b12eeee86aa7d1c751923e7b009cd74b4f2ed44b69ff5d83f9"
+  },
+  "src/assets/brand/icons/duotone/pico-map.svg": {
+    "from": "icons/duotone/pico-map.svg",
+    "sha256": "b4e538f35d99c4ce7bb3e5b382854df8dabbbb614cd4ed7363ce9c0e6adeb1a5"
+  },
+  "src/assets/brand/icons/duotone/pico-metric-rt.svg": {
+    "from": "icons/duotone/pico-metric-rt.svg",
+    "sha256": "0aa5d573229d66aaa9392e280eff23033bbca758f86cc9d908cb2b1b37221d2c"
+  },
+  "src/assets/brand/icons/duotone/pico-prevention-distancing.svg": {
+    "from": "icons/duotone/pico-prevention-distancing.svg",
+    "sha256": "d599e647ed1435767bc35afc4c1a528321a257903c5501878d085bfdfb341681"
+  },
+  "src/assets/brand/icons/duotone/pico-prevention-handwash.svg": {
+    "from": "icons/duotone/pico-prevention-handwash.svg",
+    "sha256": "b4bcf1d05d0cbf8744cdc2aef59d915ceef3a2245528c59b84cc06e88fa25823"
+  },
+  "src/assets/brand/icons/duotone/pico-prevention-mask.svg": {
+    "from": "icons/duotone/pico-prevention-mask.svg",
+    "sha256": "ac1a2d8c0443d4c6628f9f3ca11ab302e490f559300a876f7c5225644914e7c7"
+  },
+  "src/assets/brand/icons/duotone/pico-state-active.svg": {
+    "from": "icons/duotone/pico-state-active.svg",
+    "sha256": "e3822da2aa9f2811ecd7cf8ff3f13cb9a60f1d91bbe61fc0fc1567d263ffbe2a"
+  },
+  "src/assets/brand/icons/duotone/pico-state-deceased.svg": {
+    "from": "icons/duotone/pico-state-deceased.svg",
+    "sha256": "f7d3e3af2f6cb441206449dcf76c2fe6e08800cdc70e368ad82e91991b37a418"
+  },
+  "src/assets/brand/icons/duotone/pico-state-positive.svg": {
+    "from": "icons/duotone/pico-state-positive.svg",
+    "sha256": "2872a0b8ea5dce927a03f9ae61ecdea0f9d17dfab54ba6610f0030e54d9fa53d"
+  },
+  "src/assets/brand/icons/duotone/pico-state-recovered.svg": {
+    "from": "icons/duotone/pico-state-recovered.svg",
+    "sha256": "67478a3ae8b30b719637602a86f90d878104ff77dbb84362fdd8155d8b014aba"
+  },
+  "src/assets/brand/icons/duotone/pico-symptoms.svg": {
+    "from": "icons/duotone/pico-symptoms.svg",
+    "sha256": "1cef7981a8ce6f121ea92aad7c24cc3ef8e13961ba0247499fdf1527a1835721"
+  },
+  "src/assets/brand/icons/duotone/pico-task-force.svg": {
+    "from": "icons/duotone/pico-task-force.svg",
+    "sha256": "21cb9876ca179250dee3a4f33702102f8444b8564627b451d4a9c3572ad6b0a9"
+  },
+  "src/assets/brand/icons/duotone/pico-telemedicine.svg": {
+    "from": "icons/duotone/pico-telemedicine.svg",
+    "sha256": "a7840ef8c1b60cd8b83119ac7766d3fb99c843d4ce90e58bd3eb030d0e8b43db"
+  },
+  "src/assets/brand/icons/duotone/pico-test-pcr.svg": {
+    "from": "icons/duotone/pico-test-pcr.svg",
+    "sha256": "18a66e6fff844614c89816938e75bb022b71a5d250afdb12edd3ed347550425c"
+  },
+  "src/assets/brand/icons/duotone/pico-test-rapid.svg": {
+    "from": "icons/duotone/pico-test-rapid.svg",
+    "sha256": "7c3992dcea4d73c2e733ebc3a0ae8cad8b964b5f12eb629ae99a40703f836309"
+  },
+  "src/assets/brand/icons/duotone/pico-vaccine.svg": {
+    "from": "icons/duotone/pico-vaccine.svg",
+    "sha256": "9d03b56f6d323406c50b77923db0a68d45b1ab528efa286aa5b5c0c21b0f2c42"
+  },
+  "src/assets/brand/icons/index.json": {
+    "from": "icons/index.json",
+    "sha256": "fabba6b9da83146977f66de3bc6571a6973c41bedae2a866f75529937562cd81"
+  },
+  "src/assets/brand/illustrations/pico-hero-tenun-kabupaten.svg": {
+    "from": "illustrations/pico-hero-tenun-kabupaten.svg",
+    "sha256": "450bc06b0b737a5db1c06cb86ed16d62246f71774eddb9963e8944e72f549c29"
+  },
+  "src/assets/brand/illustrations/pico-state-empty.svg": {
+    "from": "illustrations/pico-state-empty.svg",
+    "sha256": "ef97c3f25ebd671a1c88291199007a87643ccf2316f01a6898da5e69fda94e49"
+  },
+  "src/assets/brand/illustrations/pico-state-error.svg": {
+    "from": "illustrations/pico-state-error.svg",
+    "sha256": "c5c9aa3ab4b65b9961f8fecc5aea3e9998806e9bcbedd1fc3a9dd970ba0aab5f"
+  },
+  "src/assets/brand/illustrations/pico-state-not-found.svg": {
+    "from": "illustrations/pico-state-not-found.svg",
+    "sha256": "2639647f373f9cca7c772b84935f48e4c6d5cb9ce016d26631f40a75dee0cfee"
+  },
+  "src/assets/brand/illustrations/pico-state-offline.svg": {
+    "from": "illustrations/pico-state-offline.svg",
+    "sha256": "43adf6e0c486f4cd1a69479bc8e775f3206cc80646a1442840e74f4bbca8ee95"
+  },
+  "src/assets/brand/illustrations/pico-tip-keep-distance.svg": {
+    "from": "illustrations/pico-tip-keep-distance.svg",
+    "sha256": "329c38803df22ee823ff2043cf4521c0b7007fb6f8480f8dc23f83849a05a1f1"
+  },
+  "src/assets/brand/illustrations/pico-tip-vaccinated.svg": {
+    "from": "illustrations/pico-tip-vaccinated.svg",
+    "sha256": "288bfd8aa8b29dcc68798feef56f63c65a69a2ad0defcd87b44869b10f9f34fa"
+  },
+  "src/assets/brand/illustrations/pico-tip-wash-hands.svg": {
+    "from": "illustrations/pico-tip-wash-hands.svg",
+    "sha256": "27e77b5138dd99a38862e20749b7ec7667e1109fdace0415505a497e789c8696"
+  },
+  "src/assets/brand/illustrations/pico-tip-wear-mask.svg": {
+    "from": "illustrations/pico-tip-wear-mask.svg",
+    "sha256": "27b2033014c956499a1070654e6e3033f82ae35a3695ead5fe71888d2300fd71"
+  },
+  "src/assets/brand/patterns/band-anyaman-keranjang.svg": {
+    "from": "patterns/band-anyaman-keranjang.svg",
+    "sha256": "08ed516114449a4c21ef90c0e36072e0d958d8d090645bb50f0b53ac425e1796"
+  },
+  "src/assets/brand/patterns/band-berundak.svg": {
+    "from": "patterns/band-berundak.svg",
+    "sha256": "e0f677db580ec146ecdeb8f6e435d0172f66d2827ae94096aaf96bf7548c0c98"
+  },
+  "src/assets/brand/patterns/band-bomba-kota.svg": {
+    "from": "patterns/band-bomba-kota.svg",
+    "sha256": "119857f8de0519187849ce4fee3d9c28da0c03f240f791604c6ebe93cf89bc31"
+  },
+  "src/assets/brand/patterns/band-bomba.svg": {
+    "from": "patterns/band-bomba.svg",
+    "sha256": "68912b12d6939f37b30daca2c80645e0522372d6a4c09f40ac2c9ebf624837c4"
+  },
+  "src/assets/brand/patterns/band-buya-subi.svg": {
+    "from": "patterns/band-buya-subi.svg",
+    "sha256": "11272e5e18810c9757b516fdadccb5a30f0a29722afed1433c383f76b891120a"
+  },
+  "src/assets/brand/patterns/band-huck.svg": {
+    "from": "patterns/band-huck.svg",
+    "sha256": "e54a9ec38205c10981d03f2d1325770028815e65c6dba7885bdc1b3661286be5"
+  },
+  "src/assets/brand/patterns/band-kepar-balik.svg": {
+    "from": "patterns/band-kepar-balik.svg",
+    "sha256": "f4d1f4e24604d796227e5d21a974f72ec44215f0c36c9953e4169beab4dbc683"
+  },
+  "src/assets/brand/patterns/band-kepar-ganda.svg": {
+    "from": "patterns/band-kepar-ganda.svg",
+    "sha256": "b8e0b530352def0df6e57154694b48553027ce01249430e750705ddbfe295e47"
+  },
+  "src/assets/brand/patterns/band-kepar-patah.svg": {
+    "from": "patterns/band-kepar-patah.svg",
+    "sha256": "b989e26263acae1a367b6c7a6fd311197d42872a8e29075df00513ca56acbe13"
+  },
+  "src/assets/brand/patterns/band-kepar.svg": {
+    "from": "patterns/band-kepar.svg",
+    "sha256": "53bda1330540da18cc4a3b610a35061bfafc79d1f90d9b8b780039ca4c53f499"
+  },
+  "src/assets/brand/patterns/band-kulit-kayu.svg": {
+    "from": "patterns/band-kulit-kayu.svg",
+    "sha256": "810d42714ccc214e3e0a0ebdba6a8e679fff52f2df9c3c99b2249441ee83b33f"
+  },
+  "src/assets/brand/patterns/band-lajur-lusi.svg": {
+    "from": "patterns/band-lajur-lusi.svg",
+    "sha256": "532a2db280be012a1846a2c375921e524ffcbd74982de3a3c3f3c9bdfd0bb34f"
+  },
+  "src/assets/brand/patterns/band-mata-burung.svg": {
+    "from": "patterns/band-mata-burung.svg",
+    "sha256": "ed20ad40ec28f62fb06ee59f81e3360a3adfe680a10a8bbe701e8bf0a22d44a9"
+  },
+  "src/assets/brand/patterns/band-tulang-ikan.svg": {
+    "from": "patterns/band-tulang-ikan.svg",
+    "sha256": "5c0f4d096089ca541a681457c3b173a9905e37569c1817b55e2bf8577cacd864"
+  },
+  "src/assets/brand/patterns/index.json": {
+    "from": "patterns/index.json",
+    "sha256": "21c3036e61c5f1d8177bd36d2d2d1b373d725ff9058fad087845a94fd2ab3fbe"
+  },
+  "src/assets/brand/patterns/pico-weave-active.svg": {
+    "from": "patterns/pico-weave-active.svg",
+    "sha256": "50434e45393e4e8f432bdbb3a3682490c9b44dc03659b3dfa6919b8320c31549"
+  },
+  "src/assets/brand/patterns/pico-weave-deceased.svg": {
+    "from": "patterns/pico-weave-deceased.svg",
+    "sha256": "fe6c4a5e3900c3035663d0a7e62f018e93fa3847afa3fe95e82323fb29d7d4cb"
+  },
+  "src/assets/brand/patterns/pico-weave-defs.svg": {
+    "from": "patterns/pico-weave-defs.svg",
+    "sha256": "49e8ec71e4d945eb44b3496498e3e9e85c23e27463487bffc24fafb696c2790f"
+  },
+  "src/assets/brand/patterns/pico-weave-positive.svg": {
+    "from": "patterns/pico-weave-positive.svg",
+    "sha256": "bbb11b30e8cf7c61312040f12371855369edc536cabd4aa985fc3ed7cd6f29ea"
+  },
+  "src/assets/brand/patterns/pico-weave-recovered.svg": {
+    "from": "patterns/pico-weave-recovered.svg",
+    "sha256": "6d171757dea0f7bc5604014700b836baf178633a094712a9716d28441eace594"
+  },
+  "src/assets/brand/patterns/pico-weave-rt.svg": {
+    "from": "patterns/pico-weave-rt.svg",
+    "sha256": "49bd4fb6fef4a06fd6d5cb6de29094815f97d6539cbb2620a04bf56f87952178"
+  },
+  "src/assets/brand/lottie/pico-error.json": {
+    "from": "lottie/pico-error.json",
+    "sha256": "c9ff294f7fb2f9c4d553946c079ad870bb4882fd53f38f38f73c3591a987d1a5"
+  },
+  "src/assets/brand/lottie/pico-loading.json": {
+    "from": "lottie/pico-loading.json",
+    "sha256": "e4bf12c74afe562b3477f4d90779dac5b922af38c9c27f5faa15b8716b7ed5e4"
+  },
+  "src/assets/brand/lottie/pico-logo-reveal.json": {
+    "from": "lottie/pico-logo-reveal.json",
+    "sha256": "d2614891587d029b028d70472b2812f582287a8ee1b235b05db0db320789681b"
+  },
+  "src/assets/brand/lottie/pico-no-internet.json": {
+    "from": "lottie/pico-no-internet.json",
+    "sha256": "68d704d99a237e4e634615eabea2990b43ff92348fe6233c6de39a54b4167a64"
+  },
+  "src/assets/brand/lottie/pico-success.json": {
+    "from": "lottie/pico-success.json",
+    "sha256": "374dc49bc9955b84361232529a81c3a51b7c2b90f4cb706dbb5825752d46515b"
+  },
+  "src/assets/brand/lottie/pico-vaccinated.json": {
+    "from": "lottie/pico-vaccinated.json",
+    "sha256": "955c81d9b0f884dcdef84e7d2d7a17c1bb666428b010861461cb1eee1f468e70"
+  },
+  "src/assets/brand/lottie/static/pico-error.svg": {
+    "from": "lottie/static/pico-error.svg",
+    "sha256": "4c3ff0373956e17354182ea754c38f8fd6e8e46522271cc9b0eeb5a00be65071"
+  },
+  "src/assets/brand/lottie/static/pico-loading.svg": {
+    "from": "lottie/static/pico-loading.svg",
+    "sha256": "98d824b17f2317b36f370a087f072cf3198e3849313c45f4b3dc284897022a64"
+  },
+  "src/assets/brand/lottie/static/pico-logo-reveal.svg": {
+    "from": "lottie/static/pico-logo-reveal.svg",
+    "sha256": "1a1d6a15db7e8595d587569bc65d6fdee472f7adeb77d67449ed29b7fc9697ae"
+  },
+  "src/assets/brand/lottie/static/pico-no-internet.svg": {
+    "from": "lottie/static/pico-no-internet.svg",
+    "sha256": "10b350066e57892596dd7898ff73cfb041a788ab59b6fce6a3200dabde839c51"
+  },
+  "src/assets/brand/lottie/static/pico-success.svg": {
+    "from": "lottie/static/pico-success.svg",
+    "sha256": "409a0f7b3df853aeb46b6e93e856c32f5fdd0ef672e4d466c450bff1a1fed7ac"
+  },
+  "src/assets/brand/lottie/static/pico-vaccinated.svg": {
+    "from": "lottie/static/pico-vaccinated.svg",
+    "sha256": "15de62f571d39aa75d577a6533a50d7902d0230d9adb5e7b6b108b5ab11fc6bf"
+  },
+  "src/assets/brand/logo/pico-lockup-horizontal-color-dark.svg": {
+    "from": "logo/pico-lockup-horizontal-color-dark.svg",
+    "sha256": "f8db24b1d5479c75e2f3806924811eecd3d9df990f33b7f0f1f9857d9eb6788f"
+  },
+  "src/assets/brand/logo/pico-lockup-horizontal-color.svg": {
+    "from": "logo/pico-lockup-horizontal-color.svg",
+    "sha256": "924fa46c70f8038644249b06c582185c968e62bc26f49832f9c7f3de8f7c4a26"
+  },
+  "src/assets/brand/logo/pico-lockup-horizontal-mono.svg": {
+    "from": "logo/pico-lockup-horizontal-mono.svg",
+    "sha256": "98d3b9a1e1ec45b707e3f9c81f236079fd382603f64ea407ae5bab741fe3a4c3"
+  },
+  "src/assets/brand/logo/pico-lockup-horizontal-reversed.svg": {
+    "from": "logo/pico-lockup-horizontal-reversed.svg",
+    "sha256": "d91309033ba4d587a9051b5dce847072780b6b5965e4787b32a72d1f3117d0d8"
+  },
+  "src/assets/brand/logo/pico-lockup-stacked-color-dark.svg": {
+    "from": "logo/pico-lockup-stacked-color-dark.svg",
+    "sha256": "c8cd84c324e02fff84d0f205c20a06eeb06cfa9887fd57644942675ff8e96a86"
+  },
+  "src/assets/brand/logo/pico-lockup-stacked-color.svg": {
+    "from": "logo/pico-lockup-stacked-color.svg",
+    "sha256": "462926ad80bcaf09aa5e78e262784a44b1d54659fef6362f4da8c95bd5d9acc1"
+  },
+  "src/assets/brand/logo/pico-lockup-stacked-mono.svg": {
+    "from": "logo/pico-lockup-stacked-mono.svg",
+    "sha256": "98d0990fbbd7b799b443fae752cfeade1bbec4a317c434c6f03b928e81d2b27a"
+  },
+  "src/assets/brand/logo/pico-lockup-stacked-reversed.svg": {
+    "from": "logo/pico-lockup-stacked-reversed.svg",
+    "sha256": "26bbbce8936c3705dc71805e89aef6180a5225e81eec75419ffee168ba8d3f12"
+  },
+  "src/assets/brand/logo/pico-mark-color-dark.svg": {
+    "from": "logo/pico-mark-color-dark.svg",
+    "sha256": "99b401a9dd28c12f0153ee67cd4b8795b2d31156a70962f58f02b96cbdbb2fa8"
+  },
+  "src/assets/brand/logo/pico-mark-color.svg": {
+    "from": "logo/pico-mark-color.svg",
+    "sha256": "99b401a9dd28c12f0153ee67cd4b8795b2d31156a70962f58f02b96cbdbb2fa8"
+  },
+  "src/assets/brand/logo/pico-mark-mono.svg": {
+    "from": "logo/pico-mark-mono.svg",
+    "sha256": "06c8af0618c7da6f92d6f28b85b09e315932de9993792428ba7180e9275a7b78"
+  },
+  "src/assets/brand/logo/pico-mark-reversed.svg": {
+    "from": "logo/pico-mark-reversed.svg",
+    "sha256": "410bda2b2accbc5ae7c15354899f1ea1a4e7538ce32212f58c55abbe45585bd6"
+  },
+  "src/assets/brand/logo/pico-mark-small-color.svg": {
+    "from": "logo/pico-mark-small-color.svg",
+    "sha256": "b136c5fdcfee3988e1842cbe1d816cc02a042b2bdf9da58f0e6355bc37ba2f5d"
+  },
+  "src/assets/brand/logo/pico-mark-small-mono.svg": {
+    "from": "logo/pico-mark-small-mono.svg",
+    "sha256": "8d135b14ecbac2162edaa4f7789d6359d8c4bc9f02bb9f89dbb953ab14faff59"
+  },
+  "src/assets/brand/logo/pico-wordmark-color-dark.svg": {
+    "from": "logo/pico-wordmark-color-dark.svg",
+    "sha256": "c6712e6be67de44c91ee2a0e5957747cf0cc5b72e926ed2d76bc98b9ed4d3e3a"
+  },
+  "src/assets/brand/logo/pico-wordmark-color.svg": {
+    "from": "logo/pico-wordmark-color.svg",
+    "sha256": "d8dfb073d6b9605e1dc06bc48f8cdde3ec83e7593ac82313fbbed26766738813"
+  },
+  "src/assets/brand/logo/pico-wordmark-mono.svg": {
+    "from": "logo/pico-wordmark-mono.svg",
+    "sha256": "2d7d29dd1d80b0d238ba8ac7eb5f062c330bb5763bc5ce1d06a6f48c08529a74"
+  },
+  "src/assets/brand/logo/pico-wordmark-reversed.svg": {
+    "from": "logo/pico-wordmark-reversed.svg",
+    "sha256": "e2c2470c3591997a892de469786fac2f46b0987e48d1833b29e510b797afc6d5"
+  },
+  "public/favicon.svg": {
+    "from": "logo/favicon/favicon.svg",
+    "sha256": "3b47fe6516462193dd4524a3c6fcd154f1cbedb1182de0b471ea940c090005ed"
+  },
+  "public/favicon.ico": {
+    "from": "logo/favicon/favicon.ico",
+    "sha256": "73297e820387961460a39f9e90b93ee71cf5b0ad1fc6418da1bfd06ce9a0d744"
+  },
+  "public/apple-touch-icon-180.png": {
+    "from": "logo/favicon/apple-touch-icon-180.png",
+    "sha256": "cfa9b21e77a9900de39c4729918113341f03b314689cd75eb08ab6fea3cd1530"
+  },
+  "public/icon-192.png": {
+    "from": "logo/favicon/icon-192.png",
+    "sha256": "c2770f07222a7cb917dbfb5634ff55c5b19721f05068f8b424aeef45bb153fdc"
+  },
+  "public/icon-512.png": {
+    "from": "logo/favicon/icon-512.png",
+    "sha256": "64e32364bfb1d51552a31603c1a10afc27b498a08333a4f1353ba68868e8a0bf"
+  },
+  "public/app-icon-maskable-512.png": {
+    "from": "logo/app-icon/app-icon-maskable-512.png",
+    "sha256": "66a4f59ecb3c1f7f413b79f4dbe154372858400c6a956a8b0db9533c4f6766bb"
+  },
+  "public/og-image-1200x630.png": {
+    "from": "logo/og/og-image-1200x630.png",
+    "sha256": "51d0ade5266a4e75dace9a79445e59fe536ff22236e364d1f716ab453eab6896"
+  }
+}

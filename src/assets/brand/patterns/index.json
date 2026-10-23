@@ -1,0 +1,244 @@
+{
+  "roles": [
+    {
+      "key": "positive",
+      "file": "pico-weave-positive.svg",
+      "pattern": "plain",
+      "name_id": "tenun polos",
+      "aria": {
+        "id": "Positif",
+        "en": "Positive"
+      },
+      "line": "solid",
+      "mark": "square"
+    },
+    {
+      "key": "recovered",
+      "file": "pico-weave-recovered.svg",
+      "pattern": "stepped-diamond",
+      "name_id": "belah ketupat berundak",
+      "aria": {
+        "id": "Sembuh",
+        "en": "Recovered"
+      },
+      "line": "dotted",
+      "mark": "diamond"
+    },
+    {
+      "key": "deceased",
+      "file": "pico-weave-deceased.svg",
+      "pattern": "double-thread",
+      "name_id": "benang ganda",
+      "aria": {
+        "id": "Meninggal",
+        "en": "Deceased"
+      },
+      "line": "doubled",
+      "mark": "bars"
+    },
+    {
+      "key": "active",
+      "file": "pico-weave-active.svg",
+      "pattern": "dashed-weft",
+      "name_id": "pakan putus-putus",
+      "aria": {
+        "id": "Dirawat",
+        "en": "Active"
+      },
+      "line": "dashed",
+      "mark": "triangle"
+    },
+    {
+      "key": "rt",
+      "file": "pico-weave-rt.svg",
+      "pattern": "hatched",
+      "name_id": "arsir",
+      "aria": {
+        "id": "Rt",
+        "en": "Rt"
+      },
+      "line": "solid + hatched band",
+      "mark": "ring"
+    }
+  ],
+  "kabupaten": [
+    {
+      "name": "Kota Palu",
+      "motif": "Batik Bomba (sulur dan bunga)",
+      "origin": "traditional-sourced",
+      "geometry": "interpretation, needs cultural review",
+      "note": "Bomba means flower in Kaili. Drawn as a simple vine and flower; Taiganja and Sambulugana are not used (sacred adat objects).",
+      "sources": [
+        "https://palontaraq.id/2024/06/09/mengenal-batik-bomba-sulawesi-tengah/",
+        "https://www.goodnewsfromindonesia.id/2025/12/05/5-ragam-batik-khas-sulawesi-tengah-dengan-motif-ikoniknya"
+      ],
+      "file": "band-bomba.svg",
+      "ground": "ink",
+      "label": "traditional motif, our interpretation"
+    },
+    {
+      "name": "Banggai",
+      "motif": "Kepar (twill)",
+      "origin": "stylised",
+      "geometry": "original weave structure",
+      "note": "Tenun Nambo (maleo, cardinalfish) is documented but its shapes are not; neutral weave until photos are available.",
+      "sources": [],
+      "file": "band-kepar.svg",
+      "ground": "primary",
+      "label": "stylised, not traditional"
+    },
+    {
+      "name": "Poso",
+      "motif": "Kain kulit kayu: tumpal dan belah ketupat",
+      "origin": "traditional-sourced",
+      "geometry": "interpretation, needs cultural review",
+      "note": "Bark-cloth motifs (tumpal, diamond) in natural brown and cream. No white ritual cloth cues.",
+      "sources": [
+        "https://budaya-indonesia.org/Kain-Kulit-Kayu"
+      ],
+      "file": "band-kulit-kayu.svg",
+      "ground": "dye-bark",
+      "label": "traditional motif, our interpretation"
+    },
+    {
+      "name": "Morowali",
+      "motif": "Kepar patah (broken twill)",
+      "origin": "stylised",
+      "geometry": "original weave structure",
+      "note": "Morowali batik (Ikzara, Tobungku) is a registered copyright work and is not copied.",
+      "sources": [],
+      "file": "band-kepar-patah.svg",
+      "ground": "indigo",
+      "label": "stylised, not traditional"
+    },
+    {
+      "name": "Parigi Moutong",
+      "motif": "Anyaman keranjang (basket weave)",
+      "origin": "stylised",
+      "geometry": "original weave structure",
+      "note": "Batik Saga and the other Parigi Moutong motifs are registered copyright works and are not copied.",
+      "sources": [],
+      "file": "band-anyaman-keranjang.svg",
+      "ground": "primary",
+      "label": "stylised, not traditional"
+    },
+    {
+      "name": "Sigi",
+      "motif": "Tulang ikan (herringbone)",
+      "origin": "stylised",
+      "geometry": "original weave structure",
+      "note": "Batik Valiri and Kulawi bark cloth are documented with medium confidence only; neutral weave for now.",
+      "sources": [],
+      "file": "band-tulang-ikan.svg",
+      "ground": "indigo",
+      "label": "stylised, not traditional"
+    },
+    {
+      "name": "Donggala",
+      "motif": "Buya Subi (belah ketupat dan sulur berbunga)",
+      "origin": "traditional-sourced",
+      "geometry": "interpretation, needs cultural review",
+      "note": "Diamond field and creeping flowering vine; dark red ground with dark-yellow weft, as in the source.",
+      "sources": [
+        "https://regional.kompas.com/read/2022/08/12/152148078/kain-tenun-donggala-latar-belakang-motif-dan-warna?page=all"
+      ],
+      "file": "band-buya-subi.svg",
+      "ground": "dye-maroon",
+      "label": "traditional motif, our interpretation"
+    },
+    {
+      "name": "Tolitoli",
+      "motif": "Berundak (stepped weave)",
+      "origin": "stylised",
+      "geometry": "original weave structure",
+      "note": "Batik Cengkeh is documented with medium confidence and no geometry; neutral weave for now.",
+      "sources": [],
+      "file": "band-berundak.svg",
+      "ground": "indigo",
+      "label": "stylised, not traditional"
+    },
+    {
+      "name": "Morowali Utara",
+      "motif": "Lajur lusi (warp stripe)",
+      "origin": "stylised",
+      "geometry": "original weave structure",
+      "note": "No district motif found.",
+      "sources": [],
+      "file": "band-lajur-lusi.svg",
+      "ground": "primary",
+      "label": "stylised, not traditional"
+    },
+    {
+      "name": "Tojo Una-Una",
+      "motif": "Kepar balik (reverse twill)",
+      "origin": "stylised",
+      "geometry": "original weave structure",
+      "note": "No district motif found.",
+      "sources": [],
+      "file": "band-kepar-balik.svg",
+      "ground": "indigo",
+      "label": "stylised, not traditional"
+    },
+    {
+      "name": "Buol",
+      "motif": "Mata burung (bird's eye)",
+      "origin": "stylised",
+      "geometry": "original weave structure",
+      "note": "Batik Buol is a registered copyright work and is not copied.",
+      "sources": [],
+      "file": "band-mata-burung.svg",
+      "ground": "primary",
+      "label": "stylised, not traditional"
+    },
+    {
+      "name": "Banggai Kepulauan",
+      "motif": "Kepar ganda (double twill)",
+      "origin": "stylised",
+      "geometry": "original weave structure",
+      "note": "No textile motif found.",
+      "sources": [],
+      "file": "band-kepar-ganda.svg",
+      "ground": "indigo",
+      "label": "stylised, not traditional"
+    },
+    {
+      "name": "Banggai Laut",
+      "motif": "Huck (silang)",
+      "origin": "stylised",
+      "geometry": "original weave structure",
+      "note": "No textile motif found.",
+      "sources": [],
+      "file": "band-huck.svg",
+      "ground": "primary",
+      "label": "stylised, not traditional"
+    }
+  ],
+  "extras": [
+    {
+      "name": "Donggala (pola tambahan)",
+      "motif": "Buya Bomba Kota (kotak kecil, garis tegak)",
+      "origin": "traditional-sourced",
+      "geometry": "sourced (small checks with vertical lines), drawing is an interpretation",
+      "note": "Check pattern for good conduct. Not used in any sad or funeral context.",
+      "sources": [
+        "https://regional.kompas.com/read/2022/08/12/152148078/kain-tenun-donggala-latar-belakang-motif-dan-warna?page=all"
+      ],
+      "file": "band-bomba-kota.svg",
+      "ground": "indigo",
+      "label": "traditional motif, our interpretation"
+    }
+  ],
+  "credits": {
+    "drawn_from": [
+      "https://regional.kompas.com/read/2022/08/12/152148078/kain-tenun-donggala-latar-belakang-motif-dan-warna?page=all",
+      "https://palontaraq.id/2024/06/09/mengenal-batik-bomba-sulawesi-tengah/",
+      "https://www.goodnewsfromindonesia.id/2025/12/05/5-ragam-batik-khas-sulawesi-tengah-dengan-motif-ikoniknya",
+      "https://budaya-indonesia.org/Kain-Kulit-Kayu"
+    ],
+    "used_for_exclusions": [
+      "https://songulara.com/2026/08/enam-motif-batik-parigi-moutong-kantongi-hak-cipta-motif-saga-jadi-identitas-daerah/",
+      "https://budaya-indonesia.org/Tenun-Nambo-si-penyejuk-hati"
+    ],
+    "todo": "Cultural review before public launch by Dinas Kebudayaan Sulteng or Dekranasda; replace interpretations with photographed real cloth if available."
+  }
+}
