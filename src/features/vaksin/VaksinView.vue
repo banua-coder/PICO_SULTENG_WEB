@@ -46,7 +46,7 @@ function setScope(s: Scope) {
       </label>
     </fieldset>
     <div class="mt-8"><VaksinBody :key="scope" :scope="scope" /></div>
-    <div class="mt-10">
+    <div class="mt-8">
       <VaccineLocations v-if="locations.data.value" :items="locations.data.value" />
       <StatusView v-else-if="locations.status.value === 'error'" kind="error" compact @retry="locations.refresh" />
       <div v-else class="min-h-[12rem]"><StatusView kind="loading" compact /></div>
