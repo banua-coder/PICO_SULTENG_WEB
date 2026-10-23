@@ -246,5 +246,26 @@
     "fullKabupaten": "13 kabupaten/kota Sulawesi Tengah",
     "api": "Untuk akses lewat program, pakai API terbuka",
     "apiDocs": "Dokumentasi Swagger"
+  },
+  "infografis": {
+    "title": "Infografis",
+    "description": "Kumpulan infografis COVID-19 yang dibagikan PICO Sulteng selama pandemi, lengkap dengan tautan ke sumbernya.",
+    "intro": "Infografis yang dibagikan selama pandemi. Gambar disimpan di layanan lain, jadi kadang tidak dapat dimuat. Sumber aslinya selalu bisa dibuka.",
+    "searchLabel": "Cari judul",
+    "searchPlaceholder": "Cari judul infografis",
+    "shown": "Menampilkan {shown} dari {total} infografis",
+    "more": "Muat lagi",
+    "noMatch": "Tidak ada infografis dengan judul itu",
+    "images": "{n} gambar",
+    "empty": "Belum ada infografis",
+    "cardNoImage": "tanpa gambar",
+    "viewer": "Penampil infografis",
+    "close": "Tutup",
+    "prev": "Gambar sebelumnya",
+    "next": "Gambar berikutnya",
+    "position": "{n} dari {m}",
+    "source": "Lihat sumber",
+    "noImages": "Infografis ini tidak punya gambar yang dapat dimuat.",
+    "imageAlt": "{title}, gambar {n} dari {m}"
   }
 }

@@ -246,5 +246,26 @@
     "fullKabupaten": "13 regencies/cities of Central Sulawesi",
     "api": "For programs, use the open API",
     "apiDocs": "Swagger documentation"
+  },
+  "infografis": {
+    "title": "Infographics",
+    "description": "The COVID-19 infographics PICO Sulteng shared during the pandemic, each with a link to its source.",
+    "intro": "Infographics shared during the pandemic. The images are stored on other services, so some may not load. The original source can always be opened.",
+    "searchLabel": "Search titles",
+    "searchPlaceholder": "Search infographic titles",
+    "shown": "Showing {shown} of {total} infographics",
+    "more": "Load more",
+    "noMatch": "No infographic has that title",
+    "images": "{n} images",
+    "empty": "No infographics yet",
+    "cardNoImage": "no image",
+    "viewer": "Infographic viewer",
+    "close": "Close",
+    "prev": "Previous image",
+    "next": "Next image",
+    "position": "{n} of {m}",
+    "source": "See the source",
+    "noImages": "This infographic has no image that can be loaded.",
+    "imageAlt": "{title}, image {n} of {m}"
   }
 }

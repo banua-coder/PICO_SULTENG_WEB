@@ -11,8 +11,10 @@ const props = withDefaults(
     loading?: 'lazy' | 'eager'
     /** After a failed load, say so and offer a retry button inside the same box */
     retryable?: boolean
+    /** 'contain' shows the whole picture (a viewer), 'cover' fills the box (a card) */
+    fit?: 'cover' | 'contain'
   }>(),
-  { fallback: 'plate', loading: 'lazy', retryable: false },
+  { fallback: 'plate', loading: 'lazy', retryable: false, fit: 'cover' },
 )
 
 const { t } = useI18n()
@@ -52,8 +54,9 @@ onMounted(() => {
       :alt="alt"
       :loading="loading"
       decoding="async"
+      draggable="false"
       referrerpolicy="no-referrer"
-      class="absolute inset-0 size-full object-cover"
+      :class="['absolute inset-0 size-full', fit === 'contain' ? 'object-contain' : 'object-cover']"
       @error="failed = true"
     >
     <div v-else-if="fallback === 'initials' && initials" role="img" :aria-label="alt" class="absolute inset-0 flex items-center justify-center" data-placeholder="initials">

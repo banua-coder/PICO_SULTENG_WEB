@@ -10,4 +10,4 @@ export function fx<T = unknown>(name: string): T {
 }
 
 // Wire types for tests outside src/api (the lint rule keeps wire.ts out of app, components and features).
-export type { WireNationalCase, WireProvince, WireProvinceCase, WireRegencyCase } from '@/api/wire'
+export type { WireDonation, WireHospital, WireInfographic, WireNationalCase, WirePartner, WireProvince, WireProvinceCase, WireRegencyCase, WireTaskForceGroup, WireTelemedicine } from '@/api/wire'

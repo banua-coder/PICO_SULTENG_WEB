@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs'
+import type { Download, Page } from '@playwright/test'
 import * as XLSX from 'xlsx'
 import { expect, test } from './support/test'
 import { expectNoA11yViolations } from './support/a11y'
@@ -6,9 +7,9 @@ import { synthProvinceSeries } from './support/synth'
 import { horizontalOverflow, visit, watchConsole, watchRequests } from './support/visit'
 
 const SERIES = '**/api/v1/provinces/72/cases**'
-const full = (page: import('@playwright/test').Page) =>
+const full = (page: Page) =>
   page.route(SERIES, (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: synthProvinceSeries() }))
-const readFile = async (d: import('@playwright/test').Download) => readFileSync((await d.path())!)
+const readFile = async (d: Download) => readFileSync((await d.path())!)
 
 test.describe('Tabel Data', () => {
   test('first load: 50 rows, newest first, caption, page 1 of 29, no console noise, no xlsx request', async ({ page }) => {
