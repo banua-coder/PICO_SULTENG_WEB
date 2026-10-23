@@ -21,6 +21,7 @@ Needs Node 22 and pnpm 10 (`corepack enable`).
 | `pnpm sync:brand` | Copy brand assets from the PICO repo (`$PICO_BRAND_DIR`, default `../../PICO/brand`) and rewrite `brand.manifest.json` |
 | `pnpm fixtures:record` | Record the live API into `test/fixtures/api/` (series trimmed) |
 | `pnpm fixtures:check` | Drift check against the live API (nightly job) |
+| `pnpm build:geo` | Project the map sources in `scripts/geo-src/` into `src/components/maps/geo/*.paths.json` (fails on an unmatched feature) |
 
 Copy `.env.example` to `.env` to override the API base URL. Archive mode is the default (`VITE_LIVE_MODE` unset).
 
@@ -51,3 +52,10 @@ Shared components are in `src/components/` (contract C3). `/_kit` and `/en/_kit`
 ## Kabupaten latest figures
 
 `useKabupatenLatest()` reads the build-time snapshot `/data/kabupaten-latest.json` by default. Set `VITE_REGENCY_LATEST=api` to read `/regencies?include_latest_case=true` instead (pico-api PR #91, once deployed).
+
+## Maps and charts
+
+- Maps are SVG paths projected at build time (`pnpm build:geo`, d3-geo is a dev dependency). No map library reaches the browser. Sources and their open licence question (O-6) are in `scripts/geo-src/PROVENANCE.md`.
+- Magnitude is a mark size on the `--pico-mark-1..6` ramp (by quantile) plus its number, never a colour ramp. Every map has its table next to it.
+- The kabupaten band patterns are interpretations that wait for the cultural review. The map draws one only as the identity fill of the selected area, and only with `VITE_MAP_BANDS=1`. Off by default.
+- Charts are hand-rolled SVG on d3-scale, d3-shape and d3-array. Every series has its line form, mark and a direct label, and every chart has a table view.

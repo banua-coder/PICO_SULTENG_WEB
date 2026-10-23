@@ -103,7 +103,11 @@
     "chartSummary": "Empat seri contoh: kurva naik dan turun dengan satu celah data.",
     "rerender": "Render ulang",
     "bars": "Batang",
-    "lines": "Garis"
+    "lines": "Garis",
+    "mapTitle": "Peta kabupaten/kota",
+    "mapMetric": "Positif kumulatif",
+    "provMetric": "Positif kumulatif provinsi",
+    "picked": "Terpilih: {name}"
   },
   "notFound": {
     "title": "Halaman tidak ditemukan",
@@ -137,5 +141,13 @@
     "noData": "Tidak ada data pada rentang ini",
     "plot": "Grafik, gunakan tombol panah",
     "legend": "Keterangan"
+  },
+  "map": {
+    "legend": "Ukuran tanda menunjukkan jumlah",
+    "range": "{min} sampai {max}",
+    "name": "Wilayah",
+    "selected": "dipilih",
+    "noValue": "tidak tersedia",
+    "mapLabel": "Peta {metric}"
   }
 }

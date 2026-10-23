@@ -28,3 +28,14 @@ export function useMarkSize(step: 1 | 2 | 3 | 4 | 5 | 6) {
   })
   return px
 }
+
+/** The six steps of the magnitude ramp (--pico-mark-1..6) in px, read from the tokens after mount. */
+export function useMarkRamp() {
+  const ramp = ref<number[]>([4, 6, 8, 11, 16, 23])
+  onMounted(() => {
+    const css = getComputedStyle(document.documentElement)
+    const read = [1, 2, 3, 4, 5, 6].map((i) => parseFloat(css.getPropertyValue(`--pico-mark-${i}`)))
+    if (read.every((n) => Number.isFinite(n) && n > 0)) ramp.value = read
+  })
+  return ramp
+}

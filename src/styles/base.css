@@ -42,12 +42,6 @@
     font-variant-numeric: tabular-nums lining-nums;
   }
 
-  /* C3: 2px primary-strong ring, offset 2px, on every interactive element */
-  :focus-visible {
-    outline: 2px solid var(--pico-primary-strong);
-    outline-offset: 2px;
-  }
-
   /* The durations in pico-tokens.css are 0 under reduced motion. Cover what they do not. */
   @media (prefers-reduced-motion: reduce) {
     html {
@@ -91,4 +85,24 @@
       repeating-linear-gradient(90deg, var(--pico-sky) 0 var(--pico-space-4), transparent var(--pico-space-4) 36px, var(--pico-primary) 36px 48px, transparent 48px 72px),
       var(--pico-indigo);
   }
+
+  /* Map areas are links drawn in SVG. The focus ring is the browser outline on the group's box. */
+  .map-area {
+    cursor: pointer;
+    outline: none;
+  }
+  .map-area:hover > path:first-child {
+    fill: var(--pico-cotton-deep) !important;
+  }
+  .map-area:focus-visible {
+    outline: 2px solid var(--pico-primary-strong);
+    outline-offset: 2px;
+  }
+}
+
+/* C3: 2px primary-strong ring, offset 2px, on every interactive element.
+   Unlayered on purpose: pico-tokens.css ends with its own (crimson) :focus-visible rule, which is unlayered too and would win over @layer base. */
+:focus-visible {
+  outline: 2px solid var(--pico-primary-strong);
+  outline-offset: 2px;
 }

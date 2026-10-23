@@ -28,6 +28,7 @@ test('PicoImage: three missing-image cases keep the box, CLS is 0', async ({ pag
   await page.goto('/_kit')
   const boxes = page.getByTestId('images').locator('> div')
   await expect(boxes).toHaveCount(4)
+  await boxes.first().scrollIntoViewIfNeeded() // images are lazy: bring them into view so the 404 and blocked-host errors happen
   const before = await boxes.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().height))
   await page.waitForTimeout(800) // 404 and blocked-host errors land here
   await expect(page.locator('[data-placeholder]')).toHaveCount(3)

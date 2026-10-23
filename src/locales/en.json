@@ -103,7 +103,11 @@
     "chartSummary": "Four sample series: curves rise and fall with one data gap.",
     "rerender": "Render again",
     "bars": "Bars",
-    "lines": "Lines"
+    "lines": "Lines",
+    "mapTitle": "Kabupaten/city map",
+    "mapMetric": "Cumulative positive",
+    "provMetric": "Cumulative positive by province",
+    "picked": "Selected: {name}"
   },
   "notFound": {
     "title": "Page not found",
@@ -137,5 +141,13 @@
     "noData": "No data in this range",
     "plot": "Chart, use the arrow keys",
     "legend": "Key"
+  },
+  "map": {
+    "legend": "Mark size shows the count",
+    "range": "{min} to {max}",
+    "name": "Area",
+    "selected": "selected",
+    "noValue": "not available",
+    "mapLabel": "Map of {metric}"
   }
 }

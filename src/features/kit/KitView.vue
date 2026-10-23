@@ -17,7 +17,9 @@ import StatusView from '@/components/StatusView.vue'
 import TimeSeriesChart from '@/components/charts/TimeSeriesChart.vue'
 import type { LineSeries } from '@/components/charts/types'
 import { dayNumber, isoFromDay } from '@/components/charts/core/days'
-import { SULTENG } from '@/app/areas'
+import KabupatenMap from '@/components/maps/KabupatenMap.vue'
+import ProvinceMap from '@/components/maps/ProvinceMap.vue'
+import { KABUPATEN_AREAS, PROVINCE_AREAS, SULTENG } from '@/app/areas'
 import { ICON_KEYS } from '@/assets/brand/icon-keys'
 import { useLocale } from '@/app/useLocale'
 import { useTheme } from '@/app/useTheme'
@@ -50,12 +52,20 @@ const chartKey = ref(0)
 const renderMs = ref('')
 // For the performance check: remount the chart and time the render until the DOM is patched (2 ticks: mount, then width)
 async function rerender() {
+  renderMs.value = ''
+  await nextTick() // clear the old number in the DOM first, so an identical new number still shows
   const t0 = performance.now()
   chartKey.value++
   await nextTick()
   await nextTick()
   renderMs.value = (performance.now() - t0).toFixed(1)
 }
+
+const mapItems = KABUPATEN_AREAS.map((a, i) => ({ code: a.code, name: a.name, value: i === 4 ? null : [4210, 25830, 3170, 9100, 0, 4530, 2210, 12840, 5120, 8650, 1980, 3460, 6310][i]! }))
+const provItems = PROVINCE_AREAS.map((a, i) => ({ code: a.code, name: a.name, value: (i * 7919) % 90000 }))
+const pickedMap = ref('7204')
+const pickedProv = ref('72')
+const pickedName = (code: string) => [...KABUPATEN_AREAS, ...PROVINCE_AREAS].find((a) => a.code === code)?.name ?? ''
 
 const area = ref<AreaRef>(SULTENG)
 const win = ref<DateWindow>({ from: '2020-03-02', to: '2024-01-14' })
@@ -101,6 +111,13 @@ const contacts: Contact[] = [
       <div class="mt-5">
         <TimeSeriesChart :key="chartKey" :series="demo" :kind="kind" :a11y="{ title: t('kit.chartTitle'), summary: t('kit.chartSummary') }" />
       </div>
+    </section>
+
+    <section class="mt-8" aria-labelledby="k-maps">
+      <SectionHeading id="k-maps" :level="2">KabupatenMap, ProvinceMap</SectionHeading>
+      <p class="mt-3 text-sm text-ink-muted" data-testid="picked">{{ t('kit.picked', { name: pickedName(pickedMap) }) }}</p>
+      <div class="mt-5"><KabupatenMap :items="mapItems" :metric="{ label: t('kit.mapMetric'), role: 'positive' }" :selected="pickedMap" @select="pickedMap = $event" /></div>
+      <div class="mt-8"><ProvinceMap :items="provItems" :metric="{ label: t('kit.provMetric'), role: 'recovered' }" :selected="pickedProv" @select="pickedProv = $event" /></div>
     </section>
 
     <section class="mt-8" aria-labelledby="k-icons">
