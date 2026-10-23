@@ -296,5 +296,43 @@
     "heading": "Wiki COVID-19",
     "note": "Konten ini disusun pada 2020 sampai 2022 dan tidak diperbarui. Ikuti panduan Kementerian Kesehatan terbaru.",
     "source": "Sumber materi asli: Pikobar Jawa Barat. Disusun ulang oleh PICO Sulteng."
+  },
+  "isoman": {
+    "title": "Isoman",
+    "heading": "Isolasi mandiri",
+    "description": "Panduan isolasi mandiri, daftar dokter telemedicine, dan penggalangan donasi untuk pasien isoman, sebagaimana tercatat pada 2021.",
+    "notice": "Layanan dan rekening di halaman ini dicatat pada 2021. PICO tidak dapat memastikan layanan masih aktif.",
+    "noticeMoney": "Jangan mengirim uang tanpa menghubungi penggalang dana lebih dulu.",
+    "telemedicine": "Konsultasi dengan dokter",
+    "telemedicineIntro": "Daftar dokter yang menyediakan konsultasi untuk pasien isoman, dengan jadwal yang tercatat pada 2021.",
+    "telemedicineEmpty": "Tidak ada dokter yang tercatat.",
+    "day": "Hari",
+    "allDays": "Semua hari",
+    "days": {
+      "1": "Senin",
+      "2": "Selasa",
+      "3": "Rabu",
+      "4": "Kamis",
+      "5": "Jumat",
+      "6": "Sabtu",
+      "7": "Minggu"
+    },
+    "free": "Gratis",
+    "paid": "Berbayar",
+    "schedule": "Jadwal",
+    "scheduleDay": "Hari",
+    "scheduleTime": "Jam",
+    "shownDoctors": "Menampilkan {shown} dari {total} dokter",
+    "noMatch": "Tidak ada dokter pada hari itu.",
+    "donations": "Donasi untuk pasien isoman",
+    "donationsIntro": "Penggalangan donasi untuk warga yang menjalani isolasi mandiri, sebagaimana tercatat pada 2021.",
+    "donationsEmpty": "Tidak ada donasi yang tercatat.",
+    "initiator": "Penggalang",
+    "acceptsGoods": "Menerima bantuan barang",
+    "deliveryAddress": "Alamat pengiriman",
+    "accounts": "Rekening",
+    "holder": "a/n {name}",
+    "copyWhat": "nomor rekening {bank}",
+    "number": "Nomor rekening"
   }
 }

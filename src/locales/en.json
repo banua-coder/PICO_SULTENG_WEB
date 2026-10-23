@@ -296,5 +296,43 @@
     "heading": "COVID-19 health wiki",
     "note": "This content was written between 2020 and 2022 and is not updated. Follow the latest guidance of the Ministry of Health.",
     "source": "Original material: Pikobar West Java. Rearranged by PICO Sulteng."
+  },
+  "isoman": {
+    "title": "Home isolation",
+    "heading": "Home isolation",
+    "description": "A home isolation guide, a list of telemedicine doctors, and donation drives for people isolating at home, as recorded in 2021.",
+    "notice": "The services and bank accounts on this page were recorded in 2021. PICO cannot confirm that a service is still active.",
+    "noticeMoney": "Do not send money before you contact the organiser.",
+    "telemedicine": "Talk to a doctor",
+    "telemedicineIntro": "Doctors who offered consultations to people isolating at home, with the schedules recorded in 2021.",
+    "telemedicineEmpty": "No doctor is recorded.",
+    "day": "Day",
+    "allDays": "All days",
+    "days": {
+      "1": "Monday",
+      "2": "Tuesday",
+      "3": "Wednesday",
+      "4": "Thursday",
+      "5": "Friday",
+      "6": "Saturday",
+      "7": "Sunday"
+    },
+    "free": "Free",
+    "paid": "Paid",
+    "schedule": "Schedule",
+    "scheduleDay": "Day",
+    "scheduleTime": "Time",
+    "shownDoctors": "Showing {shown} of {total} doctors",
+    "noMatch": "No doctor is available on that day.",
+    "donations": "Donations for people isolating at home",
+    "donationsIntro": "Donation drives for people isolating at home, as recorded in 2021.",
+    "donationsEmpty": "No donation drive is recorded.",
+    "initiator": "Organiser",
+    "acceptsGoods": "Accepts goods",
+    "deliveryAddress": "Delivery address",
+    "accounts": "Bank accounts",
+    "holder": "in the name of {name}",
+    "copyWhat": "account number {bank}",
+    "number": "Account number"
   }
 }
