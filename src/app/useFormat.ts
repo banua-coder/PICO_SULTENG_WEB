@@ -21,6 +21,8 @@ export function useFormat() {
     num: (n: number, digits?: number) => f.value.num(n, digits),
     pct: (n: number, digits?: number) => f.value.pct(n, digits),
     date: (iso: string, style?: DateStyle) => f.value.date(iso, style),
+    month: (iso: string) => f.value.month(iso),
+    year: (iso: string) => f.value.year(iso),
     range: (from: string, to: string) => f.value.range(from, to),
     nullable: <T>(v: T | null | undefined, fmt: (v: T) => string) => f.value.nullable(v, fmt),
   }

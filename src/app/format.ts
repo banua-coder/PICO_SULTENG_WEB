@@ -20,6 +20,8 @@ export function createFormatter(locale: Locale, strings: FormatStrings) {
     long: new Intl.DateTimeFormat(tag, { day: 'numeric', month: 'long', year: 'numeric', timeZone: TIME_ZONE }),
     short: new Intl.DateTimeFormat(tag, { day: 'numeric', month: 'short', year: 'numeric', timeZone: TIME_ZONE }),
   }
+  const monthFmt = new Intl.DateTimeFormat(tag, { month: 'short', year: 'numeric', timeZone: TIME_ZONE })
+  const yearFmt = new Intl.DateTimeFormat(tag, { year: 'numeric', timeZone: TIME_ZONE })
 
   const num = (n: number, digits = 0): string => numberFmt(digits).format(n)
 
@@ -36,13 +38,23 @@ export function createFormatter(locale: Locale, strings: FormatStrings) {
     return dates[style].format(d)
   }
 
+  const parse = (iso: string) => {
+    const d = new Date(`${iso.slice(0, 10)}T12:00:00+07:00`)
+    if (Number.isNaN(d.getTime())) throw new Error(`not an ISO date: ${iso}`)
+    return d
+  }
+  /** 'Jan 2021', for chart ticks */
+  const month = (iso: string): string => monthFmt.format(parse(iso))
+  /** '2021', for chart ticks */
+  const year = (iso: string): string => yearFmt.format(parse(iso))
+
   const range = (from: string, to: string): string =>
     from.slice(0, 10) === to.slice(0, 10) ? date(from) : `${date(from)} ${strings.rangeJoin} ${date(to)}`
 
   /** `null` is "not available", never 0. */
   const nullable = <T>(v: T | null | undefined, fmt: (v: T) => string): string => (v === null || v === undefined ? strings.notAvailable : fmt(v))
 
-  return { num, pct, date, range, nullable }
+  return { num, pct, date, month, year, range, nullable }
 }
 
 export type Formatter = ReturnType<typeof createFormatter>

@@ -98,7 +98,12 @@
   },
   "kit": {
     "title": "Component examples",
-    "intro": "Test page for the component kit. Not in the sitemap."
+    "intro": "Test page for the component kit. Not in the sitemap.",
+    "chartTitle": "Example daily chart, 4 series x 1,414 days",
+    "chartSummary": "Four sample series: curves rise and fall with one data gap.",
+    "rerender": "Render again",
+    "bars": "Bars",
+    "lines": "Lines"
   },
   "notFound": {
     "title": "Page not found",
@@ -121,5 +126,16 @@
   },
   "data": {
     "areaTitle": "{area} data"
+  },
+  "chart": {
+    "table": "View as table",
+    "graph": "View as chart",
+    "hint": "Use the left and right arrow keys to move one day, Page Up and Page Down for 30 days, Home and End for the start and end.",
+    "focus": "{date}: {values}",
+    "date": "Date",
+    "week": "Week starting {date}",
+    "noData": "No data in this range",
+    "plot": "Chart, use the arrow keys",
+    "legend": "Key"
   }
 }

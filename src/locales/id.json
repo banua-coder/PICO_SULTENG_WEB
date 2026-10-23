@@ -98,7 +98,12 @@
   },
   "kit": {
     "title": "Contoh komponen",
-    "intro": "Halaman uji untuk kit komponen. Tidak ada di peta situs."
+    "intro": "Halaman uji untuk kit komponen. Tidak ada di peta situs.",
+    "chartTitle": "Contoh grafik harian, 4 seri x 1.414 hari",
+    "chartSummary": "Empat seri contoh: kurva naik dan turun dengan satu celah data.",
+    "rerender": "Render ulang",
+    "bars": "Batang",
+    "lines": "Garis"
   },
   "notFound": {
     "title": "Halaman tidak ditemukan",
@@ -121,5 +126,16 @@
   },
   "data": {
     "areaTitle": "Data {area}"
+  },
+  "chart": {
+    "table": "Lihat sebagai tabel",
+    "graph": "Lihat sebagai grafik",
+    "hint": "Gunakan panah kiri dan kanan untuk pindah satu hari, Page Up dan Page Down untuk 30 hari, Home dan End untuk awal dan akhir.",
+    "focus": "{date}: {values}",
+    "date": "Tanggal",
+    "week": "Pekan mulai {date}",
+    "noData": "Tidak ada data pada rentang ini",
+    "plot": "Grafik, gunakan tombol panah",
+    "legend": "Keterangan"
   }
 }

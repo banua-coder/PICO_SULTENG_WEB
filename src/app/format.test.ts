@@ -58,6 +58,15 @@ describe('date', () => {
   })
 })
 
+describe('month and year (chart ticks)', () => {
+  it('id and en', () => {
+    expect(id.month('2021-01-01')).toBe('Jan 2021')
+    expect(id.month('2021-08-17')).toBe('Agu 2021')
+    expect(en.month('2021-08-17')).toBe('Aug 2021')
+    expect(id.year('2023-12-31')).toBe('2023')
+  })
+})
+
 describe('range', () => {
   it('joins two dates', () => {
     expect(id.range('2021-07-01', '2021-07-31')).toBe('1 Juli 2021 sampai 31 Juli 2021')
