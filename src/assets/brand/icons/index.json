@@ -253,6 +253,123 @@
         "id": "Informasi",
         "en": "Information"
       }
+    },
+    {
+      "key": "contact.phone",
+      "mono": "mono/pico-contact-phone.svg",
+      "duotone": "duotone/pico-contact-phone.svg",
+      "aria": {
+        "id": "Telepon",
+        "en": "Phone"
+      }
+    },
+    {
+      "key": "contact.whatsapp",
+      "mono": "mono/pico-contact-whatsapp.svg",
+      "duotone": "duotone/pico-contact-whatsapp.svg",
+      "aria": {
+        "id": "WhatsApp",
+        "en": "WhatsApp"
+      }
+    },
+    {
+      "key": "contact.email",
+      "mono": "mono/pico-contact-email.svg",
+      "duotone": "duotone/pico-contact-email.svg",
+      "aria": {
+        "id": "Email",
+        "en": "Email"
+      }
+    },
+    {
+      "key": "contact.telegram",
+      "mono": "mono/pico-contact-telegram.svg",
+      "duotone": "duotone/pico-contact-telegram.svg",
+      "aria": {
+        "id": "Telegram",
+        "en": "Telegram"
+      }
+    },
+    {
+      "key": "contact.web",
+      "mono": "mono/pico-contact-web.svg",
+      "duotone": "duotone/pico-contact-web.svg",
+      "aria": {
+        "id": "Situs web",
+        "en": "Website"
+      }
+    },
+    {
+      "key": "action.copy",
+      "mono": "mono/pico-action-copy.svg",
+      "duotone": "duotone/pico-action-copy.svg",
+      "aria": {
+        "id": "Salin",
+        "en": "Copy"
+      }
+    },
+    {
+      "key": "action.open-external",
+      "mono": "mono/pico-action-open-external.svg",
+      "duotone": "duotone/pico-action-open-external.svg",
+      "aria": {
+        "id": "Buka di luar aplikasi",
+        "en": "Open externally"
+      }
+    },
+    {
+      "key": "nav.home",
+      "mono": "mono/pico-nav-home.svg",
+      "duotone": "duotone/pico-nav-home.svg",
+      "aria": {
+        "id": "Beranda",
+        "en": "Home"
+      }
+    },
+    {
+      "key": "nav.stats",
+      "mono": "mono/pico-nav-stats.svg",
+      "duotone": "duotone/pico-nav-stats.svg",
+      "aria": {
+        "id": "Statistik",
+        "en": "Statistics"
+      }
+    },
+    {
+      "key": "nav.services",
+      "mono": "mono/pico-nav-services.svg",
+      "duotone": "duotone/pico-nav-services.svg",
+      "aria": {
+        "id": "Layanan",
+        "en": "Services"
+      }
+    },
+    {
+      "key": "nav.info",
+      "mono": "mono/pico-nav-info.svg",
+      "duotone": "duotone/pico-nav-info.svg",
+      "aria": {
+        "id": "Info",
+        "en": "Info"
+      }
+    },
+    {
+      "key": "settings",
+      "mono": "mono/pico-settings.svg",
+      "duotone": "duotone/pico-settings.svg",
+      "aria": {
+        "id": "Pengaturan",
+        "en": "Settings"
+      }
+    },
+    {
+      "key": "notification",
+      "mono": "mono/pico-notification.svg",
+      "duotone": "duotone/pico-notification.svg",
+      "aria": {
+        "id": "Notifikasi",
+        "en": "Notifications"
+      }
     }
   ]
 }
