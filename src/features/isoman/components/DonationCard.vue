@@ -12,7 +12,7 @@ const id = useId()
 </script>
 
 <template>
-  <article :aria-labelledby="id" class="flex flex-col gap-4 rounded-md border border-line bg-surface p-5">
+  <article :aria-labelledby="id" class="flex flex-col gap-3 rounded-lg border bg-card text-card-foreground shadow-card p-4">
     <PicoImage :src="donation.image" :alt="donation.title" ratio="16/9" fallback="initials" />
     <h3 :id="id" class="text-lg">{{ donation.title }}</h3>
     <p class="m-0 text-sm text-ink-muted">
@@ -28,7 +28,7 @@ const id = useId()
     </ul>
     <div v-if="donation.accounts.length">
       <h4 class="text-md">{{ t('isoman.accounts') }}</h4>
-      <ul class="m-0 mt-2 flex list-none flex-col gap-4 p-0">
+      <ul class="m-0 mt-1 flex list-none flex-col gap-3 p-0">
         <li v-for="(a, i) in donation.accounts" :key="i"><BankAccount :account="a" /></li>
       </ul>
     </div>

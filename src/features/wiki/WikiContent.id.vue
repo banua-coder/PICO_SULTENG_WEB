@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import TipFigure from '@/components/TipFigure.vue'
+import wash from '@/assets/images/wash_hands.png'
+import mask from '@/assets/images/wear_mask.png'
 import PicoIcon from '@/components/PicoIcon.vue'
-import distance from '@/assets/brand/illustrations/pico-tip-keep-distance.svg?raw'
-import vaccinated from '@/assets/brand/illustrations/pico-tip-vaccinated.svg?raw'
-import wash from '@/assets/brand/illustrations/pico-tip-wash-hands.svg?raw'
-import mask from '@/assets/brand/illustrations/pico-tip-wear-mask.svg?raw'
 import WikiLayout from './WikiLayout.vue'
 
 // Indonesian text of the Wiki (spec 72). Ported from the 2020 site, then cut to the claims that a public source supports (WHO, Kementerian Kesehatan RI). The sources are listed at the end of the page.
@@ -44,7 +42,7 @@ const myths: [string, string][] = [
     </section>
 
     <section aria-labelledby="gejala">
-      <h2 id="gejala" class="flex items-center gap-3"><PicoIcon name="symptoms" :size="24" class="text-indigo" /> Gejala</h2>
+      <h2 id="gejala" class="flex items-center gap-2"><PicoIcon name="symptoms" :size="24" class="text-indigo" /> Gejala</h2>
       <p>Gejala yang paling umum adalah demam, batuk, lelah, dan hilangnya penciuman atau pengecapan. Gejala lain antara lain sakit tenggorokan, sakit kepala, dan nyeri otot. Tanda yang serius adalah sulit bernapas atau sesak napas. Sebagian orang terinfeksi tanpa gejala.</p>
       <p>Bila Anda bergejala, baca bagian <a href="#jika-terinfeksi">Jika terinfeksi</a>.</p>
     </section>
@@ -53,25 +51,25 @@ const myths: [string, string][] = [
       <h2 id="pencegahan">Cara mencegah</h2>
       <p>Vaksin COVID-19 melindungi dari sakit berat dan kematian akibat COVID-19 (WHO). Tanyakan ke puskesmas atau fasilitas kesehatan terdekat apakah vaksin tersedia dan apakah Anda perlu divaksin.</p>
       <p>Selain itu, cara berikut mengurangi risiko tertular dan menularkan:</p>
-      <ol class="mt-3 pl-5">
+      <ol class="mt-2 pl-4">
         <li>Cuci tangan dengan air dan sabun, atau dengan <i>hand-rub</i> berbasis alkohol.</li>
         <li>Saat batuk atau bersin, tutup hidung dan mulut.</li>
         <li>Jaga jarak sekurang-kurangnya satu meter dari orang lain, walau mereka tampak sehat.</li>
         <li>Pakai masker yang pas bila tidak bisa menjaga jarak, atau di ruangan yang ventilasinya buruk.</li>
         <li>Di dalam ruangan, buka jendela agar udara luar masuk.</li>
       </ol>
-      <div class="mt-5 grid grid-cols-2 gap-5">
-        <TipFigure :svg="wash" caption="Cuci tangan dengan air dan sabun." />
-        <TipFigure :svg="mask" caption="Pakai masker bila tidak bisa menjaga jarak." />
-        <TipFigure :svg="distance" caption="Jaga jarak sekitar satu meter." />
-        <TipFigure :svg="vaccinated" caption="Tanyakan soal vaksinasi ke fasilitas kesehatan." />
+      <div class="mt-4 grid grid-cols-2 gap-4">
+        <TipFigure :src="wash" caption="Cuci tangan dengan air dan sabun." />
+        <TipFigure :src="mask" caption="Pakai masker bila tidak bisa menjaga jarak." />
+        <TipFigure icon="prevention.distancing" caption="Jaga jarak sekitar satu meter." />
+        <TipFigure icon="vaccine" caption="Tanyakan soal vaksinasi ke fasilitas kesehatan." />
       </div>
     </section>
 
     <section aria-labelledby="istilah">
       <h2 id="istilah">Istilah penting</h2>
       <p>Pada 13 Juli 2020 Menteri Kesehatan menetapkan Keputusan Nomor HK.01.07/MENKES/413/2020. Kementerian Kesehatan merilisnya pada 14 Juli 2020. Istilah ODP (orang dalam pemantauan), PDP (pasien dalam pengawasan) dan OTG (orang tanpa gejala) diganti dengan istilah di bawah ini. Definisinya mengikuti keputusan itu.</p>
-      <dl class="mt-3 [&_dd]:mt-1 [&_dt]:mt-4 [&_dt]:font-strong">
+      <dl class="mt-2 [&_dd]:mt-0.5 [&_dt]:mt-3 [&_dt]:font-strong">
         <dt>Suspek</dt>
         <dd>Orang dengan infeksi saluran pernapasan akut (ISPA) yang dalam 14 hari sebelum gejala pernah bepergian ke atau tinggal di wilayah dengan penularan lokal, atau berkontak dengan kasus konfirmasi atau probable. Orang dengan ISPA berat atau pneumonia berat yang butuh perawatan rumah sakit, tanpa penyebab lain yang meyakinkan, juga termasuk.</dd>
         <dt>Probable</dt>
@@ -96,12 +94,12 @@ const myths: [string, string][] = [
       <h2 id="mitos">Mitos dan fakta</h2>
       <p>Beberapa mitos yang beredar pada masa pandemi, dan jawaban WHO:</p>
       <ul class="list-none pl-0">
-        <li v-for="[myth, fact] in myths" :key="myth" class="rounded-sm border border-line p-3">
+        <li v-for="[myth, fact] in myths" :key="myth" class="rounded-sm border border-line p-2">
           <p class="m-0"><strong>Mitos:</strong> {{ myth }}</p>
           <p class="m-0"><strong>Fakta:</strong> {{ fact }}</p>
         </li>
       </ul>
     </section>
-    <p class="mt-8 text-sm text-ink-muted">Isi halaman ini mengikuti sumber publik berikut, per 24 Oktober 2026, dan belum ditinjau oleh tenaga medis: <a href="https://www.who.int/news-room/questions-and-answers/item/coronavirus-disease-covid-19-how-is-it-transmitted" rel="noopener">WHO, cara penularan</a> (23 Desember 2021); <a href="https://www.who.int/health-topics/coronavirus" rel="noopener">WHO, gejala dan pencegahan</a>; <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters" rel="noopener">WHO, mitos</a> (19 Januari 2022); <a href="https://www.who.int/news-room/questions-and-answers/item/coronavirus-disease-(covid-19)-vaccines" rel="noopener">WHO, vaksin COVID-19</a>; <a href="https://kemkes.go.id/eng/%20kemenkes-kenalkan-istilah-probable-suspect-kontak-erat-dan-terkonfirmasi-covid-19" rel="noopener">Kemenkes, istilah kasus (14 Juli 2020)</a>; <a href="https://kemkes.go.id/id/besok-pedulilindungi-resmi-bertransformasi-menjadi-satusehat-mobile" rel="noopener">Kemenkes, SATUSEHAT Mobile (28 Februari 2023)</a>.</p>
+    <p class="mt-12 text-sm text-ink-muted">Isi halaman ini mengikuti sumber publik berikut, per 24 Oktober 2026, dan belum ditinjau oleh tenaga medis: <a href="https://www.who.int/news-room/questions-and-answers/item/coronavirus-disease-covid-19-how-is-it-transmitted" rel="noopener">WHO, cara penularan</a> (23 Desember 2021); <a href="https://www.who.int/health-topics/coronavirus" rel="noopener">WHO, gejala dan pencegahan</a>; <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters" rel="noopener">WHO, mitos</a> (19 Januari 2022); <a href="https://www.who.int/news-room/questions-and-answers/item/coronavirus-disease-(covid-19)-vaccines" rel="noopener">WHO, vaksin COVID-19</a>; <a href="https://kemkes.go.id/eng/%20kemenkes-kenalkan-istilah-probable-suspect-kontak-erat-dan-terkonfirmasi-covid-19" rel="noopener">Kemenkes, istilah kasus (14 Juli 2020)</a>; <a href="https://kemkes.go.id/id/besok-pedulilindungi-resmi-bertransformasi-menjadi-satusehat-mobile" rel="noopener">Kemenkes, SATUSEHAT Mobile (28 Februari 2023)</a>.</p>
   </WikiLayout>
 </template>

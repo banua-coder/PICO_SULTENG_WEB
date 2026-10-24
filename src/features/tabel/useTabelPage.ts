@@ -3,6 +3,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useAreaSeries } from '@/api/useSeries'
 import type { AreaLevel, AreaRef, DailyRow } from '@/api/types'
 import { areaBySlug, INDONESIA, SULTENG } from '@/app/areas'
+import { lastRealRow } from '@/app/homeLatest'
 import { RECORD_FIRST, RECORD_LAST, resolveWindow } from '@/app/dateWindow'
 import { clampPage, pageOfDate, PAGE_SIZE, pageCount, parsePage, slicePage } from './paging'
 import { columnsFor } from './columns'
@@ -39,7 +40,7 @@ export function useTabelPage() {
 
   const bounds = computed(() => {
     const s = series.data.value
-    return s && s.rows.length ? { from: s.first, to: s.last } : { from: RECORD_FIRST, to: RECORD_LAST }
+    return s && s.rows.length ? { from: s.first, to: lastRealRow(s.rows)?.date ?? s.last } : { from: RECORD_FIRST, to: RECORD_LAST }
   })
   const window = computed(() => resolveWindow(route.query, bounds.value))
   const rows = computed<DailyRow[]>(() => {

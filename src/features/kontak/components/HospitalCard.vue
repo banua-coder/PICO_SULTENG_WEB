@@ -13,7 +13,7 @@ const map = computed(() => osmUrl(props.hospital.location))
 </script>
 
 <template>
-  <article :aria-labelledby="id" class="flex flex-col gap-4 rounded-md border border-line bg-surface p-5">
+  <article :aria-labelledby="id" class="flex flex-col gap-3 rounded-lg border bg-card text-card-foreground shadow-card p-4">
     <header>
       <h3 :id="id" class="text-lg">{{ hospital.name }}</h3>
       <p v-if="hospital.kabupaten" class="m-0 text-sm text-ink-muted">{{ hospital.kabupaten.name }}</p>

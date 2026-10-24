@@ -13,7 +13,6 @@ import DataView from './DataView.vue'
 import { mapDate, mapKind, selectedCode, useSubAreaItems } from './useSubAreaItems'
 
 beforeEach(() => {
-  // reduced motion keeps the Lottie player out of the loading states of unseeded resources
   vi.spyOn(window, 'matchMedia').mockImplementation((q) => ({ matches: q.includes('reduce'), media: q, addEventListener: () => undefined, removeEventListener: () => undefined }) as unknown as MediaQueryList)
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
     return { width: 640, height: 280, top: 0, left: 0, right: 640, bottom: 280, x: 0, y: 0, toJSON: () => ({}) }
@@ -44,39 +43,64 @@ const CURVES = '[data-testid="curves"] figure'
 const RT_CHART = '[data-testid="rt-section"] figure'
 
 describe('CaseCurves (W15)', () => {
-  it('daily view: a bar chart with the 7-day average over it and one crimson peak bar, plus recovered and deceased', async () => {
+  const lastDay = () => {
+    const rows = sul().rows
+    return [...rows].reverse().find((r) => r.daily.positive > 0 || r.daily.recovered > 0 || r.daily.deceased > 0)!
+  }
+
+  it('daily view: one case type, bars with the 7-day average over it, one peak bar, a legend, and the window ends on the last real day', async () => {
     const { wrapper } = await open('/data/provinsi/sulawesi-tengah', CURVES)
     const figs = wrapper.find('[data-testid="curves"]').findAll('figure')
-    expect(figs).toHaveLength(2)
+    expect(figs).toHaveLength(1)
     const bars = figs[0]!
-    expect(bars.find('figcaption').text()).toBe('Kasus positif baru per hari')
+    expect(bars.find('figcaption').text()).toBe('positif baru per hari')
     expect(bars.findAll('[data-peak]')).toHaveLength(1)
     expect(bars.findAll('[data-end-label]').map((e) => e.text())).toEqual(['Positif', 'rata-rata 7 hari'])
-    expect(bars.find('svg[role="img"]').attributes('aria-label')).toMatch(/^Puncak kasus harian [\d.]+ pada \d+ \w+ \d{4}\. Nilai terakhir 0 pada 14 Januari 2024\.$/)
-    expect(figs[1]!.findAll('[data-end-label]').map((e) => e.text())).toEqual(['Sembuh', 'Meninggal'])
+    expect(bars.findAll('[data-testid="legend"] li').map((e) => e.text())).toEqual(['Positif', 'rata-rata 7 hari'])
+    const last = lastDay()
+    const label = bars.find('svg[role="img"]').attributes('aria-label')!
+    expect(label).toMatch(/^Puncak positif harian [\d.]+ pada \d+ \w+ \d{4}\. Nilai terakhir [\d.]+ pada \d+ \w+ \d{4}\.$/)
+    // never the padded end of the record (14 January 2024, zeros)
+    expect(label).not.toContain('14 Januari 2024')
+    expect(label).toContain(`${Number(last.date.slice(8))} `)
+  })
+
+  it('case type "Semua": recovered and deceased join the positive line, with a legend', async () => {
+    const { wrapper } = await open('/data/provinsi/sulawesi-tengah?jenis=all', CURVES)
+    const fig = wrapper.find('[data-testid="curves"] figure')
+    expect(fig.findAll('[data-end-label]').map((e) => e.text()).sort()).toEqual(['Meninggal', 'Positif', 'Sembuh'])
+    expect(fig.findAll('[data-testid="legend"] li')).toHaveLength(3)
   })
 
   it('English summary sentence', async () => {
     const { wrapper } = await open('/en/data/provinsi/sulawesi-tengah', CURVES)
-    expect(wrapper.find('[data-testid="curves"] svg[role="img"]').attributes('aria-label')).toMatch(/^Peak daily cases [\d,]+ on \d+ \w+ \d{4}\. Last value 0 on 14 January 2024\.$/)
+    const label = wrapper.find('[data-testid="curves"] svg[role="img"]').attributes('aria-label')!
+    expect(label).toMatch(/^Peak daily positive [\d,]+ on \d+ \w+ \d{4}\. Last value [\d,]+ on \d+ \w+ \d{4}\.$/)
+    expect(label).not.toContain('14 January 2024')
   })
 
-  it('cumulative view: four lines for a province, three for a kabupaten; the table lists the same days', async () => {
-    const p = await open('/data/provinsi/sulawesi-tengah?tampilan=kumulatif', CURVES)
+  it('cumulative view: four lines for a province, three for a kabupaten (all types); one line for a single type', async () => {
+    const p = await open('/data/provinsi/sulawesi-tengah?tampilan=kumulatif&jenis=all', CURVES)
     expect(p.wrapper.find('[data-testid="curves"]').findAll('[data-end-label]').map((e) => e.text())).toEqual(['Positif', 'Sembuh', 'Meninggal', 'Dirawat'])
-    expect(p.wrapper.find('[data-testid="curves"] svg[role="img"]').attributes('aria-label')).toContain('Total kasus positif 63.614 pada 14 Januari 2024.')
-    const k = await open('/data/kabupaten/kota-palu?tampilan=kumulatif', CURVES)
+    expect(p.wrapper.find('[data-testid="curves"]').findAll('[data-testid="legend"] li')).toHaveLength(4)
+    const k = await open('/data/kabupaten/kota-palu?tampilan=kumulatif&jenis=all', CURVES)
     expect(k.wrapper.find('[data-testid="curves"]').findAll('[data-end-label]').map((e) => e.text())).toEqual(['Positif', 'Sembuh', 'Meninggal'])
+    const one = await open('/data/provinsi/sulawesi-tengah?tampilan=kumulatif', CURVES)
+    expect(one.wrapper.find('[data-testid="curves"]').findAll('[data-end-label]').map((e) => e.text())).toEqual(['Positif'])
+    expect(one.wrapper.find('[data-testid="curves"] svg[role="img"]').attributes('aria-label')).toContain('Total kasus positif 63.614')
   })
 
-  it('the radio switches the view, writes ?tampilan with replace and keeps the window', async () => {
-    const { wrapper, router } = await open('/data/provinsi/sulawesi-tengah?dari=2024-01-01', CURVES)
-    await wrapper.find('input[value="kumulatif"]').setValue()
+  it('the tabs switch the view and the toggle group the case type; both write the query with replace and keep the window', async () => {
+    const { wrapper, router } = await open('/data/provinsi/sulawesi-tengah?dari=2023-12-01', CURVES)
+    await wrapper.findAll('[role="tab"]').find((t) => t.text() === 'Kumulatif')!.trigger('mousedown', { button: 0, ctrlKey: false })
     await flush()
-    expect(router.currentRoute.value.query).toEqual({ dari: '2024-01-01', tampilan: 'kumulatif' })
-    await wrapper.find('input[value="harian"]').setValue()
+    expect(router.currentRoute.value.query).toEqual({ dari: '2023-12-01', tampilan: 'kumulatif' })
+    await wrapper.find('[data-testid="curves"] [data-value="recovered"]').trigger('click')
     await flush()
-    expect(router.currentRoute.value.query).toEqual({ dari: '2024-01-01' })
+    expect(router.currentRoute.value.query).toEqual({ dari: '2023-12-01', tampilan: 'kumulatif', jenis: 'recovered' })
+    await wrapper.findAll('[role="tab"]').find((t) => t.text() === 'Harian')!.trigger('mousedown', { button: 0, ctrlKey: false })
+    await flush()
+    expect(router.currentRoute.value.query).toEqual({ dari: '2023-12-01', jenis: 'recovered' })
   })
 
   it('an empty window says so and draws no chart', async () => {
@@ -94,18 +118,17 @@ describe('RtSection (W16)', () => {
     expect(en.wrapper.find('[data-testid="rt-section"] a[href$="metodologi#rt"]').attributes('href')).toBe('/en/metodologi#rt')
   })
 
-  it('national, 2023-07-01 to 2024-01-14: last value on 9 July 2023, and the gap note covers the rest', async () => {
-    const { wrapper } = await open('/data/indonesia?dari=2023-07-01', RT_CHART)
+  it('national at the default end: Rt runs to its own last day (9 July 2023), after the last day with counts, and says the estimate stopped', async () => {
+    const { wrapper } = await open('/data/indonesia', RT_CHART)
     const s = wrapper.find('[data-testid="rt-section"]')
     expect(s.find('[data-testid="rt-last"]').text()).toMatch(/^Rt [\d,]+ \([\d,]+ sampai [\d,]+\) pada 9 Juli 2023$/)
-    expect(s.find('[data-testid="rt-gaps"]').text()).toContain('10 Juli 2023')
-    expect(s.find('[data-testid="rt-gaps"]').text()).toContain('14 Januari 2024')
     expect(s.find('[data-testid="rt-end"]').text()).toBe('Setelah 9 Juli 2023 Rt tidak dihitung lagi: perhitungannya berhenti pada pertengahan 2023.')
+    expect(s.find('[data-testid="rt-gaps"]').text()).not.toContain('2024') // the padded end of the record is not a gap
     expect(s.find('figure').exists()).toBe(true)
   })
 
   it('a window with no Rt shows the explainer and "Rt tidak tersedia untuk rentang ini", no chart', async () => {
-    const { wrapper } = await open('/data/indonesia?dari=2023-08-01')
+    const { wrapper } = await open('/data/indonesia?dari=2020-03-02&sampai=2020-03-08')
     const s = wrapper.find('[data-testid="rt-section"]')
     expect(s.find('[data-testid="rt-none"]').text()).toBe('Rt tidak tersedia untuk rentang ini')
     expect(s.find('figure').exists()).toBe(false)
@@ -169,7 +192,7 @@ describe('SubAreaMap (W17)', () => {
   it('the metric switch changes the numbers', async () => {
     const { wrapper } = await openMap('/data/provinsi/sulawesi-tengah')
     const before = wrapper.find('[data-testid="submap"] td[data-code="7271"]').text()
-    await wrapper.find('input[value="deceased"]').setValue()
+    await wrapper.find('[data-testid="submap"] [data-value="deceased"]').trigger('click')
     expect(wrapper.find('[data-testid="submap"] td[data-code="7271"]').text()).not.toBe(before)
   })
 
@@ -222,7 +245,7 @@ describe('GenderAge and TestsByType (W18)', () => {
     expect(first.text()).toContain('Laki-laki (44,8%)')
     expect(first.text()).toContain('10.199')
     expect(g.findAll('figure')).toHaveLength(3)
-    await g.find('input[value="pdp"]').setValue()
+    await g.find('[data-value="pdp"]').trigger('click')
     expect(g.findAll('figure')[0]!.text()).toContain('178')
     expect(g.findAll('figure')[0]!.find('figcaption').text()).toBe('PDP menurut jenis kelamin')
   })
@@ -231,8 +254,11 @@ describe('GenderAge and TestsByType (W18)', () => {
     const { wrapper } = await openStats('/data/provinsi/sulawesi-tengah')
     const t = wrapper.find('[data-testid="tests"]')
     expect(t.findAll('[data-type]').map((e) => e.attributes('data-type'))).toEqual(['pcr', 'rdt'])
-    expect(t.find('[data-testid="tests-note"]').text()).toBe('Data pemeriksaan hanya tersedia sampai 28 September 2020.')
-    expect(t.text()).toContain('Periode terakhir (28 September 2020)')
+    // a period of four zeros (28 September 2020 and after) is padding: the last real period is shown, never a 0 row
+    expect(t.find('[data-testid="tests-note"]').text()).toMatch(/^Data pemeriksaan hanya tersedia sampai \d+ \w+ 2020\.$/)
+    expect(t.find('[data-testid="tests-note"]').text()).not.toContain('28 September 2020')
+    expect(t.text()).toMatch(/Periode terakhir \(\d+ \w+ 2020\)/)
+    expect(t.text()).not.toContain('Periode terakhir (28 September 2020)')
     expect(t.text()).toContain('Spesimen saluran pernapasan')
     expect(t.findAll('dt').map((d) => d.text()).slice(0, 4)).toEqual(['Diproses', 'Tidak valid', 'Positif', 'Negatif'])
   })

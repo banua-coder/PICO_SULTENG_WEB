@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { computed, useId } from 'vue'
-import { inlineSvg } from './inlineSvg'
+import type { IconKey } from '@/assets/brand/icon-keys'
+import PicoIcon from './PicoIcon.vue'
+import { Card } from '@/components/ui/card'
 
-// A brand illustration with a visible caption. The picture is decoration; the caption carries the meaning.
-const props = defineProps<{ svg: string; caption: string }>()
-const uid = `tip${useId().replace(/\W/g, '')}`
-const html = computed(() => inlineSvg(props.svg, uid))
+// A prevention tip: the old PICO picture (or a brand icon) with a visible caption. The picture is decoration; the caption carries the meaning.
+defineProps<{ caption: string; src?: string; icon?: IconKey }>()
 </script>
 
 <template>
-  <figure class="m-0 flex flex-col gap-2">
-    <!-- eslint-disable-next-line vue/no-v-html -- trusted brand illustration -->
-    <div class="w-full [&>svg]:block [&>svg]:h-auto [&>svg]:w-full" style="aspect-ratio: 4 / 3" v-html="html" />
-    <figcaption class="text-sm text-ink-muted">{{ caption }}</figcaption>
+  <figure class="m-0">
+    <Card class="h-full items-center gap-2 p-4 text-center">
+      <img v-if="src" :src="src" alt="" width="87" height="78" loading="lazy" decoding="async" class="h-20 w-auto">
+      <PicoIcon v-else-if="icon" :name="icon" :size="24" class="size-16 text-active" />
+      <figcaption class="text-sm">{{ caption }}</figcaption>
+    </Card>
   </figure>
 </template>

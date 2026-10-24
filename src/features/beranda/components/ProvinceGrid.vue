@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import type { LatestByArea } from '@/api/types'
 import { useFormat } from '@/app/useFormat'
 import { useLocale } from '@/app/useLocale'
+import { Input } from '@/components/ui/input'
 import { provinceRows } from '../useBeranda'
 
 const props = defineProps<{ provinces: LatestByArea[] }>()
@@ -17,15 +18,15 @@ const rows = computed(() => provinceRows(props.provinces, q.value))
 
 <template>
   <div>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-1">
       <label for="province-q" class="text-sm font-strong text-ink-muted">{{ t('beranda.provinceFilter') }}</label>
-      <input id="province-q" v-model="q" type="search" autocomplete="off" class="min-h-touch max-w-xs rounded-sm border border-line-strong bg-surface px-4 text-ink">
+      <Input id="province-q" v-model="q" type="search" autocomplete="off" class="max-w-xs" />
     </div>
-    <p role="status" aria-live="polite" class="mt-3 text-sm text-ink-muted">{{ t('beranda.provinceShown', { shown: rows.length, total: provinces.length }) }}</p>
-    <p v-if="rows.length === 0" class="mt-3">{{ t('beranda.provinceNone') }}</p>
-    <ol class="m-0 mt-3 grid list-none gap-2 p-0 sm:grid-cols-2 lg:grid-cols-3" data-testid="province-list">
+    <p role="status" aria-live="polite" class="mt-2 text-sm text-ink-muted">{{ t('beranda.provinceShown', { shown: rows.length, total: provinces.length }) }}</p>
+    <p v-if="rows.length === 0" class="mt-2">{{ t('beranda.provinceNone') }}</p>
+    <ol class="m-0 mt-2 grid list-none gap-1 p-0 sm:grid-cols-2 lg:grid-cols-3" data-testid="province-list">
       <li v-for="p in rows" :key="p.area.code">
-        <RouterLink :to="localize(`/data/provinsi/${p.area.slug}`)" class="flex min-h-touch items-center justify-between gap-3 rounded-sm border border-line bg-surface px-4 no-underline">
+        <RouterLink :to="localize(`/data/provinsi/${p.area.slug}`)" class="flex min-h-touch items-center justify-between gap-2 rounded-sm border border-line bg-surface px-3 no-underline">
           <span class="text-ink">{{ p.area.name }}</span>
           <span class="num text-sm text-ink-muted">{{ t('beranda.provinceTotal', { n: f.num(p.latest.cumulative.positive) }) }}</span>
         </RouterLink>

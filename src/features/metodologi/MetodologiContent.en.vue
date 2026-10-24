@@ -91,11 +91,11 @@ const avoided = [
       <p>Columns in the files:</p>
       <div class="max-w-full overflow-x-auto" role="region" tabindex="0" aria-label="Columns of the download files">
         <table class="w-full border-collapse text-sm">
-          <thead><tr class="bg-tint"><th scope="col" class="px-3 py-2 text-left">Column</th><th scope="col" class="px-3 py-2 text-left">Content</th></tr></thead>
+          <thead><tr class="bg-tint"><th scope="col" class="px-2 py-1 text-left">Column</th><th scope="col" class="px-2 py-1 text-left">Content</th></tr></thead>
           <tbody>
             <tr v-for="(text, col) in COLUMN_DOCS.en" :key="col" class="border-t border-line">
-              <th scope="row" class="px-3 py-2 text-left font-normal"><code>{{ col }}</code></th>
-              <td class="px-3 py-2">{{ text }}</td>
+              <th scope="row" class="px-2 py-1 text-left font-normal"><code>{{ col }}</code></th>
+              <td class="px-2 py-1">{{ text }}</td>
             </tr>
           </tbody>
         </table>

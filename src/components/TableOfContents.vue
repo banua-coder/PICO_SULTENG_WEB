@@ -8,8 +8,8 @@ const { t } = useI18n()
 
 <template>
   <nav :aria-label="t('toc.label')">
-    <p class="font-display text-md font-heading text-indigo">{{ t('toc.title') }}</p>
-    <ol class="m-0 mt-3 list-none p-0">
+    <p class="font-display text-md font-heading text-ink">{{ t('toc.title') }}</p>
+    <ol class="m-0 mt-2 list-none p-0">
       <li v-for="i in items" :key="i.id"><a :href="`#${i.id}`" class="inline-flex min-h-touch items-center">{{ i.label }}</a></li>
     </ol>
   </nav>

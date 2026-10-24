@@ -28,9 +28,9 @@ beforeEach(() => {
 })
 
 describe('sitemapXml', () => {
-  it('lists 114 URLs, each with id, en and x-default alternates', () => {
+  it('lists 116 URLs, each with id, en and x-default alternates', () => {
     const xml = sitemapXml('https://x.test')
-    expect((xml.match(/<loc>/g) ?? []).length).toBe(114)
+    expect((xml.match(/<loc>/g) ?? []).length).toBe(116)
     expect(xml).toContain('<loc>https://x.test/en/data/provinsi/aceh</loc>')
     expect(xml).toContain('hreflang="x-default" href="https://x.test/data/provinsi/aceh"')
     expect(xml).toContain('xmlns:xhtml="http://www.w3.org/1999/xhtml"')

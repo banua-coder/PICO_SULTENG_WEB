@@ -8,11 +8,11 @@
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon-180.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#1E3A8A" />
+    <meta name="theme-color" content="#2563EB" />
     <!-- Sets the saved theme before first paint, so there is no flash. External file because the CSP (deploy/nginx.conf) allows no inline script. Keep in step with useTheme.ts. -->
     <script src="/theme-init.js"></script>
-    <!-- Only the text face is preloaded. The display face loads when a heading needs it. -->
-    <link rel="preload" href="/src/assets/fonts/SourceSans3-text.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- The one face (Nunito, Latin subset) is preloaded. -->
+    <link rel="preload" href="/src/assets/fonts/Nunito-latin.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
     <div id="app"></div>

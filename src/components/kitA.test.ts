@@ -7,7 +7,6 @@ import PicoIcon from './PicoIcon.vue'
 import SectionHeading from './SectionHeading.vue'
 import StatFigure from './StatFigure.vue'
 import StateMark from './StateMark.vue'
-import WeaveDefs from './WeaveDefs.vue'
 
 afterEach(() => {
   document.body.innerHTML = ''
@@ -95,14 +94,6 @@ describe('StatFigure', () => {
     const { wrapper } = await mountApp(StatFigure, { ...base, state: 'recovered', label: 'Sembuh', value: 5 })
     expect(wrapper.find('svg[data-state="recovered"]').exists()).toBe(true)
     expect(wrapper.text()).toContain('Sembuh')
-  })
-})
-
-describe('WeaveDefs', () => {
-  it('defines the five weave patterns once, hidden', async () => {
-    const { wrapper } = await mountApp(WeaveDefs)
-    for (const s of ['positive', 'recovered', 'deceased', 'active', 'rt']) expect(wrapper.html()).toContain(`id="pico-weave-${s}"`)
-    expect(wrapper.find('div').attributes('aria-hidden')).toBe('true')
   })
 })
 

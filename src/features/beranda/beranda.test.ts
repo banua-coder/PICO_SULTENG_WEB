@@ -5,11 +5,12 @@ import { banners as toBanners, hospitals as toHospitals, infographics } from '@/
 import { nationalLatest, provincesLatest } from '@/api/normalize/areas'
 import { nationalSeries, provinceSeries } from '@/api/normalize/series'
 import { vaccinationSeries } from '@/api/normalize/vaccination'
-import { HOME_LATEST_URL } from '@/api/useSeries'
+import { HOME_LATEST_URL, KABUPATEN_SNAPSHOT_URL } from '@/api/useSeries'
 import { INDONESIA, SULTENG } from '@/app/areas'
 import { buildHomeLatest } from '@/app/homeLatest'
 import { fx, type WireHospital, type WireInfographic, type WireNationalCase, type WireProvince, type WireProvinceCase } from '../../../test/fixtures/load'
 import { flush, mountApp } from '../../../test/support/mount'
+import snapshot from '../../../test/fixtures/kabupaten-latest.snapshot.json'
 import BerandaView from './BerandaView.vue'
 import { dailyPick, jakartaDay, provinceRows } from './useBeranda'
 
@@ -37,6 +38,7 @@ const seedAll = () =>
     '/provinces': provinces(),
     '/national/latest': nationalLatest(fx('national-latest')),
     [HOME_LATEST_URL]: home(),
+    [KABUPATEN_SNAPSHOT_URL]: snapshot,
     [ENDPOINTS.banners.path]: toBanners(fx('banners')),
     [ENDPOINTS.hospitals.path]: hospitals(),
   })
@@ -74,15 +76,21 @@ describe('logic', () => {
 })
 
 describe('BerandaView', () => {
-  it('the h1, the archive line (not alarming), the Sulteng and Indonesia figures with their date, as text', async () => {
+  it('the h1, the archive line (not alarming), the four case cards in the old order with Sulteng first, as text', async () => {
     const { wrapper } = await open()
     expect(wrapper.find('h1').text()).toBe('Pusat Informasi COVID-19 Sulawesi Tengah')
     expect(wrapper.find('[data-testid="archive-line"]').text()).toBe('Arsip catatan COVID-19 dari 2 Maret 2020 sampai 14 Januari 2024. Data tidak diperbarui lagi.')
-    const sul = wrapper.find('[data-group="sulteng"]')
-    expect(sul.text()).toContain('63.614')
-    expect(sul.text()).toContain('14 Januari 2024')
-    expect(wrapper.find('[data-group="indonesia"]').text()).toMatch(/\d{1,3}(\.\d{3})+/)
-    expect(sul.findAll('svg[data-state]').map((e) => e.attributes('data-state'))).toEqual(['positive', 'recovered', 'deceased', 'active'])
+    const cards = wrapper.findAll('[data-testid="headline"] > [data-state]')
+    expect(cards.map((c) => c.attributes('data-state'))).toEqual(['positive', 'active', 'recovered', 'deceased'])
+    const lr = home().lastReal
+    const positive = cards[0]!
+    // two columns, Sulawesi Tengah then Indonesia, each with its own last real day and its total as text
+    expect(positive.text().indexOf('Sulawesi Tengah')).toBeLessThan(positive.text().indexOf('Indonesia'))
+    expect(positive.text()).toContain(lr['sulawesi-tengah']!.cumulative.positive.toLocaleString('id-ID'))
+    expect(positive.text()).toContain(lr.indonesia!.cumulative.positive.toLocaleString('id-ID'))
+    expect(positive.findAll('time').map((t) => t.attributes('datetime'))).toEqual([lr['sulawesi-tengah']!.date, lr.indonesia!.date])
+    // the padded end of the record (14 January 2024, zeros) is never the shown date
+    expect(wrapper.find('[data-testid="headline"]').text()).not.toContain('14 Januari 2024')
   })
 
   it('Rt: the last non-null value with its date, never "0" for missing', async () => {
@@ -105,6 +113,8 @@ describe('BerandaView', () => {
 
   it('vaccination summary: dose bars for Sulteng and Indonesia, the date, a link to /vaksin', async () => {
     const { wrapper } = await open()
+    await wrapper.findAll('[role="tab"]').find((t) => t.text() === 'Vaksinasi')!.trigger('mousedown', { button: 0, ctrlKey: false })
+    await flush()
     const v = wrapper.find('[data-testid="vaccine-summary"]')
     expect(v.findAll('[role="progressbar"]')).toHaveLength(4)
     expect(v.text()).toContain('25 Maret 2022')
@@ -114,8 +124,8 @@ describe('BerandaView', () => {
   it('banners: the title card with the missing-image state, external links in a new tab with a label', async () => {
     const { wrapper } = await open()
     const b = wrapper.find('[data-testid="banners"]')
-    expect(b.findAll('li')).toHaveLength(3)
-    expect(b.findAll('[data-placeholder]')).toHaveLength(3) // images are on the expired server: resolved to null
+    expect(b.findAll('li')).toHaveLength(2) // the first two on the home page
+    expect(b.findAll('[data-placeholder]')).toHaveLength(2) // images are on the expired server: resolved to null
     const a = b.find('a')
     expect(a.attributes('target')).toBe('_blank')
     expect(a.attributes('rel')).toContain('noopener')
@@ -149,14 +159,14 @@ describe('BerandaView', () => {
     await flush()
     await flush()
     expect(wrapper.find('[role="alert"]').exists()).toBe(true) // the home snapshot is missing (offline in tests)
-    expect(wrapper.find('[data-testid="headline"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="headline"]').exists()).toBe(false) // it needs the home snapshot
     expect(wrapper.find('[data-testid="province-list"]').exists()).toBe(true)
     expect(wrapper.find('h1').exists()).toBe(true)
   })
 
   it('English home', async () => {
     const { wrapper } = await open('/en/')
-    expect(wrapper.find('h1').text()).toBe('COVID-19 Information Centre of Central Sulawesi')
+    expect(wrapper.find('h1').text()).toBe('COVID-19 Information Center, Central Sulawesi')
     expect(wrapper.find('[data-testid="rt-now"]').text()).toContain('last Rt that could be computed')
     expect(wrapper.find('[data-testid="province-list"] a').attributes('href')).toBe('/en/data/provinsi/sulawesi-tengah')
   })

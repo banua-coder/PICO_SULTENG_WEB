@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useVaccineLocations } from '@/api/useStats'
 import { usePageHead } from '@/app/head'
+import OptionToggle from '@/components/OptionToggle.vue'
 import StatusView from '@/components/StatusView.vue'
 import VaccineLocations from './components/VaccineLocations.vue'
 import VaksinBody from './components/VaksinBody.vue'
@@ -31,20 +32,9 @@ function setScope(s: Scope) {
 </script>
 
 <template>
-  <div class="px-5 py-8">
-    <h1 class="text-2xl">{{ t('vaksin.heading') }}</h1>
-    <fieldset class="m-0 mt-6 flex flex-wrap items-center gap-3 border-0 p-0">
-      <legend class="mb-2 text-sm font-strong text-ink-muted">{{ t('vaksin.scope') }}</legend>
-      <label
-        v-for="s in SCOPES"
-        :key="s.key"
-        class="inline-flex min-h-touch min-w-touch cursor-pointer items-center justify-center rounded-sm border px-4 text-sm font-strong"
-        :class="scope === s.key ? 'border-indigo bg-indigo text-on-indigo' : 'border-line-strong bg-surface text-ink'"
-      >
-        <input type="radio" name="vaksin-scope" class="sr-only" :value="s.key" :checked="scope === s.key" @change="setScope(s.key)">
-        {{ t(s.label) }}
-      </label>
-    </fieldset>
+  <div class="px-4 py-6">
+    <h1 class="text-xl md:text-2xl">{{ t('vaksin.heading') }}</h1>
+    <OptionToggle class="mt-4" :model-value="scope" :options="SCOPES.map((x) => ({ value: x.key, label: t(x.label) }))" :label="t('vaksin.scope')" @update:model-value="setScope" />
     <div class="mt-8"><VaksinBody :key="scope" :scope="scope" /></div>
     <div class="mt-8">
       <VaccineLocations v-if="locations.data.value" :items="locations.data.value" />

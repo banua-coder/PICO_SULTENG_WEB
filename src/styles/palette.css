@@ -1,0 +1,109 @@
+/* The old PICO palette (Laravel dashboard: gray page, white cards, blue accent, red / blue / green / orange case colours),
+   with the text and mark colours moved to the contrast steps that pass WCAG AA and the dataviz palette check
+   (node dataviz/scripts/validate_palette.js, light on #ffffff and dark on #1f2937, see docs/redesign-plan.md).
+   It overrides the colour tokens of assets/brand/pico-tokens.css, which stays a byte-exact copy of the PICO brand repo.
+   Role names are kept so every component reads the same variables. */
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+  --pico-paper: #e5e7eb;
+  --pico-surface: #ffffff;
+  --pico-cotton-deep: #f3f4f6;
+  --pico-tint: #dbeafe;
+  --pico-indigo: #2563eb;
+  --pico-sky: #3b82f6;
+  --pico-primary: #2563eb;
+  --pico-primary-strong: #1d4ed8;
+  --pico-crimson: #991b1b;
+  --pico-ink: #1f2937;
+  --pico-ink-muted: #4b5563;
+  --pico-line: #d1d5db;
+  --pico-line-strong: #6b7280;
+  --pico-on-indigo: #ffffff;
+  --pico-on-primary: #ffffff;
+  --pico-positive: #991b1b;
+  --pico-active: #2563eb;
+  --pico-recovered: #15803d;
+  --pico-deceased: #c2410c;
+  --pico-rt: #1d4ed8;
+  --pico-band: #9ca3af;
+  --pico-scrim: rgb(17 24 39 / 0.6);
+  --pico-bar: #111827;
+  --pico-on-bar: #d1d5db;
+  --pico-on-bar-active: #ffffff;
+  --pico-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.12), 0 1px 2px -1px rgb(0 0 0 / 0.12);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --pico-paper: #111827;
+  --pico-surface: #1f2937;
+  --pico-cotton-deep: #374151;
+  --pico-tint: #1e3a8a;
+  --pico-indigo: #93c5fd;
+  --pico-sky: #60a5fa;
+  --pico-primary: #2563eb;
+  --pico-primary-strong: #93c5fd;
+  --pico-crimson: #ef4444;
+  --pico-ink: #f3f4f6;
+  --pico-ink-muted: #9ca3af;
+  --pico-line: #374151;
+  --pico-line-strong: #9ca3af;
+  --pico-on-indigo: #111827;
+  --pico-on-primary: #ffffff;
+  --pico-positive: #ef4444;
+  --pico-active: #3b82f6;
+  --pico-recovered: #16a34a;
+  --pico-deceased: #ea580c;
+  --pico-rt: #93c5fd;
+  --pico-band: #6b7280;
+  --pico-scrim: rgb(17 24 39 / 0.6);
+  --pico-bar: #030712;
+  --pico-on-bar: #d1d5db;
+  --pico-on-bar-active: #ffffff;
+  --pico-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --pico-paper: #111827;
+    --pico-surface: #1f2937;
+    --pico-cotton-deep: #374151;
+    --pico-tint: #1e3a8a;
+    --pico-indigo: #93c5fd;
+    --pico-sky: #60a5fa;
+    --pico-primary: #2563eb;
+    --pico-primary-strong: #93c5fd;
+    --pico-crimson: #ef4444;
+    --pico-ink: #f3f4f6;
+    --pico-ink-muted: #9ca3af;
+    --pico-line: #374151;
+    --pico-line-strong: #9ca3af;
+    --pico-on-indigo: #111827;
+    --pico-on-primary: #ffffff;
+    --pico-positive: #ef4444;
+    --pico-active: #3b82f6;
+    --pico-recovered: #16a34a;
+    --pico-deceased: #ea580c;
+    --pico-rt: #93c5fd;
+    --pico-band: #6b7280;
+  --pico-scrim: rgb(17 24 39 / 0.6);
+  --pico-bar: #030712;
+  --pico-on-bar: #d1d5db;
+  --pico-on-bar-active: #ffffff;
+    --pico-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.5);
+  }
+}
+
+:root {
+  --pico-font-display: 'Nunito', system-ui, sans-serif;
+  --pico-font-text: 'Nunito', system-ui, sans-serif;
+  --pico-line-width: 2px;
+}
+
+/* the brand file ends with a crimson selection and focus ring: back to the blue accent */
+::selection {
+  background: var(--pico-tint);
+  color: var(--pico-ink);
+}

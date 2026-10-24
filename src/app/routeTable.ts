@@ -7,6 +7,7 @@ type Def = { name: string; path: string; view: () => Promise<{ default: Componen
 
 export const PAGES: Def[] = [
   { name: 'beranda', path: '/', view: () => import('@/features/beranda/BerandaView.vue') },
+  { name: 'mulai', path: '/mulai', view: () => import('@/features/mulai/MulaiView.vue') },
   { name: 'data', path: '/data', view: () => import('@/features/data/DataView.vue') },
   { name: 'data-nasional', path: '/data/indonesia', view: () => import('@/features/data/DataView.vue') },
   { name: 'data-provinsi', path: '/data/provinsi/:slug', view: () => import('@/features/data/DataView.vue') },

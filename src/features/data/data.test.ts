@@ -98,13 +98,24 @@ describe('DataView routes', () => {
     expect(wrapper.find('[data-testid="summary"]').exists()).toBe(false) // series not loaded in this test (offline)
   })
 
-  it('has a share block with the copy button, and the toolbar with area, dates, presets and the Delta window', async () => {
+  it('before the series, the latest row is shown with its daily changes withheld (the padded zeros are not a report)', async () => {
+    seedLatest()
+    const { wrapper } = await mountApp(DataView, {}, '/data/provinsi/sulawesi-tengah')
+    await flush()
+    const s = wrapper.find('[data-testid="summary"]')
+    expect(s.exists()).toBe(true)
+    expect(s.text()).toContain('Perubahan harian tidak tersedia')
+    expect(s.text()).not.toContain('Perubahan harian: 0')
+  })
+
+  it('has a share block with the copy button, and the toolbar: area select, time frames, year and calendar', async () => {
     seedLatest()
     const { wrapper } = await mountApp(DataView, {}, '/data/provinsi/aceh?dari=2021-07-01')
     await flush()
     expect(wrapper.find('[data-testid="share"] button').exists()).toBe(true)
-    expect(wrapper.find('select').element.value).toBe('provinsi:aceh')
-    expect(wrapper.findAll('button').map((b) => b.text())).toEqual(expect.arrayContaining(['Semua', '2020', '2021', '2022', '2023', 'Gelombang Delta']))
+    expect(wrapper.findAll('button[role="combobox"]').map((b) => b.text())).toEqual(['Aceh', 'Tahun'])
+    expect(wrapper.findAll('[data-slot="toggle-group-item"]').map((b) => b.text())).toEqual(expect.arrayContaining(['30 hari', '90 hari', '180 hari', 'Semua']))
+    expect(wrapper.find('[data-testid="range-trigger"]').exists()).toBe(true)
   })
 })
 

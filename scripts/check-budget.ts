@@ -1,6 +1,6 @@
 /**
  * Size budget on dist/ (spec 80, ADR-0103). Prints a table and exits 1 when something is over, or when a heavy library
- * (xlsx, d3, lottie) is part of a page's initial JavaScript. Sizes are gzip, measured from the built files.
+ * (xlsx, d3) is part of a page's initial JavaScript. Sizes are gzip, measured from the built files.
  */
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
@@ -13,7 +13,7 @@ export const LIMITS = { beranda: 90 * KB, data: 160 * KB, other: 110 * KB, css: 
 export type Limits = typeof LIMITS
 
 /** Library chunks that must never be in the initial JS of a page. Named by manualChunks in vite.config.ts. */
-export const FORBIDDEN_INITIAL = /^(?:xlsx|d3|lottie)[-_.]/i
+export const FORBIDDEN_INITIAL = /^(?:xlsx|d3)[-_.]/i
 
 const gz = (buf: Buffer | string) => gzipSync(buf, { level: 9 }).length
 

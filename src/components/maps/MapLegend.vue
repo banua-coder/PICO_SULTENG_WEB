@@ -16,8 +16,8 @@ const text = (min: number, max: number) => (min === max ? fmt.num(min) : t('map.
 <template>
   <div>
     <p class="text-sm font-strong text-ink-muted">{{ t('map.legend') }}</p>
-    <ul class="m-0 mt-3 flex list-none flex-wrap items-center gap-x-5 gap-y-3 p-0 text-sm" data-testid="map-legend">
-      <li v-for="r in rows" :key="r.step" class="num flex items-center gap-2">
+    <ul class="m-0 mt-2 flex list-none flex-wrap items-center gap-x-4 gap-y-2 p-0 text-sm" data-testid="map-legend">
+      <li v-for="r in rows" :key="r.step" class="num flex items-center gap-1">
         <StateMark :state="metric.role" :size="r.step as 1" />
         <span>{{ text(r.min, r.max) }}</span>
       </li>

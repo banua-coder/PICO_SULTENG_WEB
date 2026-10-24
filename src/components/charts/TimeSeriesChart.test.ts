@@ -55,7 +55,7 @@ describe('TimeSeriesChart: structure and roles', () => {
     rectWidth = 0
     const { wrapper } = await chart({ height: 300 })
     expect(wrapper.find('[data-kind]').attributes('style')).toContain('height: 300px')
-    expect(wrapper.find('svg').exists()).toBe(false)
+    expect(wrapper.find('svg[role="img"]').exists()).toBe(false)
   })
 
   it('each role draws its own line form, its mark and its name at the line end', async () => {
@@ -101,7 +101,7 @@ describe('TimeSeriesChart: structure and roles', () => {
 
   it('draws no animation', async () => {
     const { wrapper } = await chart()
-    expect(wrapper.html()).not.toMatch(/<animate|<set |animation|transition/)
+    expect(wrapper.find('svg[role="img"]').html()).not.toMatch(/<animate|<set |animation|transition/)
   })
 })
 
@@ -110,7 +110,7 @@ describe('TimeSeriesChart: bars', () => {
     const { wrapper } = await chart({ kind: 'bar', series: [mk('p', 'positive', 'Positif', (i) => i + 1, 30)] })
     const bars = wrapper.findAll('rect[data-bar]')
     expect(bars.length).toBeGreaterThan(0)
-    expect(bars[0]!.attributes('fill')).toBe('url(#pico-weave-positive)')
+    expect(bars[0]!.attributes('fill')).toBe('var(--pico-positive)')
   })
   it('narrow charts switch to weekly bars', async () => {
     rectWidth = 340

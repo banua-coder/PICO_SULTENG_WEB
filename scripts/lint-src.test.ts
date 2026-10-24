@@ -17,7 +17,7 @@ describe('token lint', () => {
   it.each([
     'color: var(--pico-ink);',
     '<div class="bg-paper text-ink p-5">',
-    'fill="url(#pico-weave-positive)"',
+    'fill="var(--pico-positive)"',
     'href="#konten"',
     'text-[length:var(--pico-text-md)]',
     '&#8217;',

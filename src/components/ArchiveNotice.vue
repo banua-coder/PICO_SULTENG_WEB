@@ -5,8 +5,8 @@ import PicoIcon from './PicoIcon.vue'
 </script>
 
 <template>
-  <aside role="note" class="flex gap-3 rounded-md border-2 border-indigo bg-tint p-5 text-ink" data-testid="archive-notice">
-    <PicoIcon name="info" :size="24" class="mt-1 flex-none text-indigo" />
-    <div class="flex flex-col gap-2"><slot /></div>
+  <aside role="note" class="flex gap-2 rounded-md border-2 border-indigo bg-tint p-4 text-ink" data-testid="archive-notice">
+    <PicoIcon name="info" :size="24" class="mt-0.5 flex-none text-indigo" />
+    <div class="flex flex-col gap-1"><slot /></div>
   </aside>
 </template>

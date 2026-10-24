@@ -22,26 +22,26 @@ const rows = computed(() =>
 </script>
 
 <template>
-  <div class="overflow-x-auto rounded-md border border-line bg-surface">
+  <div class="overflow-x-auto rounded-lg border bg-card text-card-foreground shadow-card">
     <table class="w-full border-collapse text-sm" data-testid="area-table">
       <caption class="sr-only">{{ metric.label }}</caption>
       <thead>
         <tr>
-          <th scope="col" class="border-b border-line-strong p-3 text-left font-strong">{{ t('map.name') }}</th>
-          <th scope="col" class="border-b border-line-strong p-3 text-right font-strong">{{ metric.label }}</th>
+          <th scope="col" class="border-b border-line-strong p-2 text-left font-strong">{{ t('map.name') }}</th>
+          <th scope="col" class="border-b border-line-strong p-2 text-right font-strong">{{ metric.label }}</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="r in rows" :key="r.code" :class="r.code === selected ? 'border-l-4 border-indigo bg-tint' : 'border-l-4 border-transparent'">
           <th scope="row" class="border-b border-line p-0 text-left font-regular">
-            <RouterLink v-if="hrefFor" :to="hrefFor(r.code)" class="inline-flex min-h-touch w-full items-center px-3" :aria-current="r.code === selected ? 'true' : undefined" :class="{ 'font-strong': r.code === selected }">
+            <RouterLink v-if="hrefFor" :to="hrefFor(r.code)" class="inline-flex min-h-touch w-full items-center px-2" :aria-current="r.code === selected ? 'true' : undefined" :class="{ 'font-strong': r.code === selected }">
               {{ r.name }}<span v-if="r.code === selected" class="sr-only"> ({{ t('map.selected') }})</span>
             </RouterLink>
-            <button v-else type="button" class="inline-flex min-h-touch w-full items-center px-3 text-left text-primary-strong underline" :aria-current="r.code === selected ? 'true' : undefined" :class="{ 'font-strong': r.code === selected }" @click="emit('select', r.code)">
+            <button v-else type="button" class="inline-flex min-h-touch w-full items-center px-2 text-left text-primary-strong underline" :aria-current="r.code === selected ? 'true' : undefined" :class="{ 'font-strong': r.code === selected }" @click="emit('select', r.code)">
               {{ r.name }}<span v-if="r.code === selected" class="sr-only"> ({{ t('map.selected') }})</span>
             </button>
           </th>
-          <td class="num border-b border-line p-3 text-right" :data-code="r.code">{{ fmt.nullable(r.value, (n: number) => fmt.num(n)) }}</td>
+          <td class="num border-b border-line p-2 text-right" :data-code="r.code">{{ fmt.nullable(r.value, (n: number) => fmt.num(n)) }}</td>
         </tr>
       </tbody>
     </table>

@@ -27,15 +27,20 @@ describe('rowOnOrBefore', () => {
 
 describe('summaryRow', () => {
   const w = { from: '2021-07-29', to: '2021-07-30' }
-  it('default end: the prerendered latest row, even before the series has arrived', () => {
-    expect(summaryRow({ latest, series: undefined, window: w, customEnd: false })?.cumulative.positive).toBe(999)
+  it('series here: its row on the window end (the last day with real counts)', () => {
+    expect(summaryRow({ latest, series, window: w })?.row.cumulative.positive).toBe(20)
+    expect(summaryRow({ latest, series, window: w })?.dailyKnown).toBe(true)
   })
-  it('default end and no latest: falls back to the series', () => {
-    expect(summaryRow({ latest: undefined, series, window: w, customEnd: false })?.cumulative.positive).toBe(20)
+  it('before the series: the last real day when the build knows it', () => {
+    expect(summaryRow({ latest, series: undefined, window: w, lastReal: series.rows[0] })?.row.cumulative.positive).toBe(10)
   })
-  it('custom end: the series row of that day, nothing while the series loads (never the wrong date)', () => {
-    expect(summaryRow({ latest, series, window: w, customEnd: true })?.cumulative.positive).toBe(20)
-    expect(summaryRow({ latest, series: undefined, window: w, customEnd: true })).toBeUndefined()
+  it('before the series, no last real day: the latest row, with its daily changes withheld (the padded zeros are not a report)', () => {
+    const r = summaryRow({ latest, series: undefined, window: w })
+    expect(r?.row.cumulative.positive).toBe(999)
+    expect(r?.dailyKnown).toBe(false)
+  })
+  it('nothing at all: undefined', () => {
+    expect(summaryRow({ latest: undefined, series: undefined, window: w })).toBeUndefined()
   })
 })
 

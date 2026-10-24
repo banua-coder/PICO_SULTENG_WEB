@@ -91,11 +91,11 @@ const avoided = [
       <p>Kolom pada berkas:</p>
       <div class="max-w-full overflow-x-auto" role="region" tabindex="0" aria-label="Kolom berkas unduhan">
         <table class="w-full border-collapse text-sm">
-          <thead><tr class="bg-tint"><th scope="col" class="px-3 py-2 text-left">Kolom</th><th scope="col" class="px-3 py-2 text-left">Isi</th></tr></thead>
+          <thead><tr class="bg-tint"><th scope="col" class="px-2 py-1 text-left">Kolom</th><th scope="col" class="px-2 py-1 text-left">Isi</th></tr></thead>
           <tbody>
             <tr v-for="(text, col) in COLUMN_DOCS.id" :key="col" class="border-t border-line">
-              <th scope="row" class="px-3 py-2 text-left font-normal"><code>{{ col }}</code></th>
-              <td class="px-3 py-2">{{ text }}</td>
+              <th scope="row" class="px-2 py-1 text-left font-normal"><code>{{ col }}</code></th>
+              <td class="px-2 py-1">{{ text }}</td>
             </tr>
           </tbody>
         </table>

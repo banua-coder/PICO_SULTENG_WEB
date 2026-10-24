@@ -12,7 +12,7 @@ const newTab = computed(() => ['whatsapp', 'telegram', 'line', 'twitter', 'insta
 </script>
 
 <template>
-  <span class="inline-flex min-h-touch flex-wrap items-center gap-x-3">
+  <span class="inline-flex min-h-touch flex-wrap items-center gap-x-2">
     <span class="text-sm text-ink-muted">{{ kind }}</span>
     <a v-if="contact.href" :href="contact.href" :target="newTab ? '_blank' : undefined" :rel="newTab ? 'noopener noreferrer' : undefined">
       {{ contact.label }}<span v-if="newTab" class="sr-only"> {{ t('contact.newTab') }}</span>

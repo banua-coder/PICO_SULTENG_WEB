@@ -20,6 +20,6 @@ const summary = computed(() => {
 <template>
   <section aria-labelledby="dosis" data-testid="doses-over-time">
     <SectionHeading id="dosis" :level="2">{{ t('vaksin.overTitle') }}</SectionHeading>
-    <TimeSeriesChart class="mt-5" kind="line" :series="series" :a11y="{ title: t('vaksin.overChart'), summary }" />
+    <TimeSeriesChart class="mt-4" kind="line" :series="series" :a11y="{ title: t('vaksin.overChart'), summary }" />
   </section>
 </template>

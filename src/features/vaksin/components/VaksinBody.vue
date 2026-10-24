@@ -16,7 +16,7 @@ const day = computed(() => (series.data.value ? lastDay(series.data.value) : und
 </script>
 
 <template>
-  <div v-if="series.data.value && day" class="flex flex-col gap-8">
+  <div v-if="series.data.value && day" class="flex flex-col gap-12">
     <CoverageNow :day="day" />
     <CoverageByGroup :day="day" />
     <DosesOverTime :days="series.data.value" />

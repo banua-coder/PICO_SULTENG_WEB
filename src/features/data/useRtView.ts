@@ -19,8 +19,7 @@ export function lastRt(rows: DailyRow[], w: DataWindow): { date: IsoDate; value:
  * Runs of consecutive days without Rt inside the window. A run that reaches the last day of the whole record is the
  * estimate stopping (`end`), not a quiet period.
  */
-export function nullRuns(rows: DailyRow[], w: DataWindow): NullRun[] {
-  const recordLast = rows.at(-1)?.date
+export function nullRuns(rows: DailyRow[], w: DataWindow, recordLast: IsoDate | undefined = rows.at(-1)?.date): NullRun[] {
   const runs: NullRun[] = []
   let open = null as { from: IsoDate; to: IsoDate } | null
   for (const r of rowsInWindow(rows, w)) {
@@ -29,6 +28,6 @@ export function nullRuns(rows: DailyRow[], w: DataWindow): NullRun[] {
       open = null
     } else open = { from: open?.from ?? r.date, to: r.date }
   }
-  if (open) runs.push({ ...open, kind: open.to === recordLast ? 'end' : 'gap' })
+  if (open) runs.push({ ...open, kind: recordLast !== undefined && open.to >= recordLast ? 'end' : 'gap' })
   return runs
 }

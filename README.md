@@ -12,9 +12,9 @@ Needs Node 22 and pnpm 10 (`corepack enable`).
 |---|---|
 | `pnpm install` | Install dependencies |
 | `pnpm dev` | Vite dev server |
-| `pnpm build` | Snapshot and downloads from the live API, then prerender 114 pages + 404 with vite-ssg, then sitemap (`dist/`). Fails when the API stays down |
+| `pnpm build` | Snapshot and downloads from the live API, then prerender 116 pages + 404 with vite-ssg, then sitemap (`dist/`). Fails when the API stays down |
 | `pnpm build:data` | Only the data step: `public/data/kabupaten-latest.json` and `public/unduh/*.csv|xlsx` (one-day disk cache in `.cache/`, `PICO_NO_CACHE=1` to skip it) |
-| `pnpm check:dist` | The built site: 114 pages, unique titles, canonical, hreflang, sitemap, no broken internal link, and no unreviewed `data-todo` marker (see Review markers) |
+| `pnpm check:dist` | The built site: 116 pages, unique titles, canonical, hreflang, sitemap, no broken internal link, and no unreviewed `data-todo` marker (see Review markers) |
 | `pnpm check:budget` | Size budget (spec 80). Fails when xlsx, d3 or lottie are in a page's initial JS |
 | `pnpm preview` | Serve `dist/` on port 4173 (SPA fallback: use `pnpm exec tsx scripts/serve-dist.ts` to route like nginx) |
 | `pnpm lint` | ESLint (feature-boundary rule), raw-colour lint, locale key parity, brand manifest check |

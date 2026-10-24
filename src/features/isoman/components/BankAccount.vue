@@ -10,7 +10,7 @@ const digits = (n: string) => n.replace(/\D/g, '')
 </script>
 
 <template>
-  <div class="flex flex-wrap items-center gap-4">
+  <div class="flex flex-wrap items-center gap-3">
     <!-- a logo only when the API has one; the bank name is always text -->
     <div v-if="account.logo" class="w-[3rem] flex-none"><PicoImage :src="account.logo" alt="" ratio="1/1" fallback="initials" /></div>
     <div class="min-w-0 flex-1">

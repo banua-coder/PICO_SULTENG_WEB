@@ -20,4 +20,4 @@ export const lineForm = (role: Role): LineForm => ({
   cap: role === 'recovered' ? 'round' : 'butt', // the dotted line is 0.1-long dashes: round caps make the dots
 })
 
-export const weaveFill = (role: Role) => `url(#pico-weave-${role})`
+export const roleFill = (role: Role) => `var(--pico-${role})`

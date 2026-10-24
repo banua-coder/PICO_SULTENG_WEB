@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { nextTick, onMounted, ref } from 'vue'
 import { START_LOCATION, useRouter } from 'vue-router'
-import WeaveDefs from '../WeaveDefs.vue'
 import AppFooter from './AppFooter.vue'
 import AppHeader from './AppHeader.vue'
 import SkipLink from './SkipLink.vue'
@@ -31,7 +30,6 @@ router.afterEach(async (to, from, failure) => {
 
 <template>
   <SkipLink />
-  <WeaveDefs />
   <AppHeader />
   <main id="konten" tabindex="-1" class="mx-auto w-full max-w-6xl outline-none">
     <slot />

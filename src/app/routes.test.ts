@@ -50,8 +50,8 @@ describe('C5 route table', () => {
     expect(new Set(names).size).toBe(names.length)
   })
 
-  it('the 9 nav items are real routes', () => {
-    expect(NAV_ITEMS).toHaveLength(9)
+  it('the 10 nav items are real routes', () => {
+    expect(NAV_ITEMS).toHaveLength(10)
     for (const i of NAV_ITEMS) expect(nameOf(i.path)).not.toBe('tidak-ditemukan')
   })
 })
