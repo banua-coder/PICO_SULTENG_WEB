@@ -100,7 +100,7 @@ const contacts: Contact[] = [
     <h1 class="text-xl md:text-2xl">{{ t('kit.title') }}</h1>
     <p class="mt-2 text-ink-muted">{{ t('kit.intro') }}</p>
     <div class="mt-4 flex flex-wrap gap-2">
-      <button type="button" class="min-h-touch rounded-sm bg-primary-strong px-4 text-on-primary" @click="cycle">{{ t('theme.label') }}: {{ theme }}</button>
+      <button type="button" class="min-h-touch rounded-sm bg-primary px-4 text-on-primary" @click="cycle">{{ t('theme.label') }}: {{ theme }}</button>
       <a :href="switchPath" :hreflang="other" class="inline-flex min-h-touch items-center rounded-sm border border-line-strong px-4">{{ t('locale.switchTo') }}</a>
     </div>
 

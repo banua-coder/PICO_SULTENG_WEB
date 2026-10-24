@@ -25,15 +25,15 @@ const items = computed<NavItem[]>(() =>
 <template>
   <header class="sticky top-0 z-40 bg-surface shadow-card">
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2">
-      <RouterLink :to="localize('/')" class="flex min-h-touch items-center gap-3 text-ink no-underline" :aria-label="t('app.homeLink')">
+      <RouterLink :to="localize('/')" class="flex min-h-touch min-w-0 items-center gap-3 text-ink no-underline" :aria-label="t('app.homeLink')">
         <img :src="mark" alt="" width="40" height="40" class="logo-light size-8 md:size-10" decoding="async">
         <img :src="markDark" alt="" width="40" height="40" class="logo-dark size-8 md:size-10" decoding="async">
-        <span class="whitespace-nowrap leading-tight">
-          <span class="block text-xs font-semibold md:text-lg">{{ t('app.titleLine1') }}</span>
-          <span class="block text-xs md:text-sm">{{ t('app.titleLine2') }}</span>
+        <span class="min-w-0 leading-tight">
+          <span class="block truncate text-xs font-semibold md:text-lg">{{ t('app.titleLine1') }}</span>
+          <span class="block truncate text-xs md:text-sm">{{ t('app.titleLine2') }}</span>
         </span>
       </RouterLink>
-      <div class="flex items-center gap-2">
+      <div class="flex shrink-0 items-center gap-2">
         <AppNav :items="items" class="hidden xl:block" />
         <Button as-child class="hidden xl:inline-flex">
           <RouterLink :to="`${localize('/mulai')}#aplikasi`" class="text-on-primary no-underline"><Smartphone aria-hidden="true" />{{ t('nav.download') }}</RouterLink>

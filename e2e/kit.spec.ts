@@ -42,24 +42,14 @@ test('PicoImage: three missing-image cases keep the box, CLS is 0', async ({ pag
   expect(await cls()).toBeLessThan(0.01) // and the whole page stays far under the "good" limit
 })
 
-test('LottiePlayer with reduced motion never requests lottie-web', async ({ page }) => {
+test('the kit and the home page never load an animation library or a weave illustration', async ({ page }) => {
   const requested: string[] = []
-  page.on('request', (r) => /lottie/i.test(r.url()) && requested.push(r.url()))
-  await page.emulateMedia({ reducedMotion: 'reduce' })
+  page.on('request', (r) => requested.push(r.url()))
   await page.goto('/_kit')
   await page.waitForLoadState('networkidle')
-  expect(requested).toEqual([])
-})
-
-test('LottiePlayer with motion allowed loads the player lazily', async ({ page }) => {
-  const requested: string[] = []
-  page.on('request', (r) => /lottie/i.test(r.url()) && requested.push(r.url()))
   await page.goto('/')
   await page.waitForLoadState('networkidle')
-  expect(requested).toEqual([]) // not on a page that has no animation
-  await page.goto('/_kit')
-  await page.waitForLoadState('networkidle')
-  expect(requested.length).toBeGreaterThan(0)
+  expect(requested.filter((u) => /lottie|weave|tenun|pico-hero/i.test(u))).toEqual([])
 })
 
 test('the hero illustration is never loaded by the kit', async ({ page }) => {

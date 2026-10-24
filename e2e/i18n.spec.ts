@@ -2,7 +2,7 @@ import { expect, test } from './support/test'
 
 for (const [path, lang, heading] of [
   ['/', 'id', 'Pusat Informasi COVID-19 Sulawesi Tengah'],
-  ['/en/', 'en', 'COVID-19 Information Centre of Central Sulawesi'],
+  ['/en/', 'en', 'COVID-19 Information Center, Central Sulawesi'],
 ] as const) {
   test(`${path} is prerendered in ${lang} and hydrates with no console warning`, async ({ page }) => {
     const logs: string[] = []

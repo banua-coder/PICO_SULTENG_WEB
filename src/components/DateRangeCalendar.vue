@@ -33,7 +33,7 @@ function onRange(v: { start?: DateValue; end?: DateValue }) {
 <template>
   <Popover v-model:open="open">
     <PopoverTrigger as-child>
-      <Button variant="outline" class="justify-start font-normal" data-testid="range-trigger">
+      <Button variant="outline" class="h-auto w-full justify-start whitespace-normal py-2 text-left font-normal" data-testid="range-trigger">
         <CalendarRange aria-hidden="true" /><span class="num">{{ f.range(modelValue.from, modelValue.to) }}</span>
       </Button>
     </PopoverTrigger>

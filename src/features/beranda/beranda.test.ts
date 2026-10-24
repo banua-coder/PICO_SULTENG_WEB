@@ -121,7 +121,7 @@ describe('BerandaView', () => {
     expect(wrapper.find('a[href="/vaksin"]').exists()).toBe(true)
   })
 
-  it('banners: the title card with the missing-image state, external links in a new tab with a label', async () => {
+  it('banners: the title card (no picture), external links in a new tab with a label', async () => {
     const { wrapper } = await open()
     const b = wrapper.find('[data-testid="banners"]')
     expect(b.findAll('li')).toHaveLength(2) // the first two on the home page

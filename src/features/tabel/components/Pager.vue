@@ -28,7 +28,7 @@ const numbers = computed(() => pageNumbers(props.page, props.pages))
       <Button type="button" variant="outline" :disabled="page >= pages" @click="emit('update:page', page + 1)">{{ t('tabel.next') }}<ChevronRight aria-hidden="true" /></Button>
     </div>
     <p role="status" aria-live="polite" class="m-0 text-sm text-ink-muted">{{ t('tabel.pageOf', { page, pages }) }}</p>
-    <form class="flex items-end gap-2" @submit.prevent="date && emit('jump', date)">
+    <form class="flex flex-wrap items-end gap-2" @submit.prevent="date && emit('jump', date)">
       <div class="flex flex-col gap-1">
         <Label for="tabel-jump" class="text-sm text-ink-muted">{{ t('tabel.jump') }}</Label>
         <Input id="tabel-jump" v-model="date" type="date" :min="min" :max="max" />

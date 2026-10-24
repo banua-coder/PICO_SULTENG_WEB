@@ -154,12 +154,12 @@ const pre = 'm-0 overflow-x-auto rounded-md bg-cotton-deep p-4 text-sm leading-r
             </ul>
           </div>
           <div class="flex flex-wrap items-center gap-3">
-            <Button as-child size="lg"><a :href="APP_RELEASES_URL" rel="noopener" class="text-on-primary no-underline"><Download aria-hidden="true" />{{ t('mulai.app.download') }}</a></Button>
+            <Button as-child size="lg" class="h-auto max-w-full whitespace-normal py-3 text-left"><a :href="APP_RELEASES_URL" rel="noopener" class="text-on-primary no-underline"><Download aria-hidden="true" />{{ t('mulai.app.download') }}</a></Button>
             <span class="num text-sm text-ink-muted">{{ t('mulai.app.version', { version: APP_LATEST.version, size: f.num(APP_LATEST.mb, 1) }) }}</span>
           </div>
           <div>
             <h3 class="m-0 text-md">{{ t('mulai.app.howTitle') }}</h3>
-            <ol class="mt-2 pl-5">
+            <ol class="mt-2 list-decimal pl-5">
               <li>{{ t('mulai.app.step1') }}</li>
               <li>{{ t('mulai.app.step2') }}</li>
               <li>{{ t('mulai.app.step3') }}</li>

@@ -112,7 +112,7 @@ test('RtChart: Rt = 1 is labelled, a gap breaks the thread, a clipped value show
   await expect(rt.getByTestId('rt-key')).toContainText('Pita arsir')
 })
 
-test('BarList and ProgressBar: numbers sit outside the weave, null is text, over target says so', async ({ page }) => {
+test('BarList and ProgressBar: numbers sit outside the bar, null is text, over target says so', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
   await page.goto('/_kit')
   await hydrated(page)

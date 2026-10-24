@@ -61,7 +61,7 @@ const pickYear = (v: unknown) => emit('update:modelValue', v === 'all' ? all.val
         </SelectContent>
       </Select>
     </div>
-    <div class="flex flex-col gap-1">
+    <div class="flex w-full flex-col gap-1 sm:w-auto">
       <Label class="text-sm font-semibold text-ink-muted">{{ t('range.pickRange') }}</Label>
       <DateRangeCalendar :model-value="modelValue" :min="min" :max="max" @update:model-value="emit('update:modelValue', $event)" />
     </div>

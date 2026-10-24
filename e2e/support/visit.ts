@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test'
-import type { Page } from '@playwright/test'
+import type { Locator, Page } from '@playwright/test'
 import { hydrated } from './a11y'
 
 export type VisitOptions = { locale?: 'id' | 'en'; theme?: 'light' | 'dark'; reducedMotion?: boolean }
@@ -39,3 +39,14 @@ export async function visit(page: Page, route: string, { locale = 'id', theme, r
 export async function horizontalOverflow(page: Page): Promise<number> {
   return page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
 }
+
+/** Pick an option of a shadcn Select (reka-ui combobox): open the trigger, click the option by its name. */
+export async function chooseOption(page: Page, trigger: Locator, name: string | RegExp) {
+  await trigger.click()
+  await page.getByRole('option', { name, exact: typeof name === 'string' }).click()
+  await expect(page.getByRole('listbox')).toBeHidden() // while it is open (and closing), the rest of the page is aria-hidden
+}
+
+/** A shadcn toggle group item (reka-ui) by its text. */
+export const toggle = (page: Page, name: string, group?: string) =>
+  (group ? page.getByRole('group', { name: group }) : page).locator('[data-slot="toggle-group-item"]', { hasText: new RegExp(`^${name}$`) })

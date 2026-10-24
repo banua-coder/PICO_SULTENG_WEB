@@ -7,6 +7,8 @@ import type { ClassValue } from 'clsx'
 const SIZES = new Set(['xs', 'sm', 'md', 'base', 'lg', 'xl', '2xl', '3xl'])
 const SPACING = ['gap-x', 'gap-y', 'gap', 'min-h', 'min-w', 'max-h', 'max-w', 'size', 'px', 'py', 'pt', 'pb', 'pl', 'pr', 'ps', 'pe', 'p', 'mx', 'my', 'mt', 'mb', 'ml', 'mr', 'ms', 'me', 'm', 'w', 'h']
 const DISPLAY = new Set(['flex', 'grid', 'block', 'inline', 'inline-flex', 'inline-block', 'hidden', 'contents', 'inline-grid'])
+// utilities that are one property with a keyword value: the last one wins
+const KEYWORD = ['justify', 'items', 'self', 'content', 'overflow-x', 'overflow-y', 'overflow', 'whitespace', 'leading', 'tracking', 'opacity', 'z', 'cursor', 'position', 'underline']
 const WEIGHTS = new Set(['regular', 'medium', 'semibold', 'strong', 'heading', 'bold', 'normal', 'light'])
 
 function group(utility: string): string {
@@ -25,6 +27,7 @@ function group(utility: string): string {
     return 'text-color'
   }
   if (u.startsWith('font-')) return WEIGHTS.has(u.slice(5)) ? 'font-weight' : 'font-family'
+  for (const k of KEYWORD) if (u.startsWith(`${k}-`)) return k
   if (u.startsWith('shadow')) return 'shadow'
   if (u.startsWith('bg-')) return 'bg'
   if (u === 'border' || /^border-\d+$/.test(u)) return 'border-width'

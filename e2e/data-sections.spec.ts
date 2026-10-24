@@ -10,43 +10,44 @@ test.describe('Data page sections', () => {
     await visit(page, SULTENG)
     await expect(page.getByTestId('curves').locator('figure').first()).toBeVisible()
     const ids = await page.locator('main section[aria-labelledby]').evaluateAll((s) => s.map((e) => e.getAttribute('aria-labelledby')))
-    await expect(page.getByTestId('curves').locator('[data-peak]')).toHaveCount(1) // the one crimson thread of the chart
-    expect(ids).toEqual(['ringkasan', 'kurva', 'rt', 'peta', 'odp-pdp', 'gender', 'tes'])
+    await expect(page.getByTestId('curves').locator('[data-peak]')).toHaveCount(1) // the one ink-coloured peak bar of the chart
+    expect(ids).toEqual(['ringkasan', 'tes', 'peta', 'kurva', 'rt', 'odp-pdp', 'gender', 'akses-data']) // the order of the old data page: cards, tests, map, charts, Rt, gender and age, public data
     expect(log).toEqual([])
   })
 
-  test('daily view: two charts, one crimson peak bar, the 7-day average; the radio writes ?tampilan and keeps the window', async ({ page }) => {
-    await visit(page, `${SULTENG}?dari=2024-01-01`)
+  test('daily view: one chart for the chosen case type, one peak bar, the 7-day average; the tabs write ?tampilan and keep the window', async ({ page }) => {
+    await visit(page, `${SULTENG}?dari=2023-12-01`)
     const curves = page.getByTestId('curves')
-    await expect(curves.locator('figure')).toHaveCount(2)
+    await expect(curves.locator('figure')).toHaveCount(1)
     await expect(curves.getByText('rata-rata 7 hari').first()).toBeVisible()
-    await curves.getByText('Kumulatif', { exact: true }).click()
-    await expect(page).toHaveURL(/dari=2024-01-01/)
+    await expect(curves.getByTestId('legend')).toBeVisible()
+    await curves.getByRole('tab', { name: 'Kumulatif' }).click()
+    await expect(page).toHaveURL(/dari=2023-12-01/)
     await expect(page).toHaveURL(/tampilan=kumulatif/)
     await expect(curves.locator('figure')).toHaveCount(1)
-    await curves.getByText('Harian', { exact: true }).click()
+    await curves.getByRole('tab', { name: 'Harian' }).click()
     await expect(page).not.toHaveURL(/tampilan/)
   })
 
   test('the chart table lists the same days as the chart', async ({ page }) => {
-    await visit(page, `${SULTENG}?dari=2024-01-10&sampai=2024-01-14&tampilan=kumulatif`)
+    await visit(page, `${SULTENG}?dari=2023-12-05&sampai=2023-12-09&tampilan=kumulatif`)
     await page.getByTestId('curves').getByRole('button', { name: 'Lihat sebagai tabel' }).click()
     await expect(page.getByTestId('curves').locator('tbody tr')).toHaveCount(5)
   })
 
   test('Rt: the explainer links to Metodologi, a window without Rt says so', async ({ page }) => {
-    await visit(page, '/data/indonesia?dari=2023-08-01')
+    await visit(page, '/data/indonesia?dari=2020-03-02&sampai=2020-03-08')
     const rt = page.getByTestId('rt-section')
     await expect(rt.getByTestId('rt-none')).toHaveText('Rt tidak tersedia untuk rentang ini')
     await rt.getByRole('link', { name: 'Cara menghitungnya' }).click()
     await expect(page).toHaveURL(/\/metodologi#rt$/)
   })
 
-  test('Rt: national, 2023-07-01 to the end: the last value is 9 July 2023 and the gap note covers the rest', async ({ page }) => {
-    await visit(page, '/data/indonesia?dari=2023-07-01')
+  test('Rt: national at the default end: the chart runs to its last value, 9 July 2023, and the note says the estimate stopped', async ({ page }) => {
+    await visit(page, '/data/indonesia')
     const rt = page.getByTestId('rt-section')
     await expect(rt.getByTestId('rt-last')).toContainText('9 Juli 2023')
-    await expect(rt.getByTestId('rt-gaps')).toContainText('14 Januari 2024')
+    await expect(rt.getByTestId('rt-gaps')).not.toContainText('2024') // the padded end of the record is not a gap
     await expect(rt.getByTestId('rt-end')).toContainText('Setelah 9 Juli 2023')
   })
 
@@ -54,7 +55,7 @@ test.describe('Data page sections', () => {
     await visit(page, '/data/kabupaten/poso?dari=2021-07-01&sampai=2021-07-31')
     const map = page.getByTestId('submap')
     await expect(map.locator('g[role="link"][aria-current="true"]')).toHaveAttribute('data-code', '7204')
-    await map.getByRole('radio').first().focus()
+    await map.locator('[data-slot="toggle-group-item"]').first().focus()
     let reached = false
     for (let i = 0; i < 40 && !reached; i++) {
       await page.keyboard.press('Tab')
@@ -78,7 +79,8 @@ test.describe('Data page sections', () => {
     await visit(page, SULTENG)
     await expect(page.getByTestId('gender-caption')).toHaveText('Data terakhir yang tersedia dari sumber. Tanggal tidak tercatat di API.')
     await expect(page.getByTestId('tests').locator('[data-type]')).toHaveCount(2)
-    await expect(page.getByTestId('tests-note')).toContainText('28 September 2020')
+    await expect(page.getByTestId('tests-note')).toContainText('2020')
+    await expect(page.getByTestId('tests-note')).not.toContainText('28 September 2020') // after the last real period the source has only zero rows
   })
 
   test('the series is requested once, by the client, and the first paint has the summary already', async ({ page }) => {

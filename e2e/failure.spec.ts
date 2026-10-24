@@ -39,7 +39,7 @@ test.describe('Data page: the series request fails', () => {
   test('the page keeps working when only the series fails: the prerendered figures stay', async ({ page }) => {
     await page.route(SERIES, (r) => r.fulfill({ status: 500, body: '{"status":"error","error":"x"}' }))
     await page.goto('/data/provinsi/sulawesi-tengah')
-    await expect(page.getByTestId('summary')).toContainText('14 Januari 2024') // from the latest row in the page's initial state
+    await expect(page.getByTestId('summary')).toContainText('9 Desember 2023') // the last day with real counts, from the home snapshot in the page's initial state
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Data Sulawesi Tengah')
   })
 })

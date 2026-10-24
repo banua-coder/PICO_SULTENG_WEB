@@ -1,6 +1,6 @@
 import { expect, test } from './support/test'
 import { expectNoA11yViolations } from './support/a11y'
-import { horizontalOverflow, visit, watchConsole, watchRequests } from './support/visit'
+import { chooseOption, horizontalOverflow, visit, watchConsole, watchRequests } from './support/visit'
 
 test.describe('Kontak', () => {
   test('the prerendered HTML already has the notice, the hospitals and the task forces; hydrating makes no API request', async ({ page }) => {
@@ -20,14 +20,14 @@ test.describe('Kontak', () => {
   test('the kabupaten filter narrows both lists and writes ?kabupaten', async ({ page }) => {
     await visit(page, '/kontak')
     const all = await page.getByRole('article').count()
-    await page.getByLabel('Kabupaten/Kota', { exact: true }).selectOption('kota-palu')
+    await chooseOption(page, page.getByRole('combobox', { name: 'Kabupaten/Kota' }), 'Kota Palu')
     await expect(page).toHaveURL(/kabupaten=kota-palu/)
     const palu = await page.getByRole('article').count()
     expect(palu).toBeGreaterThan(0)
     expect(palu).toBeLessThan(all)
     for (const a of await page.getByRole('article').all()) await expect(a).toContainText('Kota Palu')
     await expect(page.getByRole('heading', { level: 3, name: 'Kota Palu' })).toBeVisible()
-    await page.getByLabel('Kabupaten/Kota', { exact: true }).selectOption('')
+    await chooseOption(page, page.getByRole('combobox', { name: 'Kabupaten/Kota' }), /^Semua/)
     await expect(page).not.toHaveURL(/kabupaten=/)
     expect(await page.getByRole('article').count()).toBe(all)
   })
