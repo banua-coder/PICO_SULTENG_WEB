@@ -14,8 +14,8 @@ usePageHead({ title: () => t('metodologi.title'), description: () => t('metodolo
 </script>
 
 <template>
-  <div class="px-5 py-8">
-    <h1 class="text-2xl">{{ t('metodologi.heading') }}</h1>
-    <component :is="Content" class="mt-8" />
+  <div class="px-4 py-6">
+    <h1 class="text-xl md:text-2xl">{{ t('metodologi.heading') }}</h1>
+    <component :is="Content" class="mt-12" />
   </div>
 </template>

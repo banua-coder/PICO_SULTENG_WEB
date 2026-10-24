@@ -26,8 +26,8 @@ const status = computed(() => (s.series.status.value === 'error' ? 'error' : s.s
 </script>
 
 <template>
-  <div class="px-5 py-8">
-    <h1 class="text-2xl">{{ t('tabel.title') }}</h1>
+  <div class="px-4 py-6">
+    <h1 class="text-xl md:text-2xl">{{ t('tabel.title') }}</h1>
     <TableToolbar
       class="mt-6"
       :level="s.level.value"
@@ -39,12 +39,12 @@ const status = computed(() => (s.series.status.value === 'error' ? 'error' : s.s
       @update:area="s.setArea"
       @update:window="s.setWindow"
     />
-    <StatusView v-if="status" class="mt-8" :kind="status" @retry="s.series.refresh()" />
+    <StatusView v-if="status" class="mt-12" :kind="status" @retry="s.series.refresh()" />
     <template v-else>
       <DailyTable class="mt-6" :rows="s.pageRows.value" :columns="s.columns.value" :caption="caption" :total="s.rows.value.length" :start="(s.page.value - 1) * s.pageSize + 1" />
-      <Pager class="mt-5" :page="s.page.value" :pages="s.pages.value" :min="s.window.value.from" :max="s.window.value.to" @update:page="s.setPage" @jump="s.jumpTo" />
+      <Pager class="mt-4" :page="s.page.value" :pages="s.pages.value" :min="s.window.value.from" :max="s.window.value.to" @update:page="s.setPage" @jump="s.jumpTo" />
     </template>
-    <div class="mt-8">
+    <div class="mt-12">
       <ExportBar :rows="s.rows.value" :columns="s.columns.value" :slug="s.area.value.slug" :from="s.window.value.from" :to="s.window.value.to" :sheet="s.area.value.name" />
     </div>
   </div>

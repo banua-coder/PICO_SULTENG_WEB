@@ -4,10 +4,10 @@ import { sitePaths, sitePairs } from './siteRoutes'
 import { createMemoryHistory, createRouter } from 'vue-router'
 
 describe('siteRoutes (C5)', () => {
-  it('lists 114 unique paths: 2 x (10 + 34 + 13)', () => {
+  it('lists 116 unique paths: 2 x (11 + 34 + 13)', () => {
     const p = sitePaths()
-    expect(p).toHaveLength(114)
-    expect(new Set(p).size).toBe(114)
+    expect(p).toHaveLength(116)
+    expect(new Set(p).size).toBe(116)
   })
   it('Indonesian has no prefix, English is /en, Beranda is /en/', () => {
     const p = sitePaths()
@@ -15,12 +15,12 @@ describe('siteRoutes (C5)', () => {
     expect(p).toContain('/en/')
     expect(p).toContain('/data/provinsi/aceh')
     expect(p).toContain('/en/data/kabupaten/kota-palu')
-    expect(p.filter((x) => x.startsWith('/en')).length).toBe(57)
+    expect(p.filter((x) => x.startsWith('/en')).length).toBe(58)
   })
   it('both locales of a page are adjacent', () => {
     const pairs = sitePairs()
-    expect(pairs[1]).toEqual(['/data', '/en/data'])
-    expect(sitePaths().slice(0, 4)).toEqual(['/', '/en/', '/data', '/en/data'])
+    expect(pairs[1]).toEqual(['/mulai', '/en/mulai'])
+    expect(sitePaths().slice(0, 4)).toEqual(['/', '/en/', '/mulai', '/en/mulai'])
   })
   it('every path resolves to a real route, not the not-found route', () => {
     const router = createRouter({ history: createMemoryHistory(), routes: buildRoutes() })

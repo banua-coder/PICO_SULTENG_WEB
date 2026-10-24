@@ -45,7 +45,9 @@ describe('useTestSeries', () => {
     expect([...xs].sort()).toEqual(xs)
     expect(pcr.last?.type).toBe('pcr')
     const rdt = useTestSeries(periods, 'rdt', { positive: 'P', negative: 'N' })
-    expect(rdt.last?.from).toBe('2020-09-28')
+    // the periods after it are four zeros: padding, not a report
+    expect(rdt.last?.from).toBe('2020-05-26')
+    expect(periods.some((p) => p.type === 'rdt' && p.from > '2020-05-26')).toBe(true)
     expect(Object.keys(rdt.last!).sort()).toEqual(['from', 'invalid', 'negative', 'positive', 'process', 'type'])
   })
   it('type descriptions come from the API rows', () => {

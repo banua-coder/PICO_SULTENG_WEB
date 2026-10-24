@@ -1,4 +1,5 @@
 import type { DailyRow, LatestByArea, Series } from '@/api/types'
+import { lastRealRow } from '@/app/homeLatest'
 import type { DataWindow } from './useDataPage'
 
 /** The last row on or before `date`, or undefined. Rows are ascending by date. */
@@ -17,12 +18,21 @@ export function rowOnOrBefore(rows: DailyRow[], date: string): DailyRow | undefi
 }
 
 /**
- * The row the summary shows: with the window ending on the latest day, the small prerendered "latest" row (so the HTML has the
- * numbers and the client needs no request). With a custom end, the series row of that day, once the series has arrived.
+ * The row the summary shows. Once the series is here: its row on the window's last day (the last day with real counts, unless the
+ * visitor moved the end). Before that, the small prerendered row: for Sulawesi Tengah and Indonesia the last real day (`lastReal`),
+ * for any other area the "latest" row with its daily changes withheld, because its date is the padded end of the record, not a report.
  */
-export function summaryRow(opts: { latest: LatestByArea | undefined; series: Series | undefined; window: DataWindow; customEnd: boolean }): DailyRow | undefined {
-  if (!opts.customEnd) return opts.latest?.latest ?? (opts.series ? rowOnOrBefore(opts.series.rows, opts.window.to) : undefined)
-  return opts.series ? rowOnOrBefore(opts.series.rows, opts.window.to) : undefined
+export function summaryRow(opts: { latest: LatestByArea | undefined; series: Series | undefined; window: DataWindow; lastReal?: DailyRow | null; /** the window end was moved by the visitor: before the series arrives there is nothing true to show */ customEnd?: boolean }): { row: DailyRow; dailyKnown: boolean } | undefined {
+  if (opts.series) {
+    // the last day with counts on or before the window end: never one of the zero rows the source padded the record with
+    const on = rowOnOrBefore(opts.series.rows, opts.window.to)
+    const lastAll = lastRealRow(opts.series.rows)
+    const row = on && lastAll && on.date > lastAll.date ? lastAll : on
+    return row ? { row, dailyKnown: true } : undefined
+  }
+  if (opts.customEnd) return undefined
+  if (opts.lastReal) return { row: opts.lastReal, dailyKnown: true }
+  return opts.latest ? { row: opts.latest.latest, dailyKnown: false } : undefined
 }
 
 /** Share of cumulative positive, in percent. Null when nothing is positive yet (never 0 for "unknown"). */

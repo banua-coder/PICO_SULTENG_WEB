@@ -35,7 +35,7 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
-      - name: Built site checks (114 pages, titles, canonical, sitemap, links, review markers) and size budget
+      - name: Built site checks (116 pages, titles, canonical, sitemap, links, review markers) and size budget
         # A branch build may still hold review markers (data-todo). A release build must not set this: see README "Review markers".
         env:
           PICO_ALLOW_TODO: '1'

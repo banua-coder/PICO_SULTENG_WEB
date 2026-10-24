@@ -12,13 +12,17 @@ export default defineConfig({
     // ADR-0102: messages are precompiled at build time, so the runtime-only vue-i18n ships (no message compiler, no eval)
     VueI18nPlugin({ include: [fileURLToPath(new URL('./src/locales/**', import.meta.url))], runtimeOnly: true, compositionOnly: true, strictMessage: true }),
   ],
-  define: { __MAP_BANDS__: JSON.stringify(!!process.env.VITE_MAP_BANDS), __BUILD_DAY__: JSON.stringify(process.env.PICO_BUILD_DAY ?? new Date().toISOString().slice(0, 10)) },
-  resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
+  define: { __BUILD_DAY__: JSON.stringify(process.env.PICO_BUILD_DAY ?? new Date().toISOString().slice(0, 10)) },
+  resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)), // the shadcn-vue components import `cn` from the package of that name: it is this small file
+      cn: fileURLToPath(new URL('./src/lib/cn.ts', import.meta.url)) } },
   build: {
+    // A lazy chunk lists the entry chunk (app-*.js) among its dependencies. The entry is already loaded, and WebKit warns that the extra preload link
+    // "was not used". Leave it out of the preload list: everything else is still preloaded.
+    modulePreload: { resolveDependencies: (_file, deps) => deps.filter((d) => !/(^|\/)app-[\w-]+\.js$/.test(d)) },
     rollupOptions: {
       output: {
         // Named chunks, so check-budget can see a heavy library in a page's initial JS: d3 (charts, Data and Vaksin only)
-        // and xlsx (the lazy export). Lottie is already named lottie_light by its module.
+        // and xlsx (the lazy export).
         manualChunks(id) {
           if (/node_modules\/(\.pnpm\/)?d3-/.test(id) || id.includes('/node_modules/d3-')) return 'd3'
           if (id.includes('node_modules/xlsx') || id.includes('/xlsx@')) return 'xlsx'

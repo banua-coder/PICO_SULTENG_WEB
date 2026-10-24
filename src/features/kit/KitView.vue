@@ -7,17 +7,16 @@ import CopyButton from '@/components/CopyButton.vue'
 import DataFreshness from '@/components/DataFreshness.vue'
 import DateRange from '@/components/DateRange.vue'
 import type { DateWindow } from '@/components/DateRange.vue'
-import LottiePlayer from '@/components/LottiePlayer.vue'
 import PicoIcon from '@/components/PicoIcon.vue'
 import PicoImage from '@/components/PicoImage.vue'
 import SectionHeading from '@/components/SectionHeading.vue'
 import StatFigure from '@/components/StatFigure.vue'
 import StateMark from '@/components/StateMark.vue'
 import StatusView from '@/components/StatusView.vue'
-import ProgressWeave from '@/components/charts/ProgressWeave.vue'
+import ProgressBar from '@/components/charts/ProgressBar.vue'
 import RtChart from '@/components/charts/RtChart.vue'
 import TimeSeriesChart from '@/components/charts/TimeSeriesChart.vue'
-import WovenBars from '@/components/charts/WovenBars.vue'
+import BarList from '@/components/charts/BarList.vue'
 import type { BandPoint, LineSeries } from '@/components/charts/types'
 import { dayNumber, isoFromDay } from '@/components/charts/core/days'
 import KabupatenMap from '@/components/maps/KabupatenMap.vue'
@@ -98,70 +97,70 @@ const contacts: Contact[] = [
 
 <template>
   <div class="mx-auto max-w-4xl p-6">
-    <h1 class="text-2xl">{{ t('kit.title') }}</h1>
-    <p class="mt-3 text-ink-muted">{{ t('kit.intro') }}</p>
-    <div class="mt-5 flex flex-wrap gap-3">
-      <button type="button" class="min-h-touch rounded-sm bg-primary-strong px-5 text-on-primary" @click="cycle">{{ t('theme.label') }}: {{ theme }}</button>
-      <a :href="switchPath" :hreflang="other" class="inline-flex min-h-touch items-center rounded-sm border border-line-strong px-5">{{ t('locale.switchTo') }}</a>
+    <h1 class="text-xl md:text-2xl">{{ t('kit.title') }}</h1>
+    <p class="mt-2 text-ink-muted">{{ t('kit.intro') }}</p>
+    <div class="mt-4 flex flex-wrap gap-2">
+      <button type="button" class="min-h-touch rounded-sm bg-primary px-4 text-on-primary" @click="cycle">{{ t('theme.label') }}: {{ theme }}</button>
+      <a :href="switchPath" :hreflang="other" class="inline-flex min-h-touch items-center rounded-sm border border-line-strong px-4">{{ t('locale.switchTo') }}</a>
     </div>
 
-    <section class="mt-8" aria-labelledby="k-figures">
+    <section class="mt-12" aria-labelledby="k-figures">
       <SectionHeading id="k-figures" :level="2">StatFigure, StateMark</SectionHeading>
-      <div class="mt-5 grid gap-5 sm:grid-cols-2">
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
         <StatFigure state="positive" :label="t('state.positive')" :value="63614" :delta="12" as-of="2024-01-14" emphasis />
         <StatFigure state="recovered" :label="t('state.recovered')" :value="61854" :delta="-3" as-of="2024-01-14" />
         <StatFigure state="deceased" :label="t('state.deceased')" :value="1760" :delta="null" as-of="2024-01-14" />
         <StatFigure state="rt" label="Rt" :value="null" as-of="2024-01-14" />
       </div>
-      <ul class="mt-5 flex flex-wrap gap-5">
-        <li v-for="s in states" :key="s" class="flex items-center gap-3"><StateMark :state="s" :size="5" /> {{ t(`state.${s}`) }}</li>
+      <ul class="mt-4 flex flex-wrap gap-4">
+        <li v-for="s in states" :key="s" class="flex items-center gap-2"><StateMark :state="s" :size="5" /> {{ t(`state.${s}`) }}</li>
       </ul>
-      <DataFreshness class="mt-5" as-of="2024-01-14" source="situs pihak ketiga" />
+      <DataFreshness class="mt-4" as-of="2024-01-14" source="situs pihak ketiga" />
     </section>
 
-    <section class="mt-8" aria-labelledby="k-chart">
+    <section class="mt-12" aria-labelledby="k-chart">
       <SectionHeading id="k-chart" :level="2">TimeSeriesChart</SectionHeading>
-      <div class="mt-5 flex flex-wrap gap-3">
-        <button type="button" class="min-h-touch rounded-sm border border-line-strong bg-surface px-4 text-sm font-strong" @click="kind = kind === 'line' ? 'bar' : 'line'">{{ kind === 'line' ? t('kit.bars') : t('kit.lines') }}</button>
-        <button type="button" class="min-h-touch rounded-sm border border-line-strong bg-surface px-4 text-sm font-strong" @click="rerender">{{ t('kit.rerender') }}</button>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <button type="button" class="min-h-touch rounded-sm border border-line-strong bg-surface px-3 text-sm font-strong" @click="kind = kind === 'line' ? 'bar' : 'line'">{{ kind === 'line' ? t('kit.bars') : t('kit.lines') }}</button>
+        <button type="button" class="min-h-touch rounded-sm border border-line-strong bg-surface px-3 text-sm font-strong" @click="rerender">{{ t('kit.rerender') }}</button>
         <span class="num self-center text-sm text-ink-muted" data-testid="render-ms">{{ renderMs }}</span>
       </div>
-      <div class="mt-5">
+      <div class="mt-4">
         <TimeSeriesChart :key="chartKey" :series="demo" :kind="kind" :a11y="{ title: t('kit.chartTitle'), summary: t('kit.chartSummary') }" />
       </div>
     </section>
 
-    <section class="mt-8" aria-labelledby="k-maps">
+    <section class="mt-12" aria-labelledby="k-maps">
       <SectionHeading id="k-maps" :level="2">KabupatenMap, ProvinceMap</SectionHeading>
-      <p class="mt-3 text-sm text-ink-muted" data-testid="picked">{{ t('kit.picked', { name: pickedName(pickedMap) }) }}</p>
-      <div class="mt-5"><KabupatenMap :items="mapItems" :metric="{ label: t('kit.mapMetric'), role: 'positive' }" :selected="pickedMap" @select="pickedMap = $event" /></div>
-      <div class="mt-8"><ProvinceMap :items="provItems" :metric="{ label: t('kit.provMetric'), role: 'recovered' }" :selected="pickedProv" @select="pickedProv = $event" /></div>
+      <p class="mt-2 text-sm text-ink-muted" data-testid="picked">{{ t('kit.picked', { name: pickedName(pickedMap) }) }}</p>
+      <div class="mt-4"><KabupatenMap :items="mapItems" :metric="{ label: t('kit.mapMetric'), role: 'positive' }" :selected="pickedMap" @select="pickedMap = $event" /></div>
+      <div class="mt-12"><ProvinceMap :items="provItems" :metric="{ label: t('kit.provMetric'), role: 'recovered' }" :selected="pickedProv" @select="pickedProv = $event" /></div>
     </section>
 
-    <section class="mt-8" aria-labelledby="k-chartb">
-      <SectionHeading id="k-chartb" :level="2">RtChart, WovenBars, ProgressWeave</SectionHeading>
-      <div class="mt-5"><RtChart :points="rtPoints" :a11y="{ title: t('kit.rtTitle'), summary: t('kit.rtSummary') }" /></div>
-      <div class="mt-8 grid gap-8 md:grid-cols-2">
-        <WovenBars :items="genderBars" orientation="horizontal" :a11y="{ title: t('kit.barsTitle'), summary: t('kit.barsSummary') }" />
-        <WovenBars :items="ageBars" orientation="vertical" :a11y="{ title: t('kit.ageTitle'), summary: t('kit.ageTitle') }" />
+    <section class="mt-12" aria-labelledby="k-chartb">
+      <SectionHeading id="k-chartb" :level="2">RtChart, BarList, ProgressBar</SectionHeading>
+      <div class="mt-4"><RtChart :points="rtPoints" :a11y="{ title: t('kit.rtTitle'), summary: t('kit.rtSummary') }" /></div>
+      <div class="mt-12 grid gap-12 md:grid-cols-2">
+        <BarList :items="genderBars" orientation="horizontal" :a11y="{ title: t('kit.barsTitle'), summary: t('kit.barsSummary') }" />
+        <BarList :items="ageBars" orientation="vertical" :a11y="{ title: t('kit.ageTitle'), summary: t('kit.ageTitle') }" />
       </div>
-      <div class="mt-8 grid gap-5 md:grid-cols-3">
-        <ProgressWeave :value="85441" :target="2240548" :label="t('kit.progressDose1')" role="positive" />
-        <ProgressWeave :value="4103" :target="25292" :label="t('kit.progressDose2')" role="recovered" />
-        <ProgressWeave :value="24885" :target="24698" :label="t('kit.progressOver')" role="positive" />
+      <div class="mt-12 grid gap-4 md:grid-cols-3">
+        <ProgressBar :value="85441" :target="2240548" :label="t('kit.progressDose1')" role="positive" />
+        <ProgressBar :value="4103" :target="25292" :label="t('kit.progressDose2')" role="recovered" />
+        <ProgressBar :value="24885" :target="24698" :label="t('kit.progressOver')" role="positive" />
       </div>
     </section>
 
-    <section class="mt-8" aria-labelledby="k-icons">
+    <section class="mt-12" aria-labelledby="k-icons">
       <SectionHeading id="k-icons" :level="2">PicoIcon</SectionHeading>
-      <ul class="mt-5 flex flex-wrap gap-5 text-primary-strong">
+      <ul class="mt-4 flex flex-wrap gap-4 text-primary-strong">
         <li v-for="k in ICON_KEYS" :key="k"><PicoIcon :name="k" :decorative="false" /></li>
       </ul>
     </section>
 
-    <section class="mt-8" aria-labelledby="k-controls">
+    <section class="mt-12" aria-labelledby="k-controls">
       <SectionHeading id="k-controls" :level="2">AreaPicker, DateRange, CopyButton, ContactLink</SectionHeading>
-      <div class="mt-5 flex flex-col gap-5">
+      <div class="mt-4 flex flex-col gap-4">
         <AreaPicker v-model="area" :levels="['indonesia', 'provinsi', 'kabupaten']" />
         <DateRange v-model="win" min="2020-03-02" max="2024-01-14" />
         <p class="num text-sm text-ink-muted">{{ area.name }} · {{ win.from }} / {{ win.to }}</p>
@@ -172,9 +171,9 @@ const contacts: Contact[] = [
       </div>
     </section>
 
-    <section class="mt-8" aria-labelledby="k-images">
+    <section class="mt-12" aria-labelledby="k-images">
       <SectionHeading id="k-images" :level="2">PicoImage</SectionHeading>
-      <div class="mt-5 grid grid-cols-2 gap-5 sm:grid-cols-4" data-testid="images">
+      <div class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4" data-testid="images">
         <PicoImage src="/favicon.svg" alt="Logo PICO" ratio="1/1" />
         <PicoImage :src="null" alt="Banner tanpa gambar" ratio="1/1" />
         <PicoImage src="/gambar-hilang.jpg" alt="Gambar tidak ditemukan" ratio="1/1" fallback="initials" />
@@ -182,15 +181,14 @@ const contacts: Contact[] = [
       </div>
     </section>
 
-    <section class="mt-8" aria-labelledby="k-status">
-      <SectionHeading id="k-status" :level="2">StatusView, LottiePlayer</SectionHeading>
-      <div class="mt-5 grid gap-5 sm:grid-cols-2">
+    <section class="mt-12" aria-labelledby="k-status">
+      <SectionHeading id="k-status" :level="2">StatusView</SectionHeading>
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
         <StatusView kind="loading" compact />
         <StatusView kind="empty" compact />
         <StatusView kind="error" compact />
         <StatusView kind="offline" compact />
         <StatusView kind="not-found" compact />
-        <LottiePlayer name="success" :label="t('copy.done')" />
       </div>
     </section>
   </div>

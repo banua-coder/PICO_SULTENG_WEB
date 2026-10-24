@@ -1,25 +1,30 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { useBanners, useHospitals } from '@/api/useContent'
-import { useHomeLatest, useNationalLatest, useProvincesLatest } from '@/api/useSeries'
+import { useHomeLatest, useKabupatenLatest, useProvincesLatest } from '@/api/useSeries'
+import { FACTS } from '@/app/facts'
 import { usePageHead } from '@/app/head'
+import { useFormat } from '@/app/useFormat'
+import { useLocale } from '@/app/useLocale'
 import SectionHeading from '@/components/SectionHeading.vue'
-import BannerStrip from './components/BannerStrip.vue'
-import HeadlineFigures from './components/HeadlineFigures.vue'
-import HomeHero from './components/HomeHero.vue'
+import { Button } from '@/components/ui/button'
+import HomeTop from './components/HomeTop.vue'
 import HospitalTeaser from './components/HospitalTeaser.vue'
+import KabupatenList from './components/KabupatenList.vue'
 import LatestInfographics from './components/LatestInfographics.vue'
 import PracticalInfo from './components/PracticalInfo.vue'
 import ProvinceGrid from './components/ProvinceGrid.vue'
-import RtNow from './components/RtNow.vue'
-import VaccineSummary from './components/VaccineSummary.vue'
+import SituationTabs from './components/SituationTabs.vue'
 import ResourceBlock from './ResourceBlock.vue'
 
-// Spec 30. Every number here comes from a small resource that is in the prerendered HTML and in the page's initial state, so the
-// page makes no series request. Each section has its own loading and error state.
+// Spec 30, in the order of the old PICO home: banners and emergency cards, the situation (statistics and vaccination), what to do, what to know,
+// referral hospitals, practical information. Sulawesi Tengah first, then its 13 kabupaten/kota, then the other provinces.
+// Every number comes from a small resource that is in the prerendered HTML and in the page's initial state, so the page makes no series request.
 const { t } = useI18n()
+const f = useFormat()
+const { localize } = useLocale()
 const provinces = useProvincesLatest()
-const national = useNationalLatest()
+const kabupaten = useKabupatenLatest()
 const home = useHomeLatest()
 const banners = useBanners()
 const hospitals = useHospitals()
@@ -27,57 +32,45 @@ usePageHead({ title: () => t('beranda.title'), description: () => t('beranda.des
 </script>
 
 <template>
-  <div class="px-5 py-5 sm:py-8">
-    <HomeHero />
+  <div class="flex flex-col gap-6 px-4 py-5 md:gap-8 md:py-6">
+    <header>
+      <h1 class="text-lg md:text-2xl">{{ t('beranda.heroTitle') }}</h1>
+      <p class="m-0 mt-1 max-w-prose text-ink-muted" data-testid="archive-line">{{ t('beranda.archive', { range: f.range(FACTS.recordFirst, FACTS.recordLast) }) }}</p>
+    </header>
 
-    <section class="mt-5" aria-labelledby="angka">
-      <!-- the group titles below say what the figures are; on a phone this line would push the first figure under the fold -->
-      <h2 id="angka" class="sr-only">{{ t('beranda.figuresTitle') }}</h2>
-      <div>
-        <ResourceBlock :resource="provinces" min-height="14rem">
-          <template #default="{ data: provs }">
-            <ResourceBlock :resource="national" min-height="14rem">
-              <template #default="{ data: nat }"><HeadlineFigures :provinces="provs" :national="nat" /></template>
-            </ResourceBlock>
-          </template>
-        </ResourceBlock>
-      </div>
+    <HomeTop :banners="banners.data.value ?? []" />
+
+    <section aria-labelledby="situasi">
+      <SectionHeading id="situasi" :level="2">{{ t('beranda.situationTitle') }}</SectionHeading>
+      <div class="mt-3"><ResourceBlock :resource="home" min-height="20rem"><template #default="{ data }"><SituationTabs :home="data" /></template></ResourceBlock></div>
     </section>
 
-    <section class="mt-8" aria-labelledby="rt-home">
-      <SectionHeading id="rt-home" :level="2">{{ t('beranda.rtTitle') }}</SectionHeading>
-      <div class="mt-3"><ResourceBlock :resource="home" min-height="5rem"><template #default="{ data }"><RtNow :home="data" /></template></ResourceBlock></div>
+    <section aria-labelledby="kabupaten">
+      <SectionHeading id="kabupaten" :level="2">{{ t('beranda.kabTitle') }}</SectionHeading>
+      <p class="m-0 mt-1 text-ink-muted">{{ t('beranda.kabNote') }}</p>
+      <div class="mt-3"><ResourceBlock :resource="kabupaten" min-height="12rem"><template #default="{ data }"><KabupatenList :rows="data" /></template></ResourceBlock></div>
     </section>
 
-    <section class="mt-8" aria-labelledby="provinsi">
-      <SectionHeading id="provinsi" :level="2">{{ t('beranda.provincesTitle') }}</SectionHeading>
-      <p class="mt-2 text-ink-muted">{{ t('beranda.provincesNote') }}</p>
-      <div class="mt-4"><ResourceBlock :resource="provinces" min-height="20rem"><template #default="{ data }"><ProvinceGrid :provinces="data" /></template></ResourceBlock></div>
-    </section>
+    <PracticalInfo />
 
-    <section class="mt-8" aria-labelledby="vaksin-home">
-      <SectionHeading id="vaksin-home" :level="2">{{ t('beranda.vaccineTitle') }}</SectionHeading>
-      <div class="mt-4"><ResourceBlock :resource="home" min-height="10rem"><template #default="{ data }"><VaccineSummary :home="data" /></template></ResourceBlock></div>
-    </section>
-
-    <section v-if="banners.data.value?.length !== 0" class="mt-8" aria-labelledby="pengumuman">
-      <SectionHeading id="pengumuman" :level="2">{{ t('beranda.bannersTitle') }}</SectionHeading>
-      <div class="mt-4"><ResourceBlock :resource="banners" min-height="8rem"><template #default="{ data }"><BannerStrip :banners="data" /></template></ResourceBlock></div>
-    </section>
-
-    <section class="mt-8" aria-labelledby="infografis-home">
-      <SectionHeading id="infografis-home" :level="2">{{ t('beranda.infoTitle') }}</SectionHeading>
-      <div class="mt-4"><ResourceBlock :resource="home" min-height="10rem"><template #default="{ data }"><LatestInfographics :items="data.infographics" /></template></ResourceBlock></div>
-    </section>
-
-    <section class="mt-8" aria-labelledby="rs-home">
+    <section aria-labelledby="rs-home">
       <SectionHeading id="rs-home" :level="2">{{ t('beranda.hospitalsTitle') }}</SectionHeading>
-      <div class="mt-4"><ResourceBlock :resource="hospitals" min-height="10rem"><template #default="{ data }"><HospitalTeaser :hospitals="data" /></template></ResourceBlock></div>
+      <div class="mt-3"><ResourceBlock :resource="hospitals" min-height="10rem"><template #default="{ data }"><HospitalTeaser :hospitals="data" /></template></ResourceBlock></div>
     </section>
 
-    <section class="mt-8" aria-labelledby="praktis">
-      <SectionHeading id="praktis" :level="2">{{ t('beranda.practicalTitle') }}</SectionHeading>
-      <div class="mt-4"><PracticalInfo /></div>
+    <section aria-labelledby="infografis-home">
+      <SectionHeading id="infografis-home" :level="2">{{ t('beranda.infoTitle') }}</SectionHeading>
+      <div class="mt-3"><ResourceBlock :resource="home" min-height="10rem"><template #default="{ data }"><LatestInfographics :items="data.infographics" /></template></ResourceBlock></div>
     </section>
+
+    <section :aria-label="t('beranda.otherProvinces')">
+      <details class="rounded-lg border bg-card p-4 shadow-card">
+        <summary class="flex min-h-touch cursor-pointer items-center font-heading text-lg text-ink">{{ t('beranda.otherProvinces') }}</summary>
+        <p class="mt-2 text-ink-muted">{{ t('beranda.provincesNote') }}</p>
+        <div class="mt-3"><ResourceBlock :resource="provinces" min-height="20rem"><template #default="{ data }"><ProvinceGrid :provinces="data" /></template></ResourceBlock></div>
+      </details>
+    </section>
+
+    <p class="m-0 text-center"><Button as-child variant="outline"><a :href="localize('/data')" class="text-primary-strong no-underline">{{ t('beranda.seeMore') }}</a></Button></p>
   </div>
 </template>

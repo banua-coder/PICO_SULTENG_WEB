@@ -20,10 +20,10 @@ const line = (kind: string, o: { total: number | null; finished: number | null }
 <template>
   <section v-if="last" aria-labelledby="odp-pdp" data-testid="odp-note">
     <SectionHeading id="odp-pdp" :level="2">{{ t('data.odpTitle') }}</SectionHeading>
-    <ul class="num m-0 mt-3 list-none p-0">
+    <ul class="num m-0 mt-2 list-none p-0">
       <li v-if="line(t('data.odpOdp'), last.odp)">{{ line(t('data.odpOdp'), last.odp) }}</li>
       <li v-if="line(t('data.odpPdp'), last.pdp)">{{ line(t('data.odpPdp'), last.pdp) }}</li>
     </ul>
-    <p class="mt-3 text-ink-muted">{{ t('data.odpAsOf', { date: fmt.date(last.date) }) }} {{ t('data.odpNote', { date: fmt.date(last.date) }) }}</p>
+    <p class="mt-2 text-ink-muted">{{ t('data.odpAsOf', { date: fmt.date(last.date) }) }} {{ t('data.odpNote', { date: fmt.date(last.date) }) }}</p>
   </section>
 </template>

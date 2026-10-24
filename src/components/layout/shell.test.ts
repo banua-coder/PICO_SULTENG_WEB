@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { createApp, nextTick } from 'vue'
+import { createApp } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { createHead } from '@unhead/vue/client'
 import { installI18n } from '@/app/i18n'
@@ -7,6 +7,7 @@ import { buildRoutes } from '@/app/routeTable'
 import App from '@/App.vue'
 import { flush, mountApp } from '../../../test/support/mount'
 import AppNav from './AppNav.vue'
+import MobileTabBar from './MobileTabBar.vue'
 import LocaleSwitch from './LocaleSwitch.vue'
 import NotFoundView from '@/app/NotFoundView.vue'
 import DataView from '@/features/data/DataView.vue'
@@ -16,30 +17,19 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-const items = ['beranda', 'data', 'tabel'].map((k, i) => ({ key: k as 'beranda', to: `/${k}`, label: k, active: i === 1 }))
+const items = ['beranda', 'data', 'tabel'].map((k, i) => ({ key: k as 'beranda', to: `/${k}`, label: k, active: i === 1, primary: i < 2, tab: false }))
 
 describe('AppNav', () => {
-  it('has a Menu button (a text label, no bare icon) with aria-expanded that toggles the list', async () => {
+  it('lists the primary pages as links and keeps the rest under a "Lainnya" button with aria-expanded', async () => {
     const { wrapper } = await mountApp(AppNav, { items })
+    expect(wrapper.findAll('a').map((a) => a.text())).toEqual(['beranda', 'data', 'tabel']) // the third is in the menu: in the HTML, hidden until opened
+    expect(wrapper.find('ul ul').attributes('style')).toContain('display: none')
     const btn = wrapper.find('button')
-    expect(btn.text()).toBe('Menu')
+    expect(btn.text()).toBe('Lainnya')
     expect(btn.attributes('aria-expanded')).toBe('false')
-    expect(btn.attributes('aria-controls')).toBe(wrapper.find('ul').attributes('id'))
+    expect(btn.attributes('aria-haspopup')).toBe('true')
     await btn.trigger('click')
     expect(btn.attributes('aria-expanded')).toBe('true')
-    expect(wrapper.find('ul').classes()).toContain('flex')
-  })
-
-  it('Escape closes the menu and returns focus to the button', async () => {
-    const { wrapper } = await mountApp(AppNav, { items })
-    const btn = wrapper.find('button')
-    await btn.trigger('click')
-    wrapper.find('a').element.focus()
-    await wrapper.find('nav').trigger('keydown', { key: 'Escape' })
-    await nextTick()
-    await nextTick()
-    expect(btn.attributes('aria-expanded')).toBe('false')
-    expect(document.activeElement).toBe(btn.element)
   })
 
   it('marks exactly the active page with aria-current', async () => {
@@ -50,6 +40,17 @@ describe('AppNav', () => {
   })
 })
 
+describe('MobileTabBar', () => {
+  it('shows the tab pages and "Lainnya", which opens the sheet with the other pages', async () => {
+    const all = ['beranda', 'data', 'kontak', 'wiki', 'tabel'].map((k, i) => ({ key: k as 'beranda', to: `/${k}`, label: k, active: i === 0, primary: true, tab: i < 3 }))
+    const { wrapper } = await mountApp(MobileTabBar, { items: all })
+    expect(wrapper.findAll('nav li a').map((a) => a.text())).toEqual(['beranda', 'data', 'kontak'])
+    expect(wrapper.find('nav li a[aria-current="page"]').text()).toBe('beranda')
+    const more = wrapper.findAll('button').find((b) => b.text() === 'Lainnya')!
+    expect(more.attributes('aria-expanded')).toBe('false')
+  })
+})
+
 describe('LocaleSwitch', () => {
   it('links to the same page in the other locale, with the query', async () => {
     const { wrapper } = await mountApp(LocaleSwitch, {}, '/data/provinsi/aceh?dari=2021-01-01')
@@ -57,7 +58,7 @@ describe('LocaleSwitch', () => {
     expect(wrapper.find('a').attributes('hreflang')).toBe('en')
     const en = await mountApp(LocaleSwitch, {}, '/en/data/provinsi/aceh?dari=2021-01-01')
     expect(en.wrapper.find('a').attributes('href')).toBe('/data/provinsi/aceh?dari=2021-01-01')
-    expect(en.wrapper.find('a').text()).toBe('Bahasa Indonesia')
+    expect(en.wrapper.find('a').text()).toContain('Bahasa Indonesia')
   })
 })
 
@@ -89,9 +90,10 @@ describe('app shell', () => {
   it('has one h1, a header with the nav and a footer', async () => {
     const { el } = await shell('/vaksin')
     expect(el.querySelectorAll('h1')).toHaveLength(1)
-    expect(el.querySelector('header nav')).not.toBeNull()
+    expect(el.querySelectorAll('header nav')).toHaveLength(2) // the top bar and the phone's bottom bar
     expect(el.querySelector('footer')).not.toBeNull()
-    expect(el.querySelectorAll('nav li')).toHaveLength(9)
+    expect(el.querySelectorAll('header nav')[0]!.querySelectorAll('li')).toHaveLength(11) // 7 pages, "Lainnya" and its 3 pages
+    expect(el.querySelectorAll('header nav')[0]!.querySelectorAll('a[aria-current="page"]')).toHaveLength(1) // Vaksin is on the top bar only
   })
 
   it('after a client navigation, focus moves to the new h1 and the live region announces it', async () => {
@@ -118,13 +120,13 @@ describe('app shell', () => {
     expect(el.querySelector('html, [lang]')).toBeDefined()
   })
 
-  it('the footer carries the archive notice, API links and the cultural note', async () => {
+  it('the footer carries the archive notice, the API and docs links and the way to the Methodology page', async () => {
     const { el } = await shell('/')
     const footer = el.querySelector('footer')!
     expect(footer.textContent).toContain('Arsip: catatan berhenti pada 14 Januari 2024')
-    expect(footer.textContent).toContain('tafsiran')
+    expect(footer.textContent).toContain('Metodologi')
     expect([...footer.querySelectorAll('a')].map((a) => a.getAttribute('href'))).toEqual(
-      expect.arrayContaining(['https://pico-api.banuacoder.com/api/v1', '/metodologi']),
+      expect.arrayContaining(['https://pico-api.banuacoder.com/api/v1', 'https://pico-api.banuacoder.com/', '/mulai', '/metodologi']),
     )
   })
 })

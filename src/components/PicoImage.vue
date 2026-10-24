@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ImageOff } from '@lucide/vue'
+import { Button } from '@/components/ui/button'
 
 const props = withDefaults(
   defineProps<{
@@ -45,7 +47,7 @@ onMounted(() => {
 
 <template>
   <!-- The box has its own fixed ratio, so a missing image never shifts the layout (CLS 0). -->
-  <div class="relative w-full overflow-hidden rounded-md bg-tint" :style="{ aspectRatio: ratio }">
+  <div class="relative w-full overflow-hidden rounded-md bg-cotton-deep" :style="{ aspectRatio: ratio }">
     <img
       v-if="shown"
       :key="attempt"
@@ -60,21 +62,14 @@ onMounted(() => {
       @error="failed = true"
     >
     <div v-else-if="fallback === 'initials' && initials" role="img" :aria-label="alt" class="absolute inset-0 flex items-center justify-center" data-placeholder="initials">
-      <span aria-hidden="true" class="flex size-8 items-center justify-center rounded-full border-2 border-line-strong bg-surface font-display text-lg font-heading text-indigo">{{ initials }}</span>
+      <span aria-hidden="true" class="flex size-8 items-center justify-center rounded-full border border-line-strong bg-surface font-display text-lg font-heading text-primary-strong">{{ initials }}</span>
     </div>
     <div v-else role="img" :aria-label="`${alt}. ${t('image.missing')}`" class="absolute inset-0 flex items-center justify-center" data-placeholder="plate">
-      <svg viewBox="0 0 120 120" class="h-2/3 max-h-full" aria-hidden="true" focusable="false">
-        <circle cx="60" cy="60" r="46" :style="{ fill: 'var(--pico-surface)', stroke: 'var(--pico-line-strong)' }" stroke-width="3" />
-        <g :style="{ stroke: 'var(--pico-line)' }" stroke-width="1.5">
-          <path v-for="x in [36, 48, 60, 72, 84]" :key="`w${x}`" :d="`M${x} 24V96`" />
-          <path v-for="y in [36, 48, 60, 72, 84]" :key="`f${y}`" :d="`M24 ${y}H96`" />
-        </g>
-        <circle cx="60" cy="60" r="7" :style="{ fill: 'var(--pico-crimson)' }" />
-      </svg>
+      <ImageOff class="size-10 text-ink-muted" aria-hidden="true" />
     </div>
-    <div v-if="failed && retryable" class="absolute inset-x-0 bottom-0 flex flex-col items-center gap-2 bg-surface p-3 text-center text-xs" data-failed>
+    <div v-if="failed && retryable" class="absolute inset-x-0 bottom-0 flex flex-col items-center gap-1 bg-surface p-2 text-center text-xs" data-failed>
       <span class="text-ink">{{ t('image.failed') }}</span>
-      <button type="button" class="min-h-touch min-w-touch rounded-sm border border-line-strong bg-surface px-3 font-strong text-primary-strong" @click="retry">{{ t('image.retry') }}</button>
+      <Button type="button" variant="outline" size="sm" @click="retry">{{ t('image.retry') }}</Button>
     </div>
   </div>
 </template>

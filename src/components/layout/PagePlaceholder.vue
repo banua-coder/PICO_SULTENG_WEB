@@ -9,8 +9,8 @@ usePageHead({ title: () => props.heading ?? t(`nav.${props.page}`) })
 </script>
 
 <template>
-  <div class="px-5 py-8">
+  <div class="px-4 py-12">
     <h1 class="text-2xl">{{ heading ?? t(`nav.${page}`) }}</h1>
-    <p class="mt-4 text-ink-muted">{{ t('placeholder.soon') }}</p>
+    <p class="mt-3 text-ink-muted">{{ t('placeholder.soon') }}</p>
   </div>
 </template>

@@ -57,7 +57,7 @@ describe('checkBudget', () => {
     expect(over.rows[0]!.ok).toBe(false)
   })
 
-  it.each([['xlsx-abc.js'], ['d3-abc.js'], ['lottie_light-abc.js']])('fails when %s is part of a page\'s initial JS, even under the size limit', (heavy) => {
+  it.each([['xlsx-abc.js'], ['d3-abc.js']])('fails when %s is part of a page\'s initial JS, even under the size limit', (heavy) => {
     put('assets/' + heavy, noise(50))
     put('index.html', page(['app-1.js', 'beranda-1.js', heavy]))
     const { problems } = checkBudget(dist, geo)

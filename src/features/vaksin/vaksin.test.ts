@@ -4,6 +4,7 @@ import { ENDPOINTS } from '@/api/endpoints'
 import { vaccinationSeries, vaccineLocations } from '@/api/normalize/vaccination'
 import { fx } from '../../../test/fixtures/load'
 import { flush, mountApp, until } from '../../../test/support/mount'
+import { Select } from '@/components/ui/select'
 import VaksinView from './VaksinView.vue'
 
 beforeEach(() => {
@@ -64,13 +65,13 @@ describe('VaksinView', () => {
     expect(new Set(c.findAll('[data-end-label] [data-mark]').map((e) => e.attributes('data-mark'))).size).toBe(2)
   })
 
-  it('?wilayah=indonesia shows the national series; the radio writes the query with replace', async () => {
+  it('?wilayah=indonesia shows the national series; the toggle group writes the query with replace', async () => {
     const { wrapper, router } = await open('/vaksin?wilayah=indonesia')
-    expect((wrapper.find('input[value="indonesia"]').element as HTMLInputElement).checked).toBe(true)
-    await wrapper.find('input[value="sulawesi-tengah"]').setValue()
+    expect(wrapper.find('[data-value="indonesia"]').attributes('data-state')).toBe('on')
+    await wrapper.find('[data-value="sulawesi-tengah"]').trigger('click')
     await flush()
     expect(router.currentRoute.value.query.wilayah).toBeUndefined()
-    await wrapper.find('input[value="indonesia"]').setValue()
+    await wrapper.find('[data-value="indonesia"]').trigger('click')
     await flush()
     expect(router.currentRoute.value.query.wilayah).toBe('indonesia')
   })
@@ -85,7 +86,8 @@ describe('VaksinView', () => {
     expect(total).toBe(36)
     const sel = l.find('#loc-filter')
     ;(sel.element as HTMLElement).focus()
-    await sel.setValue('kota-palu')
+    l.findComponent(Select).vm.$emit('update:modelValue', 'kota-palu')
+    await flush()
     expect(l.findAll('h3')).toHaveLength(1)
     expect(l.findAll('li').length).toBeLessThan(total)
     expect(document.activeElement).toBe(sel.element)

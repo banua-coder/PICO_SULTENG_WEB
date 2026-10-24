@@ -1,6 +1,6 @@
 import { expect, test } from './support/test'
 import { expectNoA11yViolations } from './support/a11y'
-import { horizontalOverflow, visit, watchConsole } from './support/visit'
+import { chooseOption, horizontalOverflow, visit, watchConsole } from './support/visit'
 
 test.describe('Vaksin', () => {
   test('the prerendered HTML has the locations and their archive note; the series comes from the client', async ({ page }) => {
@@ -41,10 +41,10 @@ test.describe('Vaksin', () => {
     await visit(page, '/vaksin')
     const l = page.getByTestId('locations')
     const before = await l.locator('li').count()
-    await l.getByLabel('Kabupaten/Kota').focus()
-    await l.getByLabel('Kabupaten/Kota').selectOption('kota-palu')
+    const filter = l.getByRole('combobox', { name: 'Kabupaten/Kota' })
+    await chooseOption(page, filter, 'Kota Palu')
     expect(await l.locator('li').count()).toBeLessThan(before)
-    await expect(l.getByLabel('Kabupaten/Kota')).toBeFocused()
+    await expect(filter).toBeFocused() // the trigger keeps focus when the list changes
     await expect(l.locator('h3')).toHaveCount(1)
   })
 

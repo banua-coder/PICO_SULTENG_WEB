@@ -61,7 +61,7 @@ test.describe('Infografis', () => {
     for (let i = 0; i < 8; i++) {
       await page.keyboard.press('Tab')
       // a modal dialog lets Tab pass through the browser UI (body) but never to the inert page behind
-      expect(await page.evaluate(() => document.activeElement === document.body || !!document.activeElement?.closest('dialog'))).toBe(true)
+      expect(await page.evaluate(() => document.activeElement === document.body || !!document.activeElement?.closest('[role="dialog"]'))).toBe(true)
     }
   })
 
@@ -142,6 +142,7 @@ test.describe('Infografis', () => {
   for (const locale of ['id', 'en'] as const) {
     test(`axe: the grid and the open viewer pass (${locale})`, async ({ page }) => {
       await serveList(page)
+      await page.emulateMedia({ reducedMotion: 'reduce' }) // axe reads the colours at rest, not in the middle of the dialog's fade
       await page.route(IMAGES, (r) => r.abort('failed'))
       await visit(page, '/infografis', { locale })
       await expect(page.getByTestId('infografis-grid').locator('> li')).toHaveCount(24)

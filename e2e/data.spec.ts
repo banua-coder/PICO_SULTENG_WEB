@@ -1,5 +1,6 @@
 import { expect, test } from './support/test'
 import { expectNoA11yViolations, hydrated } from './support/a11y'
+import { chooseOption, toggle } from './support/visit'
 
 test('the prerendered HTML of an area route already has its latest cumulative positive as text', async ({ page }) => {
   const html = await (await page.request.get('/data/provinsi/aceh')).text()
@@ -52,11 +53,14 @@ test('a custom window shows the figures of its last day, the ODP/PDP note shows 
   await expect(page.getByTestId('summary')).toContainText('31 Juli 2021')
   await expect(page.getByTestId('odp-note')).toContainText('8 Mei 2022')
   const start = await page.evaluate(() => history.length)
-  for (const name of ['2020', '2021', '2022']) await page.getByRole('button', { name, exact: true }).click()
+  for (const name of ['2020', '2021', '2022']) await chooseOption(page, page.getByRole('combobox', { name: 'Tahun' }), name)
   await expect(page).toHaveURL(/dari=2022-01-01/)
   await expect(page).toHaveURL(/sampai=2022-12-31/)
   expect(await page.evaluate(() => history.length)).toBe(start) // replace, not push
-  await page.getByRole('button', { name: 'Semua' }).click()
+  await toggle(page, '30 hari', 'Rentang waktu').click() // counted back from the last day with real counts (9 December 2023): the end is the default, so it leaves the URL
+  await expect(page).toHaveURL(/dari=2023-11-10/)
+  await expect(page).not.toHaveURL(/sampai=/)
+  await toggle(page, 'Semua', 'Rentang waktu').click()
   await expect(page).toHaveURL(/\/data\/provinsi\/sulawesi-tengah$/) // defaults leave the URL
 })
 
@@ -71,17 +75,18 @@ test('/data/kabupaten/kota-palu?dari=2021-07-01&sampai=2021-07-31 shows Kota Pal
 test('?dari=1999-01-01 clamps and ?dari=abc falls back, with no error', async ({ page }) => {
   await page.goto('/data/provinsi/sulawesi-tengah?dari=1999-01-01')
   await hydrated(page)
-  await expect(page.locator('input[type="date"]').first()).toHaveValue('2020-03-02')
+  // the calendar button shows the window: the first day of the record to the last day with real counts
+  await expect(page.getByTestId('range-trigger')).toContainText('2 Maret 2020 sampai 9 Desember 2023')
   await page.goto('/data/provinsi/sulawesi-tengah?dari=abc')
   await hydrated(page)
-  await expect(page.locator('input[type="date"]').first()).toHaveValue('2020-03-02')
+  await expect(page.getByTestId('range-trigger')).toContainText('2 Maret 2020 sampai 9 Desember 2023')
 })
 
 test('changing the area keeps dari, sampai and tampilan', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
   await page.goto('/data/provinsi/aceh?dari=2021-07-01&sampai=2021-07-31&tampilan=kumulatif')
   await hydrated(page)
-  await page.getByLabel('Wilayah').selectOption('kabupaten:kota-palu')
+  await chooseOption(page, page.getByRole('combobox', { name: 'Wilayah' }), 'Kota Palu')
   await expect(page).toHaveURL(/\/data\/kabupaten\/kota-palu\?(?=.*dari=2021-07-01)(?=.*sampai=2021-07-31)(?=.*tampilan=kumulatif)/)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Data Kota Palu')
 })

@@ -1,5 +1,6 @@
 import { expect, test } from './support/test'
 import { hydrated } from './support/a11y'
+import { synthProvinceSeries } from './support/synth'
 
 test.use({ viewport: { width: 360, height: 740 } })
 
@@ -22,35 +23,44 @@ test('keyboard: the skip link is the first Tab stop and moves focus into main', 
   await expect(page.locator('#konten')).toBeFocused()
 })
 
-test('keyboard: the menu opens, Escape closes it and returns focus to its button', async ({ page }) => {
+test('keyboard: the phone bar has Beranda, Data, Kontak and Lainnya; Lainnya opens a sheet with the rest, Escape closes it and returns focus', async ({ page }) => {
   await page.goto('/')
   await hydrated(page)
-  const menu = page.getByRole('button', { name: 'Menu' })
-  await expect(menu).toHaveAttribute('aria-expanded', 'false')
-  await expect(page.getByRole('link', { name: 'Kontak', exact: true })).toBeHidden() // collapsed on a narrow screen
-  await menu.focus()
+  const bar = page.getByRole('navigation', { name: 'Navigasi bawah' })
+  await expect(bar.getByRole('link')).toHaveCount(3)
+  await expect(page.getByRole('navigation', { name: 'Navigasi utama' })).toBeHidden() // the top links are for wide screens
+  const more = bar.getByRole('button', { name: 'Lainnya' })
+  await expect(more).toHaveAttribute('aria-expanded', 'false')
+  await more.focus()
   await page.keyboard.press('Enter')
-  await expect(menu).toHaveAttribute('aria-expanded', 'true')
-  await page.keyboard.press('Tab')
-  await expect(page.getByRole('link', { name: 'Beranda', exact: true })).toBeFocused()
+  const sheet = page.getByRole('dialog', { name: 'Menu' })
+  await expect(sheet).toBeVisible()
+  await expect(sheet.getByRole('link', { name: 'Vaksin', exact: true })).toBeVisible()
+  await expect(sheet.getByRole('link', { name: 'Metodologi', exact: true })).toBeVisible()
   await page.keyboard.press('Escape')
-  await expect(menu).toHaveAttribute('aria-expanded', 'false')
-  await expect(menu).toBeFocused()
+  await expect(sheet).toBeHidden()
+  await expect(more).toBeFocused()
 })
 
-test('desktop shows the nav inline with no Menu button, and marks the current page', async ({ page }) => {
+test('desktop shows the nav inline with no bottom bar, and marks the current page', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 })
   await page.goto('/data/provinsi/aceh')
-  await expect(page.getByRole('button', { name: 'Menu' })).toBeHidden()
-  await expect(page.getByRole('link', { name: 'Data', exact: true })).toHaveAttribute('aria-current', 'page')
-  await expect(page.locator('header nav a')).toHaveCount(9)
+  await expect(page.getByRole('navigation', { name: 'Navigasi bawah' })).toBeHidden()
+  const top = page.getByRole('navigation', { name: 'Navigasi utama' })
+  await expect(top.getByRole('link', { name: 'Data', exact: true })).toHaveAttribute('aria-current', 'page')
+  await expect(top.getByRole('link')).toHaveCount(7) // the other 3 are under "Lainnya"
+  await top.getByRole('button', { name: 'Lainnya' }).click()
+  await expect(top.getByRole('link')).toHaveCount(10)
+  await expect(top.getByRole('link', { name: 'Metodologi', exact: true })).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(top.getByRole('link', { name: 'Metodologi', exact: true })).toBeHidden()
 })
 
 test('navigating moves focus to the new h1 and announces it', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 })
   await page.goto('/')
   await hydrated(page)
-  await page.getByRole('link', { name: 'Kontak', exact: true }).click()
+  await page.getByRole('navigation', { name: 'Navigasi utama' }).getByRole('link', { name: 'Kontak', exact: true }).click()
   await expect(page).toHaveURL(/\/kontak$/)
   await expect(page.getByRole('heading', { level: 1, name: 'Kontak' })).toBeFocused()
   await expect(page.getByTestId('route-announcer')).toHaveText('Kontak')
@@ -85,9 +95,11 @@ test('keyboard navigation to every page moves focus to its h1 and announces it',
   await page.setViewportSize({ width: 1280, height: 800 })
   await page.goto('/')
   await hydrated(page)
-  const paths = ['/data', '/tabel-data', '/vaksin', '/infografis', '/kontak', '/wiki', '/isoman', '/metodologi', '/']
+  const paths = ['/mulai', '/data', '/tabel-data', '/vaksin', '/infografis', '/kontak', '/wiki', '/isoman', '/metodologi', '/']
   for (const path of paths) {
-    await page.locator(`header nav a[href="${path}"]`).focus()
+    // links under "Lainnya" are in the page, hidden until the menu opens: focus works once it is open
+    if (['/tabel-data', '/infografis', '/metodologi'].includes(path)) await page.getByRole('navigation', { name: 'Navigasi utama' }).getByRole('button', { name: 'Lainnya' }).click()
+    await page.locator(`header nav[aria-label="Navigasi utama"] a[href="${path}"]`).focus()
     await page.keyboard.press('Enter')
     await expect(page).toHaveURL(new RegExp(`${path === '/' ? '/$' : `${path}$`}`))
     const h1 = page.locator('#konten h1')
@@ -100,6 +112,7 @@ test('keyboard navigation to every page moves focus to its h1 and announces it',
 })
 
 test('a query-only change (the pager) does not steal focus or re-announce', async ({ page }) => {
+  await page.route('**/api/v1/provinces/72/cases**', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: synthProvinceSeries() })) // a full-length series, so there is a next page
   await page.setViewportSize({ width: 1280, height: 800 })
   await page.goto('/tabel-data')
   await hydrated(page)

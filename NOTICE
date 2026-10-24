@@ -11,20 +11,23 @@ licence or have no determined licence.
    from them (src/components/maps/geo/) are derived works with the same status. The maps may be replaced
    by BPS boundaries later.
 
-2. Weave (Tenun) motifs and illustrations, not MIT
-   - src/assets/brand/patterns/ (band-*.svg, pico-weave-*.svg)
-   - src/assets/brand/illustrations/, src/assets/brand/lottie/ (where they use the weave motifs)
-   - src/components/WeaveDefs.vue
-   Interpretations drawn from written descriptions, not from photographs of real cloth. They have not been
+2. Weave (Tenun) motifs, retired and not shipped
+   The site no longer shows the Tenun Donggala weave motifs, illustrations or Lottie animations. The files were
+   removed from src/assets/brand/ (patterns, illustrations, lottie) and from the brand mirror
+   (scripts/sync-brand.mjs). They remain in the PICO brand repository and in this repository's git history. They
+   were interpretations drawn from written descriptions, not from photographs of real cloth, and were never
    reviewed by Dinas Kebudayaan Sulawesi Tengah or Dekranasda. The Kaili motifs are communal heritage and not
-   owned by PICO. Not for commercial use of the motif.
+   owned by PICO. Not for commercial use of the motif. The Metodologi page keeps this caveat.
 
 3. Data (COVID-19 series), not MIT
    Derived from m.andrafarm.com, which allows copy-paste with credit and names no licence. See the
    Metodologi page.
 
-4. Logo and fonts
+4. Logo, images and fonts
    - PICO logo: the owner's legacy logo (src/assets/brand/logo/, public/favicon.*, public/icon-*.png,
      public/apple-touch-icon-180.png, public/og-image-1200x630.png).
-   - Fonts Archivo and Source Sans 3: SIL OFL 1.1 (src/assets/fonts/). The OFL text is not yet bundled in
-     this repository.
+   - Small illustrations of the old PICO dashboard (src/assets/images/: wash hands, wear mask, fever, cough,
+     headache), from the owner's legacy-assets. Owner's own work, not MIT.
+   - Font Nunito (src/assets/fonts/Nunito-latin.woff2): SIL OFL 1.1. The OFL text is not yet bundled in this
+     repository.
+   - Components in src/components/ui/ come from shadcn-vue (MIT) and reka-ui (MIT).

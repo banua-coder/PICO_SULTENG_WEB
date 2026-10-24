@@ -26,7 +26,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm build
-# gates: 114 pages, titles, sitemap, links, review markers (fails the image build), size budget
+# gates: 116 pages, titles, sitemap, links, review markers (fails the image build), size budget
 RUN PICO_ALLOW_TODO=$PICO_ALLOW_TODO pnpm check:dist && pnpm check:budget
 RUN printf '%s\n' "$APP_VERSION" > dist/version.txt
 

@@ -6,6 +6,7 @@ import { useKabupatenLatest, useProvincesLatest } from '@/api/useSeries'
 import { areaByCode } from '@/app/areas'
 import { useFormat } from '@/app/useFormat'
 import { useLocale } from '@/app/useLocale'
+import OptionToggle from '@/components/OptionToggle.vue'
 import SectionHeading from '@/components/SectionHeading.vue'
 import StatusView from '@/components/StatusView.vue'
 import { areaPath, DataPageKey } from '../useDataPage'
@@ -47,24 +48,13 @@ const select = (code: string) => void router.push(hrefFor(code))
 <template>
   <section v-if="kind" aria-labelledby="peta" data-testid="submap">
     <SectionHeading id="peta" :level="2">{{ t('data.map.title') }}</SectionHeading>
-    <fieldset class="m-0 mt-4 flex flex-wrap items-center gap-3 border-0 p-0">
-      <legend class="mb-2 text-sm font-strong text-ink-muted">{{ t('data.map.metric') }}</legend>
-      <label
-        v-for="m in METRICS"
-        :key="m"
-        class="inline-flex min-h-touch min-w-touch cursor-pointer items-center justify-center rounded-sm border px-4 text-sm font-strong"
-        :class="metric === m ? 'border-indigo bg-indigo text-on-indigo' : 'border-line-strong bg-surface text-ink'"
-      >
-        <input v-model="metric" type="radio" name="map-metric" class="sr-only" :value="m">
-        {{ t(`data.map.${m}`) }}
-      </label>
-    </fieldset>
-    <p v-if="date" class="mt-3 text-sm text-ink-muted" data-testid="map-caption">{{ t('data.map.caption', { date: f.date(date) }) }}</p>
-    <div v-if="rows.length" class="mt-5">
+    <OptionToggle v-model="metric" class="mt-3" :options="METRICS.map((m) => ({ value: m, label: t(`data.map.${m}`) }))" :label="t('data.map.metric')" />
+    <p v-if="date" class="mt-2 text-sm text-ink-muted" data-testid="map-caption">{{ t('data.map.caption', { date: f.date(date) }) }}</p>
+    <div v-if="rows.length" class="mt-4 rounded-lg border bg-card p-4 shadow-card">
       <ProvinceMap v-if="kind === 'provinces'" :items="items" :metric="metricProp" :href-for="hrefFor" @select="select" />
       <KabupatenMap v-else :items="items" :metric="metricProp" :selected="selectedCode(area)" :href-for="hrefFor" @select="select" />
     </div>
-    <StatusView v-else-if="latest.status.value === 'error'" class="mt-5" kind="error" compact @retry="latest.refresh" />
-    <div v-else class="mt-5 min-h-[18rem]"><StatusView kind="loading" compact /></div>
+    <StatusView v-else-if="latest.status.value === 'error'" class="mt-4" kind="error" compact @retry="latest.refresh" />
+    <div v-else class="mt-4 min-h-[18rem]"><StatusView kind="loading" compact /></div>
   </section>
 </template>

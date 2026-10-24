@@ -108,6 +108,8 @@ export type RtLast = { date: IsoDate; value: number; lower: number; upper: numbe
  */
 export type HomeLatest = {
   rt: Record<'indonesia' | 'sulawesi-tengah', RtLast | null>
+  /** the last day that has real counts (a positive, recovered or deceased above 0): after it the source padded the series with zeros */
+  lastReal: Record<'indonesia' | 'sulawesi-tengah', DailyRow | null>
   vaccination: Record<'indonesia' | 'sulawesi-tengah', VaccinationDay | null>
   infographics: Infographic[]
 }

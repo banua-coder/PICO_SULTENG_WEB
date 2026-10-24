@@ -5,6 +5,7 @@ import { donations as toDonations, telemedicines as toTele } from '@/api/normali
 import type { Donation, Telemedicine } from '@/api/types'
 import { fx, type WireDonation, type WireTelemedicine } from '../../../test/fixtures/load'
 import { flush, mountApp } from '../../../test/support/mount'
+import { Select } from '@/components/ui/select'
 import IsomanView from './IsomanView.vue'
 import { parseDays, worksOn } from './useScheduleFilter'
 
@@ -54,7 +55,7 @@ describe('IsomanView', () => {
     seed()
     const { wrapper } = await mountApp(IsomanView, {}, '/isoman')
     await flush()
-    const root = wrapper.find('div.px-5')
+    const root = wrapper.find('div.px-4')
     expect(root.element.children[0]!.tagName).toBe('H1')
     expect(root.element.children[1]!.getAttribute('data-testid')).toBe('archive-notice')
     expect(wrapper.find('[data-testid="archive-notice"]').text()).toContain('Jangan mengirim uang')
@@ -69,7 +70,8 @@ describe('IsomanView', () => {
     await flush()
     const total = tele().length
     expect(wrapper.findAll('[data-testid="telemedicine-grid"] article')).toHaveLength(total)
-    await wrapper.find('#isoman-day').setValue('7') // Minggu
+    wrapper.findComponent(Select).vm.$emit('update:modelValue', '7') // Minggu
+    await flush()
     const expected = tele().filter((t) => worksOn(t, 7)).length
     expect(expected).toBeLessThan(total)
     expect(wrapper.findAll('[data-testid="telemedicine-grid"] article')).toHaveLength(expected)

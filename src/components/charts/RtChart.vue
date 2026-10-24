@@ -9,6 +9,8 @@ import { buildRtModel } from './core/rtModel'
 import { useChartSize, useMarkSize } from './core/useChartSize'
 import { useChartFocus } from './core/useFocus'
 import RoleMark from './RoleMark.vue'
+import { Button } from '@/components/ui/button'
+import { LineChart, Table2 } from '@lucide/vue'
 import type { BandPoint, ChartA11y } from './types'
 
 const props = withDefaults(defineProps<{ points: BandPoint[]; range?: [IsoDate, IsoDate]; a11y: ChartA11y; height?: number; yMax?: number }>(), {
@@ -67,12 +69,12 @@ const tablePoints = computed(() => [
   model.value.visible.map((p) => ({ x: p.x, y: p.lo })),
   model.value.visible.map((p) => ({ x: p.x, y: p.hi })),
 ])
-const stripe = 'url(#pico-weave-rt)'
+const stripe = 'var(--pico-band)'
 </script>
 
 <template>
   <figure class="m-0" data-chart="rt">
-    <figcaption class="mb-3 font-display text-md font-heading text-indigo">{{ a11y.title }}</figcaption>
+    <figcaption class="mb-2 font-display text-md font-heading text-ink">{{ a11y.title }}</figcaption>
 
     <div ref="box" :style="{ height: `${height}px` }" class="relative w-full" data-kind="rt">
       <template v-if="!asTable && drawn">
@@ -95,8 +97,8 @@ const stripe = 'url(#pico-weave-rt)'
             <g :transform="`translate(${model.margin.left} ${model.margin.top})`">
               <Axis :plot-w="model.plotW" :plot-h="model.plotH" :x="xLabels" :y="yLabels" />
 
-              <!-- the 95 % band, hatched with the rt weave -->
-              <path :d="model.band" :fill="stripe" :style="{ stroke: 'var(--pico-rt)' }" stroke-width="0.5" data-rt-band />
+              <!-- the 95 % band: a grey area between the lower and the upper bound -->
+              <path :d="model.band" :fill="stripe" fill-opacity="0.35" stroke="none" data-rt-band />
               <!-- Rt = 1, dashed, with its label on a halo so the text never sits on the hatch -->
               <g v-if="model.threshold !== null" data-threshold>
                 <line :x1="0" :x2="model.plotW" :y1="model.threshold" :y2="model.threshold" :style="{ stroke: 'var(--pico-ink)' }" stroke-width="1.5" stroke-dasharray="6 4" />
@@ -124,7 +126,7 @@ const stripe = 'url(#pico-weave-rt)'
             </g>
           </svg>
 
-          <div v-if="focusDate" class="pointer-events-none absolute top-3 z-10 rounded-sm border border-line-strong bg-surface p-3 text-xs text-ink" :style="tipSide" aria-hidden="true" data-tooltip>
+          <div v-if="focusDate" class="pointer-events-none absolute top-2 z-10 rounded-sm border border-line-strong bg-surface p-2 text-xs text-ink" :style="tipSide" aria-hidden="true" data-tooltip>
             <p class="num font-strong">{{ fmt.date(focusDate) }}</p>
             <p class="num">{{ focusValue ? `Rt ${rt(focusValue.value)} (${rt(focusValue.lo)} – ${rt(focusValue.hi)})` : `Rt ${t('format.notAvailable')}` }}</p>
           </div>
@@ -134,10 +136,10 @@ const stripe = 'url(#pico-weave-rt)'
       </template>
     </div>
 
-    <p v-if="!asTable && model.hasAny" class="mt-3 text-sm text-ink-muted" data-testid="rt-key">{{ t('chart.rtKey') }}</p>
+    <p v-if="!asTable && model.hasAny" class="mt-2 text-sm text-ink-muted" data-testid="rt-key">{{ t('chart.rtKey') }}</p>
     <ChartTable v-if="asTable" :caption="a11y.title" :columns="tableCols" :dates="model.dates" :values="tablePoints" :digits="2" />
-    <button type="button" class="mt-3 inline-flex min-h-touch items-center rounded-sm border border-line-strong bg-surface px-4 text-sm font-strong text-primary-strong" @click="asTable = !asTable">
-      {{ asTable ? t('chart.graph') : t('chart.table') }}
-    </button>
+    <Button type="button" variant="outline" size="sm" class="mt-3 text-primary-strong" :aria-pressed="asTable" @click="asTable = !asTable">
+      <component :is="asTable ? LineChart : Table2" aria-hidden="true" />{{ asTable ? t('chart.graph') : t('chart.table') }}
+    </Button>
   </figure>
 </template>

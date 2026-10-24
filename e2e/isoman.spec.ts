@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test'
 import { expect, test } from './support/test'
 import { expectNoA11yViolations } from './support/a11y'
-import { horizontalOverflow, visit, watchConsole, watchRequests } from './support/visit'
+import { chooseOption, horizontalOverflow, visit, watchConsole, watchRequests } from './support/visit'
 
 // third-party images are not part of what is tested (and some are unreachable): fail them quickly
 const noRemoteImages = (page: Page) => page.route((u) => !['localhost', 'pico-api.banuacoder.com'].includes(u.hostname), (r) => (r.request().resourceType() === 'image' ? r.abort('failed') : r.continue()))
@@ -26,7 +26,7 @@ test.describe('Isoman', () => {
     await visit(page, '/isoman')
     const grid = page.getByTestId('telemedicine-grid').getByRole('article')
     const all = await grid.count()
-    await page.getByLabel('Hari', { exact: true }).selectOption('Minggu')
+    await chooseOption(page, page.getByRole('combobox', { name: 'Hari' }), 'Minggu')
     await expect(page.getByRole('status').filter({ hasText: 'Menampilkan' })).toContainText(`dari ${all} dokter`)
     expect(await grid.count()).toBeLessThan(all)
     expect(await grid.count()).toBeGreaterThan(0)

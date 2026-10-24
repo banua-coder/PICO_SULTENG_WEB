@@ -2,13 +2,17 @@
 import { computed, defineAsyncComponent, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useFormat } from '@/app/useFormat'
+import OptionToggle from '@/components/OptionToggle.vue'
 import SectionHeading from '@/components/SectionHeading.vue'
 import StatusView from '@/components/StatusView.vue'
+import { Card, CardContent } from '@/components/ui/card'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { buildCurves } from '../useCaseCurves'
-import { DataPageKey } from '../useDataPage'
-import type { DataView } from '../useDataPage'
+import { CASE_TYPES, DataPageKey, parseView } from '../useDataPage'
+import type { CaseType } from '../useDataPage'
 
-// Spec 42. The chart code (d3) loads as its own chunk, after the shell, so the page's first paint does not wait for it.
+// Spec 42, in the old ChartTab shape: "Kasus harian" and "Kasus kumulatif" tabs, and one case type at a time (or all together).
+// The chart code (d3) loads as its own chunk, after the shell, so the page's first paint does not wait for it.
 const TimeSeriesChart = defineAsyncComponent(() => import('@/components/charts/TimeSeriesChart.vue'))
 const state = inject(DataPageKey)!
 const { t } = useI18n()
@@ -26,52 +30,61 @@ const curves = computed(() => {
   })
 })
 const nf = (n: number) => f.num(n)
+const type = computed<CaseType>(() => state.caseType.value)
+const single = computed(() => (type.value === 'all' ? null : curves.value?.byType[type.value]))
+const typeLabel = (c: CaseType) => (c === 'all' ? t('data.curves.all') : t(`state.${c}`))
+const typeOptions = computed(() => CASE_TYPES.map((c) => ({ value: c, label: typeLabel(c) })))
 const dailySummary = computed(() => {
   const c = curves.value
+  const p = single.value
   if (!c?.last) return ''
-  return c.peak
-    ? t('data.curves.summaryDaily', { peak: nf(c.peak.value), peakDate: f.date(c.peak.date), last: nf(c.last.daily), lastDate: f.date(c.last.date) })
-    : t('data.curves.summaryDailyNoPeak', { last: nf(c.last.daily), lastDate: f.date(c.last.date) })
+  if (!p) return t('data.curves.summaryOthers', { date: f.date(c.last.date) })
+  return p.peak
+    ? t('data.curves.summaryDaily', { type: typeLabel(type.value).toLocaleLowerCase(), peak: nf(p.peak.value), peakDate: f.date(p.peak.date), last: nf(c.last.daily), lastDate: f.date(c.last.date) })
+    : t('data.curves.summaryDailyNoPeak', { type: typeLabel(type.value).toLocaleLowerCase(), last: nf(c.last.daily), lastDate: f.date(c.last.date) })
 })
 const cumulativeSummary = computed(() => (curves.value?.last ? t('data.curves.summaryCumulative', { value: nf(curves.value.last.cumulative), date: f.date(curves.value.last.date) }) : ''))
-const othersSummary = computed(() => (curves.value?.last ? t('data.curves.summaryOthers', { date: f.date(curves.value.last.date) }) : ''))
 const range = computed<[string, string]>(() => [state.window.value.from, state.window.value.to])
-const views: DataView[] = ['harian', 'kumulatif']
 const waiting = computed(() => !curves.value && state.series.status.value !== 'error')
+const dailyTitle = computed(() => (single.value ? t('data.curves.dailyOf', { type: typeLabel(type.value).toLocaleLowerCase() }) : t('data.curves.dailyAll')))
 </script>
 
 <template>
   <section aria-labelledby="kurva" data-testid="curves">
     <SectionHeading id="kurva" :level="2">{{ t('data.curves.title') }}</SectionHeading>
-    <fieldset class="m-0 mt-4 flex flex-wrap items-center gap-3 border-0 p-0">
-      <legend class="mb-2 text-sm font-strong text-ink-muted">{{ t('data.curves.view') }}</legend>
-      <label
-        v-for="v in views"
-        :key="v"
-        class="inline-flex min-h-touch min-w-touch cursor-pointer items-center justify-center rounded-sm border px-4 text-sm font-strong"
-        :class="state.view.value === v ? 'border-indigo bg-indigo text-on-indigo' : 'border-line-strong bg-surface text-ink'"
-      >
-        <input type="radio" name="curves-view" class="sr-only" :value="v" :checked="state.view.value === v" @change="state.setView(v)">
-        {{ t(`data.curves.${v}`) }}
-      </label>
-    </fieldset>
+    <Tabs class="mt-3" :model-value="state.view.value" @update:model-value="(v) => state.setView(parseView(v))">
+      <TabsList class="grid w-full max-w-md grid-cols-2" :aria-label="t('data.curves.view')">
+        <TabsTrigger value="harian">{{ t('data.curves.harian') }}</TabsTrigger>
+        <TabsTrigger value="kumulatif">{{ t('data.curves.kumulatif') }}</TabsTrigger>
+      </TabsList>
+    </Tabs>
+    <OptionToggle class="mt-4" :model-value="type" :options="typeOptions" :label="t('data.curves.type')" @update:model-value="state.setCaseType" />
 
-    <div v-if="curves && curves.rows.length === 0" class="mt-5 text-ink-muted">{{ t('data.curves.noRows') }}</div>
-    <div v-else-if="curves" class="mt-5 flex flex-col gap-8">
-      <template v-if="state.view.value === 'harian'">
+    <div v-if="curves && curves.rows.length === 0" class="mt-4 text-ink-muted">{{ t('data.curves.noRows') }}</div>
+    <Card v-else-if="curves" class="mt-4">
+      <CardContent class="flex flex-col gap-8">
+        <template v-if="state.view.value === 'harian'">
+          <TimeSeriesChart
+            v-if="single"
+            kind="bar"
+            :series="[single.daily]"
+            :overlay="single.average"
+            :peak="single.peak?.date"
+            :range="range"
+            :a11y="{ title: dailyTitle, summary: dailySummary }"
+          />
+          <TimeSeriesChart v-else kind="line" :series="[curves.byType.positive.daily, ...curves.dailyLines]" :range="range" :a11y="{ title: dailyTitle, summary: dailySummary }" />
+        </template>
         <TimeSeriesChart
-          kind="bar"
-          :series="[curves.dailyPositive]"
-          :overlay="curves.average"
-          :peak="curves.peak?.date"
+          v-else
+          kind="line"
+          :series="single ? [single.cumulative] : curves.cumulative"
           :range="range"
-          :a11y="{ title: t('data.curves.dailyPositive'), summary: dailySummary }"
+          :a11y="{ title: t('data.curves.cumulative'), summary: cumulativeSummary }"
         />
-        <TimeSeriesChart kind="line" :series="curves.dailyLines" :range="range" :a11y="{ title: t('data.curves.dailyOthers'), summary: othersSummary }" />
-      </template>
-      <TimeSeriesChart v-else kind="line" :series="curves.cumulative" :range="range" :a11y="{ title: t('data.curves.cumulative'), summary: cumulativeSummary }" />
-    </div>
-    <div v-else-if="waiting" class="mt-5 min-h-[18rem]"><StatusView kind="loading" compact /></div>
-    <StatusView v-else class="mt-5" kind="error" compact @retry="state.series.refresh" />
+      </CardContent>
+    </Card>
+    <div v-else-if="waiting" class="mt-4 min-h-[18rem]"><StatusView kind="loading" compact /></div>
+    <StatusView v-else class="mt-4" kind="error" compact @retry="state.series.refresh" />
   </section>
 </template>

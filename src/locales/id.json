@@ -3,7 +3,9 @@
     "name": "PICO Sulteng",
     "tagline": "Catatan COVID-19 Sulawesi Tengah",
     "skip": "Lompat ke konten",
-    "homeLink": "PICO Sulteng, ke Beranda"
+    "homeLink": "PICO Sulteng, ke Beranda",
+    "titleLine1": "Pusat Informasi COVID-19",
+    "titleLine2": "Provinsi Sulawesi Tengah"
   },
   "nav": {
     "label": "Navigasi utama",
@@ -16,18 +18,24 @@
     "kontak": "Kontak",
     "wiki": "Wiki",
     "isoman": "Isoman",
-    "metodologi": "Metodologi"
+    "metodologi": "Metodologi",
+    "mulai": "Mulai",
+    "more": "Lainnya",
+    "download": "Unduh Aplikasi",
+    "labelMobile": "Navigasi bawah"
   },
   "locale": {
     "label": "Bahasa",
     "switchTo": "English",
-    "switchToLabel": "Ganti bahasa ke English"
+    "switchToLabel": "Ganti bahasa ke English",
+    "code": "EN"
   },
   "theme": {
     "label": "Tema",
     "system": "Ikuti perangkat",
     "light": "Terang",
-    "dark": "Gelap"
+    "dark": "Gelap",
+    "hint": "Ganti tema: ikuti perangkat, terang, gelap"
   },
   "format": {
     "notAvailable": "tidak tersedia",
@@ -36,7 +44,8 @@
   "common": {
     "retry": "Coba lagi",
     "loading": "Memuat",
-    "pageTitle": "{page} · {site}"
+    "pageTitle": "{page} · {site}",
+    "close": "Tutup"
   },
   "state": {
     "positive": "Positif",
@@ -82,7 +91,16 @@
     "from": "Dari",
     "to": "Sampai",
     "presets": "Pilihan cepat",
-    "all": "Semua"
+    "all": "Semua",
+    "last30": "30 hari",
+    "last90": "90 hari",
+    "last180": "180 hari",
+    "year": "Tahun",
+    "allYears": "Semua tahun",
+    "frame": "Rentang waktu",
+    "custom": "Pilih tanggal",
+    "pickRange": "Rentang tanggal",
+    "apply": "Terapkan"
   },
   "heading": {
     "link": "Tautan ke bagian ini"
@@ -136,9 +154,19 @@
     "api": "API terbuka",
     "swagger": "Dokumentasi Swagger",
     "methodology": "Metodologi",
-    "culture": "Motif tenun Kaili adalah warisan bersama masyarakat Kaili. Pola di situs ini adalah tafsiran dari deskripsi tertulis, bukan reproduksi kain asli.",
     "archive": "Arsip: catatan berhenti pada {date} dan tidak diperbarui lagi.",
-    "thirdParty": "situs pihak ketiga"
+    "thirdParty": "situs pihak ketiga",
+    "start": "Mulai: API, data, aplikasi",
+    "docs": "Dokumentasi API",
+    "source": "Sumber data dan batasannya ada di halaman Metodologi.",
+    "made": "Dibuat oleh",
+    "licence": "Kode situs: lisensi MIT.",
+    "social": {
+      "github": "GitHub Banua Coder",
+      "instagram": "Instagram Banua Coders",
+      "facebook": "Facebook Banua Coder",
+      "youtube": "Kanal YouTube Banua Coder"
+    }
   },
   "placeholder": {
     "soon": "Halaman ini sedang disiapkan."
@@ -174,10 +202,14 @@
       "dailyOthers": "Sembuh dan meninggal per hari",
       "cumulative": "Total kasus",
       "noRows": "Tidak ada data pada rentang ini",
-      "summaryDaily": "Puncak kasus harian {peak} pada {peakDate}. Nilai terakhir {last} pada {lastDate}.",
-      "summaryDailyNoPeak": "Tidak ada kasus baru pada rentang ini. Nilai terakhir {last} pada {lastDate}.",
+      "summaryDaily": "Puncak {type} harian {peak} pada {peakDate}. Nilai terakhir {last} pada {lastDate}.",
+      "summaryDailyNoPeak": "Tidak ada {type} baru pada rentang ini. Nilai terakhir {last} pada {lastDate}.",
       "summaryCumulative": "Total kasus positif {value} pada {date}.",
-      "summaryOthers": "Sembuh dan meninggal per hari pada rentang ini, sampai {date}."
+      "summaryOthers": "Sembuh dan meninggal per hari pada rentang ini, sampai {date}.",
+      "type": "Jenis kasus",
+      "all": "Semua",
+      "dailyOf": "{type} baru per hari",
+      "dailyAll": "Kasus baru per hari, semua jenis"
     },
     "rt": {
       "title": "Angka reproduksi (Rt)",
@@ -230,7 +262,12 @@
       "sample": "Sampel",
       "duration": "Waktu",
       "summary": "{type}: {first} sampai {last}, periode terakhir {positive} positif dan {negative} negatif."
-    }
+    },
+    "dashboard": "Dashboard COVID-19 {area}",
+    "links": "Akses data publik",
+    "linkTable": "Akses data publik di Tabel Data",
+    "linkApi": "Akses API publik di halaman Mulai",
+    "mapTable": "Tabel kabupaten/kota"
   },
   "chart": {
     "table": "Lihat sebagai tabel",
@@ -490,6 +527,103 @@
     "tipDistance": "Jaga jarak sekitar satu meter.",
     "tipVaccine": "Ikuti anjuran vaksinasi.",
     "wikiLink": "Baca Wiki COVID-19",
-    "isomanLink": "Panduan isolasi mandiri"
+    "isomanLink": "Panduan isolasi mandiri",
+    "situationTitle": "Situasi COVID-19 di Sulawesi Tengah",
+    "situationUpdated": "Data terakhir",
+    "situationSource": "Sumber data",
+    "tabStats": "Statistik",
+    "tabVaccine": "Vaksinasi",
+    "seeMore": "Lihat selengkapnya",
+    "startTitle": "Mulai",
+    "startApi": "Akses API dan unduh data",
+    "startApp": "Unduh aplikasi Android",
+    "startNote": "Pintu masuk ke API terbuka dan aplikasi.",
+    "callCenter": "Call Center",
+    "callCenterNote": "Nomor darurat",
+    "daily": "Perubahan harian",
+    "kabTitle": "13 kabupaten/kota Sulawesi Tengah",
+    "kabNote": "Menurut total kasus positif.",
+    "kabTotal": "{n} kasus",
+    "kabDate": "Data per {date}",
+    "otherProvinces": "Provinsi lain di Indonesia",
+    "whatToDo": "Apa yang harus dilakukan?",
+    "whatToKnow": "Apa yang harus diketahui?",
+    "aboutTitle": "Apa itu COVID-19?",
+    "aboutText": "COVID-19 adalah penyakit menular yang disebabkan virus SARS-CoV-2. Penularan terjadi lewat percikan napas dan sentuhan pada permukaan yang tercemar.",
+    "symFever": "Demam",
+    "symCough": "Batuk",
+    "symHeadache": "Sakit kepala",
+    "startApiShort": "API dan data",
+    "startAppShort": "Aplikasi"
+  },
+  "mulai": {
+    "title": "Mulai",
+    "description": "Pintu masuk ke PICO Sulteng: API terbuka, unduhan data CSV dan Excel, aplikasi Android, dan kode sumber.",
+    "lead": "Semua cara memakai data PICO ada di sini: baca di situs ini, ambil lewat API, unduh berkas, atau pasang aplikasi Android.",
+    "jump": "Isi halaman",
+    "web": {
+      "title": "Baca di situs ini",
+      "text": "Angka, kurva, Rt, peta dan tabel Sulawesi Tengah lebih dulu, lalu 13 kabupaten/kota dan Indonesia.",
+      "data": "Buka Data",
+      "table": "Buka Tabel Data"
+    },
+    "api": {
+      "title": "API terbuka",
+      "text": "REST API berformat JSON. Tanpa kunci, tanpa akun. Data berhenti pada 14 Januari 2024.",
+      "base": "Alamat dasar",
+      "version": "Semua jalur ada di bawah /api/v1.",
+      "example": "Contoh: kasus Sulawesi Tengah, 13 dan 14 Januari 2024",
+      "docs": "Dokumentasi API",
+      "swagger": "Swagger UI",
+      "openapi": "Spesifikasi OpenAPI (JSON)",
+      "tabCurl": "curl",
+      "tabJs": "JavaScript",
+      "note": "Seri lengkap besar (sampai 0,9 MB). Tambahkan start_date dan end_date, atau pakai berkas unduhan di bawah."
+    },
+    "files": {
+      "title": "Data terbuka (CSV dan Excel)",
+      "text": "Satu berkas per tingkat, semua tanggal, satu baris per wilayah per hari. Sulawesi Tengah lebih dulu.",
+      "area": "Berkas",
+      "csv": "CSV",
+      "xlsx": "Excel (XLSX)",
+      "caption": "Berkas data lengkap",
+      "kabupaten": "13 kabupaten/kota Sulawesi Tengah",
+      "provinsi": "34 provinsi (termasuk Sulawesi Tengah)",
+      "indonesia": "Indonesia",
+      "columns": "Arti setiap kolom ada di Metodologi.",
+      "licence": "Data berasal dari pihak ketiga dan tidak berlisensi MIT. Baca Metodologi sebelum memakainya ulang."
+    },
+    "app": {
+      "title": "Aplikasi Android",
+      "text": "PICO Sulteng untuk Android memuat angka, kurva dan kontak yang sama di ponsel.",
+      "status": "Status distribusi",
+      "play": "Google Play",
+      "apple": "App Store",
+      "apk": "Berkas APK (GitHub)",
+      "notPublished": "Belum terbit",
+      "available": "Tersedia",
+      "version": "Versi {version}, {size} MB",
+      "download": "Unduh APK dari GitHub Releases",
+      "releases": "Semua rilis",
+      "howTitle": "Cara memasang APK",
+      "step1": "Buka halaman GitHub Releases di ponsel Android dan unduh berkas APK versi terbaru.",
+      "step2": "Buka berkas yang terunduh. Jika diminta, izinkan pemasangan dari peramban atau pengelola berkas Anda.",
+      "step3": "Ikuti petunjuk pemasangan. Setelah selesai, matikan lagi izin itu.",
+      "warn": "APK ini dipasang di luar toko aplikasi, jadi Android tidak memeriksanya. Unduh hanya dari tautan resmi di halaman ini. Aplikasi memuat data arsip. iPhone belum didukung."
+    },
+    "code": {
+      "title": "Kode sumber",
+      "text": "Semua bagian terbuka di GitHub.",
+      "web": "Situs ini (Vue 3)",
+      "api": "API (Go)",
+      "docs": "Situs dokumentasi API",
+      "app": "Aplikasi (Flutter)"
+    },
+    "copy": "Salin",
+    "copied": "Tersalin",
+    "what": {
+      "base": "alamat dasar API",
+      "command": "perintah contoh"
+    }
   }
 }

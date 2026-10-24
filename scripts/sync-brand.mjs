@@ -20,6 +20,7 @@ const OWNED = 'src/assets/brand' // fully owned by the sync: unlisted files here
 const ext = (...e) => (name) => e.some((x) => name.endsWith(x))
 const list = (dir, keep) => (existsSync(dir) ? readdirSync(dir).filter((n) => statSync(join(dir, n)).isFile() && keep(n)) : [])
 
+// Retired with the legacy-design redesign: illustrations/, patterns/ and lottie/ (the Tenun weave motifs) are no longer mirrored.
 /** The fixed file list: [source relative to brand/, destination relative to the web root]. */
 export function plan(brand) {
   const out = [['tokens/pico-tokens.css', `${OWNED}/pico-tokens.css`]]
@@ -27,10 +28,6 @@ export function plan(brand) {
   add('icons/mono', `${OWNED}/icons/mono`, ext('.svg'))
   add('icons/duotone', `${OWNED}/icons/duotone`, ext('.svg'))
   add('icons', `${OWNED}/icons`, ext('index.json'))
-  add('illustrations', `${OWNED}/illustrations`, ext('.svg'))
-  add('patterns', `${OWNED}/patterns`, ext('.svg', '.json'))
-  add('lottie', `${OWNED}/lottie`, ext('.json'))
-  add('lottie/static', `${OWNED}/lottie/static`, ext('.svg'))
   add('logo', `${OWNED}/logo`, ext('.svg'))
   const pub = [
     ['logo/favicon/favicon.svg', 'public/favicon.svg'],

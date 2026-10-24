@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useFormat } from '@/app/useFormat'
 import RoleMark from '../charts/RoleMark.vue'
 import { useChartSize, useMarkRamp } from '../charts/core/useChartSize'
 import AreaTable from './AreaTable.vue'
-import { bandsEnabled, loadBand } from './bands'
 import MapLegend from './MapLegend.vue'
 import { markSteps, readingOrder } from './quantile'
 import type { PathItem } from './quantile'
@@ -55,15 +54,6 @@ const markSize = (code: string) => (ramp.value[(steps.value.get(code) ?? 1) - 1]
 const moved = (p: PathItem) => p.labelX !== p.cx || p.labelY !== p.cy
 const hitR = computed(() => 22 * k.value) // 44 CSS px hit target for small areas
 
-// identity band for the selected area: off unless VITE_MAP_BANDS=1 (cultural review pending)
-const band = ref<{ inner: string; w: number; h: number } | null>(null)
-const selectedName = computed(() => (props.selected ? itemByCode.value.get(props.selected)?.name : undefined))
-async function refreshBand() {
-  band.value = null
-  if (bandsEnabled() && selectedName.value) band.value = await loadBand(selectedName.value)
-}
-onMounted(refreshBand)
-watch(() => props.selected, refreshBand)
 const selectedPath = computed(() => props.paths.find((p) => p.code === props.selected))
 
 function activate(e: KeyboardEvent, code: string) {
@@ -75,19 +65,11 @@ function activate(e: KeyboardEvent, code: string) {
 <template>
   <div class="grid items-start gap-6" :class="stacked ? '' : 'lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]'">
     <figure class="m-0">
-      <figcaption class="mb-3 font-display text-md font-heading text-indigo">{{ t('map.mapLabel', { metric: metric.label }) }}</figcaption>
+      <figcaption class="mb-2 font-display text-md font-heading text-ink">{{ t('map.mapLabel', { metric: metric.label }) }}</figcaption>
       <div ref="host" class="w-full" :style="{ aspectRatio: `${viewSize[0]} / ${viewSize[1]}` }">
         <svg :viewBox="`0 0 ${viewSize[0]} ${viewSize[1]}`" role="group" :aria-label="t('map.mapLabel', { metric: metric.label })" class="block h-full w-full" data-testid="geo-map">
-          <defs v-if="band && selectedPath">
-            <pattern :id="`band-${selected}`" patternUnits="userSpaceOnUse" :width="band.w" :height="band.h" :patternTransform="`scale(${k})`">
-              <!-- eslint-disable-next-line vue/no-v-html -- trusted brand strip -->
-              <g v-html="band.inner" />
-            </pattern>
-          </defs>
-
           <g v-for="p in ordered" :key="p.code" role="link" tabindex="0" class="map-area" :data-code="p.code" :aria-label="label(p)" :aria-current="p.code === selected ? 'true' : undefined" @click="emit('select', p.code)" @keydown.enter="activate($event, p.code)" @keydown.space="activate($event, p.code)">
             <path :d="p.d" fill-rule="evenodd" :style="{ fill: 'var(--pico-tint)', stroke: 'var(--pico-line-strong)', strokeWidth: `${k}px` }" stroke-linejoin="round" />
-            <path v-if="p.code === selected && band" :d="p.d" fill-rule="evenodd" :fill="`url(#band-${selected})`" data-band />
             <circle v-if="moved(p) && width > 0" :cx="p.cx" :cy="p.cy" :r="hitR" fill="transparent" data-hit />
           </g>
 
@@ -106,7 +88,7 @@ function activate(e: KeyboardEvent, code: string) {
           </g>
         </svg>
       </div>
-      <MapLegend v-if="!compact" class="mt-4" :items="items" :metric="metric" />
+      <MapLegend v-if="!compact" class="mt-3" :items="items" :metric="metric" />
     </figure>
     <AreaTable :items="items" :metric="metric" :selected="selected" :href-for="hrefFor" @select="emit('select', $event)" />
   </div>

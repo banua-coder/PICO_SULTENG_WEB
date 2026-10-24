@@ -23,6 +23,10 @@ export const FACTS = {
 } as const
 
 export const API_BASE = 'https://pico-api.banuacoder.com/api/v1'
+export const API_ORIGIN = 'https://pico-api.banuacoder.com'
+export const DOCS_URL = 'https://pico-api.banuacoder.com/'
+export const APP_RELEASES_URL = 'https://github.com/ryanaidilp/PICO_SULTENG_FLUTTER/releases'
+export const APP_LATEST = { version: '7.0.0', file: 'PICO.Sulteng.v7.0.0.apk', mb: 25.8 } as const
 export const SWAGGER_URL = 'https://pico-api.banuacoder.com/swagger/index.html'
 export const REPO_URL = 'https://github.com/banua-coder/PICO_SULTENG_WEB'
 

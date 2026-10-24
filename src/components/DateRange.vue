@@ -1,67 +1,69 @@
 <script setup lang="ts">
-import { computed, useId } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { IsoDate } from '@/api/types'
+import { isoFromDay, dayNumber } from '@/components/charts/core/days'
+import OptionToggle from '@/components/OptionToggle.vue'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export type DateWindow = { from: IsoDate; to: IsoDate }
 
-const props = defineProps<{ modelValue: DateWindow; min: IsoDate; max: IsoDate; /** named windows after the years, e.g. a wave */ extraPresets?: { key: string; label: string; from: IsoDate; to: IsoDate }[] }>()
+// Time frame filters: the last 30, 90 or 180 days or everything (counted back from the last day with real data), a year, or two dates in a calendar.
+const props = defineProps<{ modelValue: DateWindow; min: IsoDate; max: IsoDate }>()
 const emit = defineEmits<{ 'update:modelValue': [DateWindow] }>()
 
+const DateRangeCalendar = defineAsyncComponent(() => import('./DateRangeCalendar.vue'))
 const { t } = useI18n()
-const uid = useId()
 const clamp = (d: IsoDate) => (d < props.min ? props.min : d > props.max ? props.max : d)
-
-// Years that overlap the data window get a preset button.
+const lastN = (n: number): DateWindow => ({ from: clamp(isoFromDay(dayNumber(props.max) - (n - 1))), to: props.max })
+const all = computed<DateWindow>(() => ({ from: props.min, to: props.max }))
+const yearWindow = (y: number): DateWindow => ({ from: clamp(`${y}-01-01`), to: clamp(`${y}-12-31`) })
 const years = computed(() => {
   const out: number[] = []
   for (let y = Number(props.min.slice(0, 4)); y <= Number(props.max.slice(0, 4)); y++) out.push(y)
   return out
 })
-const yearWindow = (y: number): DateWindow => ({ from: clamp(`${y}-01-01`), to: clamp(`${y}-12-31`) })
-const isAll = computed(() => props.modelValue.from === props.min && props.modelValue.to === props.max)
-const isYear = (y: number) => props.modelValue.from === yearWindow(y).from && props.modelValue.to === yearWindow(y).to && !isAll.value
+const same = (a: DateWindow, b: DateWindow) => a.from === b.from && a.to === b.to
+const FRAMES = [30, 90, 180] as const
+const frame = computed(() => {
+  const v = props.modelValue
+  if (same(v, all.value)) return 'all'
+  const hit = FRAMES.find((n) => same(v, lastN(n)))
+  return hit ? String(hit) : ''
+})
+const year = computed(() => {
+  if (same(props.modelValue, all.value)) return 'all'
+  const hit = years.value.find((y) => same(props.modelValue, yearWindow(y)))
+  return hit ? String(hit) : ''
+})
+const frameOptions = computed(() => [
+  { value: '30', label: t('range.last30') },
+  { value: '90', label: t('range.last90') },
+  { value: '180', label: t('range.last180') },
+  { value: 'all', label: t('range.all') },
+])
+const pickFrame = (v: string) => emit('update:modelValue', v === 'all' ? all.value : lastN(Number(v)))
+const pickYear = (v: unknown) => emit('update:modelValue', v === 'all' ? all.value : yearWindow(Number(v)))
 
-/** A native date input gives '' while it is being edited: ignore it. A start after the end drags the end along, and the reverse. */
-function setFrom(v: string) {
-  if (!v) return
-  const from = clamp(v)
-  emit('update:modelValue', { from, to: props.modelValue.to < from ? from : props.modelValue.to })
-}
-function setTo(v: string) {
-  if (!v) return
-  const to = clamp(v)
-  emit('update:modelValue', { from: props.modelValue.from > to ? to : props.modelValue.from, to })
-}
-const isNamed = (x: { from: IsoDate; to: IsoDate }) => props.modelValue.from === clamp(x.from) && props.modelValue.to === clamp(x.to)
-const pick = (w: DateWindow) => emit('update:modelValue', w)
-const btn = 'min-h-touch min-w-touch rounded-sm border px-4 text-sm font-strong'
 </script>
 
 <template>
-  <fieldset class="m-0 flex flex-wrap items-end gap-5 border-0 p-0">
-    <legend class="mb-2 text-sm font-strong text-ink-muted">{{ t('range.group') }}</legend>
-    <div class="flex flex-col gap-2">
-      <label :for="`${uid}-from`" class="text-sm text-ink-muted">{{ t('range.from') }}</label>
-      <input :id="`${uid}-from`" type="date" class="min-h-touch rounded-sm border border-line-strong bg-surface px-3 text-ink" :value="modelValue.from" :min="min" :max="max" @change="setFrom(($event.target as HTMLInputElement).value)">
+  <div class="flex flex-wrap items-end gap-4" role="group" :aria-label="t('range.group')">
+    <OptionToggle :model-value="frame" :options="frameOptions" :label="t('range.frame')" @update:model-value="pickFrame" />
+    <div class="flex flex-col gap-1">
+      <Label class="text-sm font-semibold text-ink-muted">{{ t('range.year') }}</Label>
+      <Select :model-value="year" @update:model-value="pickYear">
+        <SelectTrigger :aria-label="t('range.year')" class="w-36"><SelectValue :placeholder="t('range.allYears')">{{ year === 'all' ? t('range.allYears') : year || t('range.year') }}</SelectValue></SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">{{ t('range.allYears') }}</SelectItem>
+          <SelectItem v-for="y in years" :key="y" :value="String(y)">{{ y }}</SelectItem>
+        </SelectContent>
+      </Select>
     </div>
-    <div class="flex flex-col gap-2">
-      <label :for="`${uid}-to`" class="text-sm text-ink-muted">{{ t('range.to') }}</label>
-      <input :id="`${uid}-to`" type="date" class="min-h-touch rounded-sm border border-line-strong bg-surface px-3 text-ink" :value="modelValue.to" :min="min" :max="max" @change="setTo(($event.target as HTMLInputElement).value)">
+    <div class="flex w-full flex-col gap-1 sm:w-auto">
+      <Label class="text-sm font-semibold text-ink-muted">{{ t('range.pickRange') }}</Label>
+      <DateRangeCalendar :model-value="modelValue" :min="min" :max="max" @update:model-value="emit('update:modelValue', $event)" />
     </div>
-    <div role="group" :aria-label="t('range.presets')" class="flex flex-wrap gap-3">
-      <button type="button" :class="[btn, isAll ? 'border-indigo bg-indigo text-on-indigo' : 'border-line-strong bg-surface text-ink']" :aria-pressed="isAll" @click="pick({ from: min, to: max })">{{ t('range.all') }}</button>
-      <button v-for="y in years" :key="y" type="button" :class="[btn, isYear(y) ? 'border-indigo bg-indigo text-on-indigo' : 'border-line-strong bg-surface text-ink']" :aria-pressed="isYear(y)" @click="pick(yearWindow(y))">{{ y }}</button>
-      <button
-        v-for="x in extraPresets ?? []"
-        :key="x.key"
-        type="button"
-        :class="[btn, isNamed(x) ? 'border-indigo bg-indigo text-on-indigo' : 'border-line-strong bg-surface text-ink']"
-        :aria-pressed="isNamed(x)"
-        @click="pick({ from: clamp(x.from), to: clamp(x.to) })"
-      >
-        {{ x.label }}
-      </button>
-    </div>
-  </fieldset>
+  </div>
 </template>

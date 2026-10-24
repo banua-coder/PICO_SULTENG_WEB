@@ -36,7 +36,8 @@ test('fonts are self-hosted and within budget', async ({ page }) => {
   await page.evaluate(() => document.fonts.ready)
   expect(external).toEqual([])
   expect(fonts.length).toBeGreaterThan(0)
-  const text = fonts.find((f) => f.url.includes('SourceSans3'))
-  expect(text?.bytes).toBeLessThanOrEqual(35 * 1024)
+  const text = fonts.find((f) => f.url.includes('Nunito')) // the one face
+  expect(text?.bytes).toBeLessThanOrEqual(40 * 1024)
+  expect(fonts).toHaveLength(1)
   expect(fonts.reduce((n, f) => n + f.bytes, 0)).toBeLessThanOrEqual(70 * 1024)
 })

@@ -112,13 +112,13 @@ test('RtChart: Rt = 1 is labelled, a gap breaks the thread, a clipped value show
   await expect(rt.getByTestId('rt-key')).toContainText('Pita arsir')
 })
 
-test('WovenBars and ProgressWeave: numbers sit outside the weave, null is text, over target says so', async ({ page }) => {
+test('BarList and ProgressBar: numbers sit outside the bar, null is text, over target says so', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
   await page.goto('/_kit')
   await hydrated(page)
   const bars = page.locator('[data-orientation="horizontal"]').first()
   await expect(bars.locator('[data-bar-key="u"] [data-value]')).toHaveText('tidak tersedia')
-  await expect(bars.locator('[data-bar-key="m"] [data-bar]')).toHaveAttribute('fill', 'url(#pico-weave-positive)')
+  await expect(bars.locator('[data-bar-key="m"] [data-bar]')).toHaveAttribute('fill', 'var(--pico-positive)')
   const text = await bars.locator('[data-bar-key="m"] [data-value]').boundingBox()
   const bar = await bars.locator('[data-bar-key="m"] [data-bar]').boundingBox()
   expect(text!.x).toBeGreaterThanOrEqual(bar!.x + bar!.width) // the number is not on the pattern

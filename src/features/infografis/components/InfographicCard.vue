@@ -9,12 +9,12 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <button type="button" class="flex w-full flex-col gap-3 rounded-md border border-line bg-surface p-3 text-left" :data-id="item.id" @click="emit('open')">
+  <button type="button" class="flex w-full flex-col gap-2 rounded-lg border bg-card p-2 text-left text-card-foreground shadow-card hover:bg-accent" :data-id="item.id" @click="emit('open')">
     <!-- decoration only: the button is named by the title below -->
     <div aria-hidden="true">
       <PicoImage :src="item.images[0] ?? null" :alt="item.title" ratio="4/5" />
     </div>
-    <span class="font-strong text-ink">{{ item.title }}</span>
+    <span class="font-semibold text-ink">{{ item.title }}</span>
     <span class="text-sm text-ink-muted">{{ item.images.length ? t('infografis.images', { n: item.images.length }) : t('infografis.cardNoImage') }}</span>
   </button>
 </template>

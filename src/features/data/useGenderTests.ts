@@ -28,7 +28,8 @@ export const ageMax = (a: BarDatum[], b: BarDatum[]): number => Math.max(0, ...[
  * the line forms: the labels at the line ends say which is which.
  */
 export function useTestSeries(periods: TestPeriod[], type: 'pcr' | 'rdt', labels: { positive: string; negative: string }) {
-  const rows = periods.filter((p) => p.type === type)
+  // a period of four zeros is the source's padding, not a report: it is left out, never drawn or shown as 0
+  const rows = periods.filter((p) => p.type === type && (p.process > 0 || p.invalid > 0 || p.positive > 0 || p.negative > 0))
   const line = (id: string, role: LineSeries['role'], label: string, f: (p: TestPeriod) => number): LineSeries => ({ id, role, label, points: rows.map((p) => ({ x: p.from, y: f(p) })) })
   return {
     series: [line('positive', 'positive', labels.positive, (p) => p.positive), line('negative', 'recovered', labels.negative, (p) => p.negative)],

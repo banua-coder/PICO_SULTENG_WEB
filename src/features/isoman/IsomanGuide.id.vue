@@ -5,9 +5,9 @@ import PicoIcon from '@/components/PicoIcon.vue'
 </script>
 
 <template>
-  <div class="flex max-w-prose flex-col gap-8 [&_h2]:text-xl [&_li]:mt-3 [&_ol]:mt-4 [&_ol]:pl-5 [&_p]:mt-4 [&_ul]:mt-4 [&_ul]:pl-5">
-    <section aria-labelledby="tanda-bahaya" class="rounded-md border-2 border-indigo bg-tint p-5">
-      <h2 id="tanda-bahaya" class="flex items-center gap-3"><PicoIcon name="info" :size="24" class="flex-none text-indigo" /> Tanda bahaya: segera ke fasilitas kesehatan</h2>
+  <div class="flex max-w-prose flex-col gap-12 [&_h2]:text-xl [&_li]:mt-2 [&_ol]:mt-3 [&_ol]:pl-4 [&_p]:mt-3 [&_ul]:mt-3 [&_ul]:pl-4">
+    <section aria-labelledby="tanda-bahaya" class="rounded-md border-2 border-indigo bg-tint p-4">
+      <h2 id="tanda-bahaya" class="flex items-center gap-2"><PicoIcon name="info" :size="24" class="flex-none text-indigo" /> Tanda bahaya: segera ke fasilitas kesehatan</h2>
       <ul>
         <li>Sesak napas atau sulit bernapas.</li>
         <li>Nyeri dada.</li>

@@ -57,7 +57,7 @@ describe('KontakView', () => {
     await flush()
     expect(wrapper.findAll('article')).toHaveLength(filterHospitals(hospitals(), palu).length)
     expect(wrapper.findAll('section h3').filter((h) => h.attributes('id')?.startsWith('tf-'))).toHaveLength(1)
-    expect((wrapper.find('select').element as HTMLSelectElement).value).toBe('kota-palu')
+    expect(wrapper.find('#kontak-kabupaten').text()).toBe('Kota Palu')
   })
 
   it('the map link opens a new tab, only for a hospital with coordinates', async () => {

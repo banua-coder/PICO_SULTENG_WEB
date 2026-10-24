@@ -7,10 +7,12 @@ import StateMark from '../StateMark.vue'
 import Axis from './Axis.vue'
 import ChartTable from './ChartTable.vue'
 import { buildModel } from './core/model'
-import { lineForm, weaveFill } from './core/roles'
+import { lineForm, roleFill } from './core/roles'
 import { useChartSize, useMarkSize } from './core/useChartSize'
 import { useChartFocus } from './core/useFocus'
 import RoleMark from './RoleMark.vue'
+import { Button } from '@/components/ui/button'
+import { LineChart, Table2 } from '@lucide/vue'
 import type { ChartA11y, LineSeries } from './types'
 
 const props = withDefaults(
@@ -77,11 +79,17 @@ const tipLeft = computed(() => {
 const hintId = `${uid}-hint`
 const tableCols = computed(() => (props.overlay && props.kind === 'bar' ? [...props.series, props.overlay] : props.series).map((s) => ({ id: s.id, label: s.label })))
 const tablePoints = computed(() => model.value.visible)
+// a legend whenever there are two or more series (the direct labels at the line ends stay)
+const legend = computed(() => [...props.series, ...(props.overlay ? [props.overlay] : [])].map((s) => ({ id: s.id + (s === props.overlay ? '-avg' : ''), label: s.label, state: s.form?.shape ?? s.role, color: s.form?.color })))
 </script>
 
 <template>
   <figure class="m-0" data-chart="timeseries">
-    <figcaption class="mb-3 font-display text-md font-heading text-indigo">{{ a11y.title }}</figcaption>
+    <figcaption class="mb-2 font-display text-md font-heading text-ink">{{ a11y.title }}</figcaption>
+
+    <ul v-if="legend.length >= 2" class="m-0 mb-2 flex list-none flex-wrap gap-x-4 gap-y-1 p-0 text-sm" data-testid="legend">
+      <li v-for="l in legend" :key="l.id" class="flex items-center gap-2"><StateMark :state="l.state" :color="l.color" :size="2" /><span>{{ l.label }}</span></li>
+    </ul>
 
     <div ref="box" :style="{ height: `${height}px` }" class="relative w-full" :data-kind="kind">
       <template v-if="!asTable && drawn">
@@ -125,8 +133,8 @@ const tablePoints = computed(() => model.value.visible)
                     :y="b.y"
                     :width="b.w"
                     :height="b.h"
-                    :fill="b.date === peak ? 'var(--pico-crimson)' : weaveFill(s.role)"
-                    :style="{ stroke: b.date === peak ? 'var(--pico-crimson)' : `var(--pico-${s.role})` }"
+                    :fill="b.date === peak ? 'var(--pico-ink)' : roleFill(s.role)"
+                    :style="{ stroke: b.date === peak ? 'var(--pico-ink)' : `var(--pico-${s.role})` }"
                     stroke-width="0.5"
                     :data-peak="b.date === peak ? '' : undefined"
                     data-bar
@@ -159,13 +167,13 @@ const tablePoints = computed(() => model.value.visible)
 
           <div
             v-if="focusDate"
-            class="pointer-events-none absolute top-3 z-10 rounded-sm border border-line-strong bg-surface p-3 text-xs text-ink"
+            class="pointer-events-none absolute top-2 z-10 rounded-sm border border-line-strong bg-surface p-2 text-xs text-ink"
             :style="tipLeft"
             aria-hidden="true"
             data-tooltip
           >
             <p class="num font-strong">{{ fmt.date(focusDate) }}</p>
-            <p v-for="v in focusValues" :key="v.id" class="num flex items-center gap-2">
+            <p v-for="v in focusValues" :key="v.id" class="num flex items-center gap-1">
               <StateMark :state="v.form?.shape ?? v.role" :color="v.form?.color" :size="2" />
               <span>{{ v.label }} {{ fmt.nullable(v.value, (n: number) => fmt.num(n)) }}</span>
             </p>
@@ -178,12 +186,8 @@ const tablePoints = computed(() => model.value.visible)
 
     <ChartTable v-if="asTable" :caption="a11y.title" :columns="tableCols" :dates="model.dates" :values="tablePoints" />
 
-    <button
-      type="button"
-      class="mt-3 inline-flex min-h-touch items-center rounded-sm border border-line-strong bg-surface px-4 text-sm font-strong text-primary-strong"
-      @click="asTable = !asTable"
-    >
-      {{ asTable ? t('chart.graph') : t('chart.table') }}
-    </button>
+    <Button type="button" variant="outline" size="sm" class="mt-3 text-primary-strong" :aria-pressed="asTable" @click="asTable = !asTable">
+      <component :is="asTable ? LineChart : Table2" aria-hidden="true" />{{ asTable ? t('chart.graph') : t('chart.table') }}
+    </Button>
   </figure>
 </template>

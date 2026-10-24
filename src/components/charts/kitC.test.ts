@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { flush, mountApp } from '../../../test/support/mount'
 import { dayNumber, isoFromDay } from './core/days'
-import ProgressWeave from './ProgressWeave.vue'
+import ProgressBar from './ProgressBar.vue'
 import RtChart from './RtChart.vue'
-import WovenBars from './WovenBars.vue'
+import BarList from './BarList.vue'
 import type { BandPoint } from './types'
 
 let w = 640
@@ -37,9 +37,9 @@ describe('RtChart', () => {
     expect(wrapper.find('svg[role="img"]').attributes('aria-label')).toBe(a11y.summary)
   })
 
-  it('draws a solid thread, a band hatched with the rt weave, and a dashed Rt = 1 line with a text label', async () => {
+  it('draws a solid thread, a gray 95 % band, and a dashed Rt = 1 line with a text label', async () => {
     const { wrapper } = await chart(rt([1.2, 1.1, 0.95, 0.9]))
-    expect(wrapper.find('[data-rt-band]').attributes('fill')).toBe('url(#pico-weave-rt)')
+    expect(wrapper.find('[data-rt-band]').attributes('fill')).toBe('var(--pico-band)')
     const thread = wrapper.find('[data-line]')
     expect(thread.attributes('style')).not.toContain('dasharray') // solid
     const th = wrapper.find('[data-threshold]')
@@ -60,7 +60,7 @@ describe('RtChart', () => {
     expect(((gap.wrapper.find('[data-line]').attributes('d') ?? '').match(/M/g) ?? []).length).toBe(2)
     const none = await chart(rt([null, null, null]))
     expect(none.wrapper.find('[data-testid="rt-empty"]').text()).toBe('Rt tidak tersedia untuk rentang ini')
-    expect(none.wrapper.find('svg').exists()).toBe(false)
+    expect(none.wrapper.find('svg[role="img"]').exists()).toBe(false)
     expect(none.wrapper.find('[data-testid="rt-key"]').exists()).toBe(false)
   })
 
@@ -117,18 +117,18 @@ describe('RtChart', () => {
 
   it('draws no animation', async () => {
     const { wrapper } = await chart(rt([1.2, 1.1]))
-    expect(wrapper.html()).not.toMatch(/<animate|animation|transition/)
+    expect(wrapper.find('svg[role="img"]').html()).not.toMatch(/<animate|animation|transition/)
   })
 })
 
-describe('WovenBars', () => {
+describe('BarList', () => {
   const items = [
     { key: 'm', label: 'Laki-laki', value: 10199, role: 'positive' as const },
     { key: 'f', label: 'Perempuan', value: 12585, role: 'recovered' as const },
     { key: 'x', label: 'Tidak diketahui', value: null, role: 'deceased' as const },
   ]
   const bars = async (props: Record<string, unknown> = {}, path = '/') => {
-    const out = await mountApp(WovenBars, { items, orientation: 'horizontal', a11y: { title: 'Jenis kelamin', summary: 'Perempuan lebih banyak.' }, ...props }, path)
+    const out = await mountApp(BarList, { items, orientation: 'horizontal', a11y: { title: 'Jenis kelamin', summary: 'Perempuan lebih banyak.' }, ...props }, path)
     await flush()
     return out
   }
@@ -137,8 +137,8 @@ describe('WovenBars', () => {
     const { wrapper } = await bars()
     const m = wrapper.find('[data-bar-key="m"]')
     const f = wrapper.find('[data-bar-key="f"]')
-    expect(m.find('[data-bar]').attributes('fill')).toBe('url(#pico-weave-positive)')
-    expect(f.find('[data-bar]').attributes('fill')).toBe('url(#pico-weave-recovered)')
+    expect(m.find('[data-bar]').attributes('fill')).toBe('var(--pico-positive)')
+    expect(f.find('[data-bar]').attributes('fill')).toBe('var(--pico-recovered)')
     expect(parseFloat(f.find('[data-bar]').attributes('width')!)).toBeGreaterThan(parseFloat(m.find('[data-bar]').attributes('width')!))
     expect(m.find('[data-value]').text()).toBe('10.199')
     const barEnd = parseFloat(m.find('[data-bar]').attributes('x')!) + parseFloat(m.find('[data-bar]').attributes('width')!)
@@ -163,7 +163,7 @@ describe('WovenBars', () => {
     w = 0
     const { wrapper } = await bars()
     expect(wrapper.find('[data-orientation]').attributes('style')).toMatch(/height: \d+px/)
-    expect(wrapper.find('svg').exists()).toBe(false)
+    expect(wrapper.find('svg[role="img"]').exists()).toBe(false)
   })
 
   it('the table view has the same numbers', async () => {
@@ -182,14 +182,14 @@ describe('WovenBars', () => {
   })
 })
 
-describe('ProgressWeave', () => {
-  const prog = async (props: Record<string, unknown>, path = '/') => (await mountApp(ProgressWeave, { label: 'Dosis 1', role: 'positive', ...props }, path)).wrapper
+describe('ProgressBar', () => {
+  const prog = async (props: Record<string, unknown>, path = '/') => (await mountApp(ProgressBar, { label: 'Dosis 1', role: 'positive', ...props }, path)).wrapper
 
   it('shows the percentage and "x dari y" as text, and a woven fill of that width', async () => {
     const wr = await prog({ value: 85441, target: 2240548 })
     expect(wr.find('[data-testid="progress-text"]').text()).toBe('3,8% · 85.441 dari 2.240.548')
     expect(wr.find('[data-fill]').attributes('width')).toMatch(/^3\.8\d*%$/)
-    expect(wr.find('[data-fill]').attributes('fill')).toBe('url(#pico-weave-positive)')
+    expect(wr.find('[data-fill]').attributes('fill')).toBe('var(--pico-positive)')
   })
 
   it('is a progressbar with a full-sentence value text', async () => {
@@ -227,6 +227,6 @@ describe('ProgressWeave', () => {
   it('English and the role weave follow the prop', async () => {
     const wr = await prog({ value: 1, target: 4, role: 'recovered' }, '/en/')
     expect(wr.find('[data-testid="progress-text"]').text()).toBe('25.0% · 1 of 4')
-    expect(wr.find('[data-fill]').attributes('fill')).toBe('url(#pico-weave-recovered)')
+    expect(wr.find('[data-fill]').attributes('fill')).toBe('var(--pico-recovered)')
   })
 })

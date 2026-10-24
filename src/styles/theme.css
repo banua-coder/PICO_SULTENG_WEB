@@ -1,20 +1,14 @@
-/* ADR-0097: the Tailwind theme is the brand tokens and nothing else.
-   Every value below is a var() into pico-tokens.css, which scripts/sync-brand.mjs copies from the PICO repo. */
+/* The Tailwind theme: the old PICO palette (palette.css) plus the shadcn-vue semantic colours.
+   Tailwind's default spacing, shadow and weight scales are back because shadcn-vue components are written against them.
+   Raw colour classes (bg-red-500) still do not exist: colours come from the tokens below. */
 @import '../assets/brand/pico-tokens.css';
+@import './palette.css';
 
 @theme inline {
-  /* Drop every Tailwind default we map ourselves, so an off-brand class does not exist. */
   --color-*: initial;
   --font-*: initial;
   --text-*: initial;
   --radius-*: initial;
-  --spacing: initial;
-  --spacing-*: initial;
-  --shadow-*: initial;
-  --inset-shadow-*: initial;
-  --drop-shadow-*: initial;
-  --ease-*: initial;
-  --font-weight-*: initial;
 
   --color-paper: var(--pico-paper);
   --color-surface: var(--pico-surface);
@@ -22,7 +16,6 @@
   --color-tint: var(--pico-tint);
   --color-indigo: var(--pico-indigo);
   --color-sky: var(--pico-sky);
-  --color-primary: var(--pico-primary);
   --color-primary-strong: var(--pico-primary-strong);
   --color-crimson: var(--pico-crimson);
   --color-ink: var(--pico-ink);
@@ -31,28 +24,54 @@
   --color-line-strong: var(--pico-line-strong);
   --color-on-indigo: var(--pico-on-indigo);
   --color-on-primary: var(--pico-on-primary);
-  --color-dye-maroon: var(--pico-dye-maroon);
-  --color-dye-gold: var(--pico-dye-gold);
-  --color-dye-bark: var(--pico-dye-bark);
   --color-positive: var(--pico-positive);
   --color-recovered: var(--pico-recovered);
   --color-deceased: var(--pico-deceased);
   --color-active: var(--pico-active);
   --color-rt: var(--pico-rt);
+  --color-scrim: var(--pico-scrim);
+  --color-bar: var(--pico-bar);
+  --color-on-bar: var(--pico-on-bar);
+  --color-on-bar-active: var(--pico-on-bar-active);
   --color-current: currentColor;
   --color-transparent: transparent;
 
+  /* shadcn-vue semantic names */
+  --color-background: var(--pico-paper);
+  --color-foreground: var(--pico-ink);
+  --color-card: var(--pico-surface);
+  --color-card-foreground: var(--pico-ink);
+  --color-popover: var(--pico-surface);
+  --color-popover-foreground: var(--pico-ink);
+  --color-primary: var(--pico-primary);
+  --color-primary-foreground: var(--pico-on-primary);
+  --color-secondary: var(--pico-cotton-deep);
+  --color-secondary-foreground: var(--pico-ink);
+  --color-muted: var(--pico-cotton-deep);
+  --color-muted-foreground: var(--pico-ink-muted);
+  --color-accent: var(--pico-tint);
+  --color-accent-foreground: var(--pico-ink);
+  --color-destructive: var(--pico-crimson);
+  --color-border: var(--pico-line);
+  --color-input: var(--pico-line-strong);
+  --color-ring: var(--pico-primary-strong);
+
   --font-display: var(--pico-font-display);
   --font-text: var(--pico-font-text);
-  /* Weights the two self-hosted faces really have: Source Sans 3 400..600, Archivo 650..760 */
+  --font-sans: var(--pico-font-text);
   --font-weight-regular: 400;
+  --font-weight-medium: 500;
   --font-weight-strong: 600;
+  --font-weight-semibold: 600;
   --font-weight-heading: 700;
+  --font-weight-bold: 700;
 
   --text-xs: var(--pico-text-xs);
   --text-xs--line-height: 1.5;
   --text-sm: var(--pico-text-sm);
   --text-sm--line-height: 1.5;
+  --text-base: var(--pico-text-md);
+  --text-base--line-height: 1.55;
   --text-md: var(--pico-text-md);
   --text-md--line-height: 1.55;
   --text-lg: var(--pico-text-lg);
@@ -67,23 +86,12 @@
   --radius-xs: var(--pico-radius-xs);
   --radius-sm: var(--pico-radius-sm);
   --radius-md: var(--pico-radius-md);
-  --radius-lg: var(--pico-radius-lg);
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-full: 9999px;
 
-  /* p-5 means --pico-space-5 (16px). The scale is the brand's 4px grid, not a multiplier. */
-  --spacing-0: var(--pico-space-0);
-  --spacing-1: var(--pico-space-1);
-  --spacing-2: var(--pico-space-2);
-  --spacing-3: var(--pico-space-3);
-  --spacing-4: var(--pico-space-4);
-  --spacing-5: var(--pico-space-5);
-  --spacing-6: var(--pico-space-6);
-  --spacing-7: var(--pico-space-7);
-  --spacing-8: var(--pico-space-8);
-  --spacing-9: var(--pico-space-9);
+  --shadow-card: var(--pico-shadow);
   /* C3: every interactive target is at least 44 x 44 px */
   --spacing-touch: 2.75rem;
-
-  --ease-out: var(--pico-ease-out);
-  --ease-in: var(--pico-ease-in);
-  --ease-in-out: var(--pico-ease-in-out);
 }

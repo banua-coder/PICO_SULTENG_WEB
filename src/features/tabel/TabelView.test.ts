@@ -21,7 +21,7 @@ describe('TabelView', () => {
     expect(wrapper.find('h1').text()).toBe('Tabel Data')
     expect(wrapper.findAll('tbody tr')).toHaveLength(50)
     expect(wrapper.find('caption').text()).toContain('Sulawesi Tengah')
-    expect(wrapper.find('tbody th').text()).toContain('14 Jan 2024')
+    expect(wrapper.find('tbody th').text()).toContain('9 Des 2023') // the last day with real counts, not the zero rows after it
     expect(s.rows.at(-1)!.date).toBe('2024-01-14')
     const region = wrapper.find('[role="region"]')
     expect(region.attributes('tabindex')).toBe('0')
@@ -43,7 +43,7 @@ describe('TabelView', () => {
 
   it('a window narrows the rows, and a range with no rows says so', async () => {
     seed()
-    const { wrapper } = await mountApp(TabelView, {}, '/tabel-data?dari=2024-01-10&sampai=2024-01-12')
+    const { wrapper } = await mountApp(TabelView, {}, '/tabel-data?dari=2023-12-01&sampai=2023-12-03')
     await flush()
     expect(wrapper.findAll('tbody tr')).toHaveLength(3)
     expect(wrapper.find('caption').text()).toContain('3')

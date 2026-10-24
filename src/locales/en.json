@@ -3,7 +3,9 @@
     "name": "PICO Sulteng",
     "tagline": "COVID-19 record of Central Sulawesi",
     "skip": "Skip to content",
-    "homeLink": "PICO Sulteng, go to Home"
+    "homeLink": "PICO Sulteng, go to Home",
+    "titleLine1": "COVID-19 Information Center",
+    "titleLine2": "Central Sulawesi Province"
   },
   "nav": {
     "label": "Main navigation",
@@ -16,18 +18,24 @@
     "kontak": "Contacts",
     "wiki": "Health wiki",
     "isoman": "Home isolation",
-    "metodologi": "Methodology"
+    "metodologi": "Methodology",
+    "mulai": "Start",
+    "more": "More",
+    "download": "Get the app",
+    "labelMobile": "Bottom navigation"
   },
   "locale": {
     "label": "Language",
     "switchTo": "Bahasa Indonesia",
-    "switchToLabel": "Switch language to Bahasa Indonesia"
+    "switchToLabel": "Switch language to Bahasa Indonesia",
+    "code": "ID"
   },
   "theme": {
     "label": "Theme",
     "system": "Follow device",
     "light": "Light",
-    "dark": "Dark"
+    "dark": "Dark",
+    "hint": "Change theme: follow device, light, dark"
   },
   "format": {
     "notAvailable": "not available",
@@ -36,7 +44,8 @@
   "common": {
     "retry": "Try again",
     "loading": "Loading",
-    "pageTitle": "{page} · {site}"
+    "pageTitle": "{page} · {site}",
+    "close": "Close"
   },
   "state": {
     "positive": "Positive",
@@ -82,7 +91,16 @@
     "from": "From",
     "to": "To",
     "presets": "Quick picks",
-    "all": "All"
+    "all": "All",
+    "last30": "30 days",
+    "last90": "90 days",
+    "last180": "180 days",
+    "year": "Year",
+    "allYears": "All years",
+    "frame": "Time frame",
+    "custom": "Pick dates",
+    "pickRange": "Date range",
+    "apply": "Apply"
   },
   "heading": {
     "link": "Link to this section"
@@ -136,9 +154,19 @@
     "api": "Open API",
     "swagger": "Swagger documentation",
     "methodology": "Methodology",
-    "culture": "Kaili weaving motifs are the shared heritage of the Kaili people. The patterns on this site are interpretations of written descriptions, not reproductions of real cloth.",
     "archive": "Archive: the record stops on {date} and is no longer updated.",
-    "thirdParty": "a third-party site"
+    "thirdParty": "a third-party site",
+    "start": "Start: API, data, app",
+    "docs": "API documentation",
+    "source": "The data sources and their limits are on the Methodology page.",
+    "made": "Made by",
+    "licence": "Site code: MIT licence.",
+    "social": {
+      "github": "Banua Coder on GitHub",
+      "instagram": "Banua Coders on Instagram",
+      "facebook": "Banua Coder on Facebook",
+      "youtube": "Banua Coder on YouTube"
+    }
   },
   "placeholder": {
     "soon": "This page is being prepared."
@@ -174,10 +202,14 @@
       "dailyOthers": "Recovered and deceased per day",
       "cumulative": "Total cases",
       "noRows": "No data in this range",
-      "summaryDaily": "Peak daily cases {peak} on {peakDate}. Last value {last} on {lastDate}.",
-      "summaryDailyNoPeak": "No new cases in this range. Last value {last} on {lastDate}.",
+      "summaryDaily": "Peak daily {type} {peak} on {peakDate}. Last value {last} on {lastDate}.",
+      "summaryDailyNoPeak": "No new {type} in this range. Last value {last} on {lastDate}.",
       "summaryCumulative": "Total positive cases {value} on {date}.",
-      "summaryOthers": "Recovered and deceased per day in this range, up to {date}."
+      "summaryOthers": "Recovered and deceased per day in this range, up to {date}.",
+      "type": "Case type",
+      "all": "All",
+      "dailyOf": "New {type} per day",
+      "dailyAll": "New cases per day, all types"
     },
     "rt": {
       "title": "Reproduction number (Rt)",
@@ -230,7 +262,12 @@
       "sample": "Sample",
       "duration": "Time",
       "summary": "{type}: {first} to {last}, last period {positive} positive and {negative} negative."
-    }
+    },
+    "dashboard": "COVID-19 dashboard, {area}",
+    "links": "Public data",
+    "linkTable": "Get the public data in the Data Table",
+    "linkApi": "Get the public API on the Start page",
+    "mapTable": "Regency/city table"
   },
   "chart": {
     "table": "View as table",
@@ -451,7 +488,7 @@
   "beranda": {
     "title": "Home",
     "description": "COVID-19 records for Central Sulawesi and Indonesia, 2 March 2020 to 14 January 2024: cases, Rt, vaccination, hospital contacts and a home isolation guide.",
-    "heroTitle": "COVID-19 Information Centre of Central Sulawesi",
+    "heroTitle": "COVID-19 Information Center, Central Sulawesi",
     "archive": "An archive of COVID-19 records from {range}. The data is no longer updated.",
     "seeData": "See the data",
     "figuresTitle": "Latest recorded figures",
@@ -490,6 +527,103 @@
     "tipDistance": "Keep about one metre apart.",
     "tipVaccine": "Follow the vaccination advice.",
     "wikiLink": "Read the COVID-19 wiki",
-    "isomanLink": "Home isolation guide"
+    "isomanLink": "Home isolation guide",
+    "situationTitle": "COVID-19 situation in Central Sulawesi",
+    "situationUpdated": "Latest data",
+    "situationSource": "Data source",
+    "tabStats": "Statistics",
+    "tabVaccine": "Vaccination",
+    "seeMore": "See more",
+    "startTitle": "Start",
+    "startApi": "Use the API and download data",
+    "startApp": "Get the Android app",
+    "startNote": "The entry point to the open API and the app.",
+    "callCenter": "Call Center",
+    "callCenterNote": "Emergency number",
+    "daily": "Daily change",
+    "kabTitle": "13 regencies/cities of Central Sulawesi",
+    "kabNote": "By total positive cases.",
+    "kabTotal": "{n} cases",
+    "kabDate": "Data as of {date}",
+    "otherProvinces": "Other provinces of Indonesia",
+    "whatToDo": "What should you do?",
+    "whatToKnow": "What should you know?",
+    "aboutTitle": "What is COVID-19?",
+    "aboutText": "COVID-19 is an infectious disease caused by the SARS-CoV-2 virus. It spreads through breath droplets and touching contaminated surfaces.",
+    "symFever": "Fever",
+    "symCough": "Cough",
+    "symHeadache": "Headache",
+    "startApiShort": "API and data",
+    "startAppShort": "App"
+  },
+  "mulai": {
+    "title": "Start",
+    "description": "The entry point to PICO Sulteng: the open API, CSV and Excel downloads, the Android app and the source code.",
+    "lead": "Every way to use the PICO data is here: read it on this site, fetch it through the API, download the files, or install the Android app.",
+    "jump": "On this page",
+    "web": {
+      "title": "Read it on this site",
+      "text": "Figures, curves, Rt, maps and tables for Central Sulawesi first, then its 13 regencies/cities and Indonesia.",
+      "data": "Open Data",
+      "table": "Open the data table"
+    },
+    "api": {
+      "title": "Open API",
+      "text": "A JSON REST API. No key, no account. The data stops on 14 January 2024.",
+      "base": "Base URL",
+      "version": "Every path is under /api/v1.",
+      "example": "Example: Central Sulawesi cases, 13 and 14 January 2024",
+      "docs": "API documentation",
+      "swagger": "Swagger UI",
+      "openapi": "OpenAPI specification (JSON)",
+      "tabCurl": "curl",
+      "tabJs": "JavaScript",
+      "note": "The full series is large (up to 0.9 MB). Add start_date and end_date, or use the download files below."
+    },
+    "files": {
+      "title": "Open data (CSV and Excel)",
+      "text": "One file per level, every date, one row per area per day. Central Sulawesi first.",
+      "area": "File",
+      "csv": "CSV",
+      "xlsx": "Excel (XLSX)",
+      "caption": "Full data files",
+      "kabupaten": "13 regencies/cities of Central Sulawesi",
+      "provinsi": "34 provinces (including Central Sulawesi)",
+      "indonesia": "Indonesia",
+      "columns": "What each column holds is on the Methodology page.",
+      "licence": "The data comes from third parties and is not MIT licensed. Read the Methodology page before you reuse it."
+    },
+    "app": {
+      "title": "Android app",
+      "text": "PICO Sulteng for Android has the same figures, curves and contacts on your phone.",
+      "status": "Distribution status",
+      "play": "Google Play",
+      "apple": "App Store",
+      "apk": "APK file (GitHub)",
+      "notPublished": "Not published yet",
+      "available": "Available",
+      "version": "Version {version}, {size} MB",
+      "download": "Download the APK from GitHub Releases",
+      "releases": "All releases",
+      "howTitle": "How to install the APK",
+      "step1": "Open the GitHub Releases page on an Android phone and download the newest APK file.",
+      "step2": "Open the downloaded file. If asked, allow installs from your browser or file manager.",
+      "step3": "Follow the install prompts. Afterwards, switch that permission off again.",
+      "warn": "This APK is installed outside an app store, so Android does not vet it. Download it only from the official link on this page. The app shows archive data. iPhone is not supported yet."
+    },
+    "code": {
+      "title": "Source code",
+      "text": "Every part is open on GitHub.",
+      "web": "This site (Vue 3)",
+      "api": "API (Go)",
+      "docs": "API documentation site",
+      "app": "App (Flutter)"
+    },
+    "copy": "Copy",
+    "copied": "Copied",
+    "what": {
+      "base": "the API base URL",
+      "command": "the example command"
+    }
   }
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Button } from '@/components/ui/button'
 
 const props = defineProps<{ value: string; /** what is copied, e.g. "nomor rekening" */ label: string; /** announced after copying, default "Disalin" */ doneText?: string }>()
 const emit = defineEmits<{ copied: [] }>()
@@ -24,15 +25,10 @@ onBeforeUnmount(() => clearTimeout(timer))
 </script>
 
 <template>
-  <span class="inline-flex items-center gap-3">
-    <button
-      type="button"
-      class="min-h-touch min-w-touch rounded-sm border border-line-strong bg-surface px-4 text-sm font-strong text-primary-strong"
-      :aria-label="t('copy.action', { what: label })"
-      @click="copy"
-    >
+  <span class="inline-flex items-center gap-2">
+    <Button type="button" variant="outline" size="sm" class="text-primary-strong" :aria-label="t('copy.action', { what: label })" @click="copy">
       {{ announced || t('copy.short') }}
-    </button>
+    </Button>
     <span role="status" aria-live="polite" class="sr-only">{{ announced }}</span>
   </span>
 </template>

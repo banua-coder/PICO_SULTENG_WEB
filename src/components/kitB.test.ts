@@ -1,10 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { INDONESIA, SULTENG } from '@/app/areas'
 import { flush, mountApp, until } from '../../test/support/mount'
+import { Select } from '@/components/ui/select'
 import AreaPicker from './AreaPicker.vue'
 import DateRange from './DateRange.vue'
-import LottiePlayer from './LottiePlayer.vue'
-import { hexToLottie, recolor } from './lottie'
 import PicoImage from './PicoImage.vue'
 import StatusView from './StatusView.vue'
 
@@ -134,129 +133,79 @@ describe('StatusView', () => {
   })
 })
 
-describe('LottiePlayer', () => {
-  it('with reduced motion it shows the static SVG and never requests lottie-web', async () => {
-    motion(true)
-    const { wrapper } = await mountApp(LottiePlayer, { name: 'success', label: 'Berhasil' })
-    await flush()
-    expect(lottieLoaded).not.toHaveBeenCalled()
-    expect(wrapper.find('svg').exists()).toBe(true)
-    expect(wrapper.attributes('role')).toBe('img')
-    expect(wrapper.attributes('aria-label')).toBe('Berhasil')
-  })
-
-  it('with motion allowed it lazy-loads the player', async () => {
-    motion(false)
-    await mountApp(LottiePlayer, { name: 'success', label: 'Berhasil' })
-    await flush()
-    expect(lottieLoaded).toHaveBeenCalled()
-  })
-})
-
-describe('lottie recolour', () => {
-  it('parses hex to 0..1 floats', () => {
-    expect(hexToLottie('#FF0000')).toEqual([1, 0, 0, 1])
-    expect(hexToLottie('#9DB0EE')?.[0]).toBeCloseTo(0.616, 2)
-    expect(hexToLottie('red')).toBeNull()
-  })
-
-  it('recolours only named fills and strokes, deep in the tree, from CSS variables', () => {
-    const data = {
-      layers: [
-        { shapes: [{ ty: 'st', nm: 'pico-primary', c: { k: [0, 0, 0, 1] } }, { ty: 'fl', nm: 'other', c: { k: [0.1, 0.1, 0.1, 1] } }] },
-        { shapes: [{ ty: 'fl', nm: 'pico-crimson', c: { k: [0, 0, 0, 1] } }] },
-      ],
-    }
-    recolor(data, (n) => ({ '--pico-primary': '#77A2DA', '--pico-crimson': '#F08AAE' })[n] ?? '')
-    expect(data.layers[0]!.shapes[0]!.c.k).toEqual(hexToLottie('#77A2DA'))
-    expect(data.layers[0]!.shapes[1]!.c.k).toEqual([0.1, 0.1, 0.1, 1])
-    expect(data.layers[1]!.shapes[0]!.c.k).toEqual(hexToLottie('#F08AAE'))
-  })
-
-  it('leaves a colour alone when the variable is not a hex', () => {
-    const d = { ty: 'fl', nm: 'pico-sky', c: { k: [1, 1, 1, 1] } }
-    recolor(d, () => '')
-    expect(d.c.k).toEqual([1, 1, 1, 1])
-  })
-})
-
 describe('AreaPicker', () => {
-  it('has native optgroups for each requested level: 1 + 34 + 13 options', async () => {
+  it('is a labelled shadcn select showing the current area', async () => {
     const { wrapper } = await mountApp(AreaPicker, { modelValue: SULTENG, levels: ['indonesia', 'provinsi', 'kabupaten'] })
-    expect(wrapper.findAll('optgroup')).toHaveLength(3)
-    expect(wrapper.findAll('option')).toHaveLength(48)
-    expect((wrapper.find('select').element as HTMLSelectElement).value).toBe('provinsi:sulawesi-tengah')
     expect(wrapper.find('label').text()).toBe('Wilayah')
+    const trigger = wrapper.find('button[role="combobox"]')
+    expect(trigger.exists()).toBe(true)
+    expect(trigger.text()).toBe('Sulawesi Tengah')
+    expect(wrapper.find('label').attributes('for')).toBe(trigger.attributes('id'))
   })
 
-  it('only the requested levels appear', async () => {
-    const { wrapper } = await mountApp(AreaPicker, { modelValue: SULTENG, levels: ['provinsi'] })
-    expect(wrapper.findAll('optgroup')).toHaveLength(1)
-    expect(wrapper.findAll('option')).toHaveLength(34)
-  })
-
-  it('emits the AreaRef of the chosen option', async () => {
+  it('emits the AreaRef of the chosen value', async () => {
     const { wrapper } = await mountApp(AreaPicker, { modelValue: INDONESIA, levels: ['indonesia', 'kabupaten'] })
-    await wrapper.find('select').setValue('kabupaten:kota-palu')
+    wrapper.findComponent(Select).vm.$emit('update:modelValue', 'kabupaten:kota-palu')
     const out = wrapper.findComponent(AreaPicker).emitted('update:modelValue')![0]![0]
     expect(out).toMatchObject({ level: 'kabupaten', code: '7271', name: 'Kota Palu' })
+  })
+
+  it('ignores a value that is not an area', async () => {
+    const { wrapper } = await mountApp(AreaPicker, { modelValue: INDONESIA, levels: ['indonesia'] })
+    wrapper.findComponent(Select).vm.$emit('update:modelValue', 'provinsi:nowhere')
+    expect(wrapper.findComponent(AreaPicker).emitted('update:modelValue')).toBeUndefined()
   })
 })
 
 describe('DateRange', () => {
-  const win = { from: '2020-03-02', to: '2024-01-14' }
-  const props = { modelValue: win, min: '2020-03-02', max: '2024-01-14' }
+  // the last day with real counts is the end of the window, not the padded end of the record
+  const win = { from: '2020-03-02', to: '2023-12-09' }
+  const props = { modelValue: win, min: '2020-03-02', max: '2023-12-09' }
   const emitted = (w: Awaited<ReturnType<typeof mountApp>>['wrapper']) => w.findComponent(DateRange).emitted('update:modelValue')!.at(-1)![0] as { from: string; to: string }
+  const frames = (w: Awaited<ReturnType<typeof mountApp>>['wrapper']) => w.findAll('[data-slot="toggle-group-item"]')
 
-  it('has two labelled native date inputs inside a fieldset with a legend', async () => {
+  it('time frames: 30, 90, 180 days and Semua, counted back from the last real day', async () => {
     const { wrapper } = await mountApp(DateRange, props)
-    expect(wrapper.find('legend').text()).toBe('Rentang tanggal')
-    const inputs = wrapper.findAll('input[type="date"]')
-    expect(inputs).toHaveLength(2)
-    expect(inputs[0]!.attributes('min')).toBe('2020-03-02')
-    for (const i of inputs) expect(wrapper.find(`label[for="${i.attributes('id')}"]`).exists()).toBe(true)
+    expect(frames(wrapper).map((b) => b.text())).toEqual(['30 hari', '90 hari', '180 hari', 'Semua'])
+    await frames(wrapper)[0]!.trigger('click')
+    expect(emitted(wrapper)).toEqual({ from: '2023-11-10', to: '2023-12-09' }) // 30 days, both ends included
+    await frames(wrapper)[1]!.trigger('click')
+    expect(emitted(wrapper)).toEqual({ from: '2023-09-11', to: '2023-12-09' })
+    await frames(wrapper)[2]!.trigger('click')
+    expect(emitted(wrapper)).toEqual({ from: '2023-06-13', to: '2023-12-09' })
   })
 
-  it('presets: semua, 2020, 2021, 2022, 2023, 2024 clamped to the data window', async () => {
-    const { wrapper } = await mountApp(DateRange, props)
-    const buttons = wrapper.findAll('button')
-    expect(buttons.map((b) => b.text())).toEqual(['Semua', '2020', '2021', '2022', '2023', '2024'])
-    await buttons[1]!.trigger('click')
-    expect(emitted(wrapper)).toEqual({ from: '2020-03-02', to: '2020-12-31' }) // 2020 starts at the data's first day
-    await buttons[5]!.trigger('click')
-    expect(emitted(wrapper)).toEqual({ from: '2024-01-01', to: '2024-01-14' })
-    await buttons[0]!.trigger('click')
+  it('Semua is the whole data window, and a window longer than the data is clamped to its first day', async () => {
+    const { wrapper } = await mountApp(DateRange, { ...props, modelValue: { from: '2023-11-10', to: '2023-12-09' } })
+    await frames(wrapper)[3]!.trigger('click')
     expect(emitted(wrapper)).toEqual(win)
+    const short = await mountApp(DateRange, { modelValue: { from: '2023-12-01', to: '2023-12-09' }, min: '2023-12-01', max: '2023-12-09' })
+    await frames(short.wrapper)[2]!.trigger('click')
+    expect(emitted(short.wrapper)).toEqual({ from: '2023-12-01', to: '2023-12-09' })
   })
 
-  it('marks the active preset with aria-pressed', async () => {
+  it('marks the active time frame (data-state on)', async () => {
     const all = await mountApp(DateRange, props)
-    expect(all.wrapper.findAll('button')[0]!.attributes('aria-pressed')).toBe('true')
+    expect(frames(all.wrapper)[3]!.attributes('data-state')).toBe('on')
+    const d30 = await mountApp(DateRange, { ...props, modelValue: { from: '2023-11-10', to: '2023-12-09' } })
+    expect(frames(d30.wrapper)[0]!.attributes('data-state')).toBe('on')
+    expect(frames(d30.wrapper)[3]!.attributes('data-state')).toBe('off')
+  })
+
+  it('the year select shows the year of the window, and the calendar button shows the dates', async () => {
     const y = await mountApp(DateRange, { ...props, modelValue: { from: '2021-01-01', to: '2021-12-31' } })
-    expect(y.wrapper.findAll('button').find((b) => b.text() === '2021')!.attributes('aria-pressed')).toBe('true')
-    expect(y.wrapper.findAll('button')[0]!.attributes('aria-pressed')).toBe('false')
+    expect(y.wrapper.find('button[role="combobox"]').text()).toBe('2021')
+    await until(() => y.wrapper.find('[data-testid="range-trigger"]').exists()) // the calendar is its own chunk
+    expect(y.wrapper.find('[data-testid="range-trigger"]').text()).toContain('1 Januari 2021 sampai 31 Desember 2021')
   })
 
-  it('clamps typed dates to min and max', async () => {
+  it('a year is picked from the select: clamped to the data window', async () => {
     const { wrapper } = await mountApp(DateRange, props)
-    await wrapper.findAll('input')[0]!.setValue('2019-01-01')
-    expect(emitted(wrapper).from).toBe('2020-03-02')
-    await wrapper.findAll('input')[1]!.setValue('2030-01-01')
-    expect(emitted(wrapper).to).toBe('2024-01-14')
-  })
-
-  it('a start after the end drags the end along, and the reverse', async () => {
-    const mid = { from: '2021-01-01', to: '2021-06-30' }
-    const { wrapper } = await mountApp(DateRange, { ...props, modelValue: mid })
-    await wrapper.findAll('input')[0]!.setValue('2021-09-01')
-    expect(emitted(wrapper)).toEqual({ from: '2021-09-01', to: '2021-09-01' })
-    await wrapper.findAll('input')[1]!.setValue('2020-12-01')
-    expect(emitted(wrapper)).toEqual({ from: '2020-12-01', to: '2020-12-01' })
-  })
-
-  it('ignores an empty value while the user is editing', async () => {
-    const { wrapper } = await mountApp(DateRange, props)
-    await wrapper.findAll('input')[0]!.setValue('')
-    expect(wrapper.findComponent(DateRange).emitted('update:modelValue')).toBeUndefined()
+    wrapper.findComponent(Select).vm.$emit('update:modelValue', '2020')
+    expect(emitted(wrapper)).toEqual({ from: '2020-03-02', to: '2020-12-31' }) // 2020 starts at the data's first day
+    wrapper.findComponent(Select).vm.$emit('update:modelValue', '2023')
+    expect(emitted(wrapper)).toEqual({ from: '2023-01-01', to: '2023-12-09' })
+    wrapper.findComponent(Select).vm.$emit('update:modelValue', 'all')
+    expect(emitted(wrapper)).toEqual(win)
   })
 })

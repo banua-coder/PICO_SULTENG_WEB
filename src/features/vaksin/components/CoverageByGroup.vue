@@ -6,7 +6,7 @@ import { useFormat } from '@/app/useFormat'
 import SectionHeading from '@/components/SectionHeading.vue'
 import { groupBars, OVER, overTarget } from '../useVaksin'
 
-const WovenBars = defineAsyncComponent(() => import('@/components/charts/WovenBars.vue'))
+const BarList = defineAsyncComponent(() => import('@/components/charts/BarList.vue'))
 const props = defineProps<{ day: VaccinationDay }>()
 const { t } = useI18n()
 const f = useFormat()
@@ -26,11 +26,11 @@ const over = computed(() => overTarget(props.day))
 <template>
   <section aria-labelledby="kelompok" data-testid="coverage-groups">
     <SectionHeading id="kelompok" :level="2">{{ t('vaksin.groupsTitle') }}</SectionHeading>
-    <p class="mt-3 max-w-prose text-ink-muted">{{ t('vaksin.groupsNote') }}</p>
-    <div class="mt-5 grid gap-8 lg:grid-cols-2">
-      <WovenBars v-for="c in charts" :key="c.dose" :items="c.items" orientation="horizontal" :max="max" :a11y="{ title: c.title, summary: c.summary }" />
+    <p class="mt-2 max-w-prose text-ink-muted">{{ t('vaksin.groupsNote') }}</p>
+    <div class="mt-4 grid gap-12 lg:grid-cols-2">
+      <BarList v-for="c in charts" :key="c.dose" :items="c.items" orientation="horizontal" :max="max" :a11y="{ title: c.title, summary: c.summary }" />
     </div>
-    <ul v-if="over.length" class="num mt-4 list-disc pl-5 text-sm" data-testid="over-notes">
+    <ul v-if="over.length" class="num mt-3 list-disc pl-4 text-sm" data-testid="over-notes">
       <li v-for="o in over" :key="`${o.key}${o.dose}`">{{ t('vaksin.overNote', { group: name(o.key), dose: t(`vaksin.${o.dose}`), pct: pct(o.coverage) }) }}</li>
     </ul>
   </section>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Download, FileSpreadsheet } from '@lucide/vue'
+import { Button } from '@/components/ui/button'
 import { useDownloadSizes } from '@/api/useSeries'
 import type { DailyRow } from '@/api/types'
 import { toCsv } from '@/app/csv'
@@ -47,27 +49,26 @@ const FULL = [
   { file: 'provinsi', label: 'tabel.fullProvinsi' },
   { file: 'kabupaten-sulteng', label: 'tabel.fullKabupaten' },
 ] as const
-const btn = 'min-h-touch min-w-touch rounded-sm border border-line-strong bg-surface px-4 text-sm font-strong text-primary-strong disabled:opacity-50'
 </script>
 
 <template>
   <div class="flex flex-col gap-6">
-    <div class="flex flex-wrap items-center gap-3">
-      <button type="button" :class="btn" :disabled="disabled" @click="csv">{{ t('tabel.csv') }}</button>
-      <button type="button" :class="btn" :disabled="disabled" :aria-busy="busy" @click="xlsx">{{ t('tabel.xlsx') }}</button>
+    <div class="flex flex-wrap items-center gap-2">
+      <Button type="button" variant="outline" class="text-primary-strong" :disabled="disabled" @click="csv"><Download aria-hidden="true" />{{ t('tabel.csv') }}</Button>
+      <Button type="button" variant="outline" class="text-primary-strong" :disabled="disabled" :aria-busy="busy" @click="xlsx"><FileSpreadsheet aria-hidden="true" />{{ t('tabel.xlsx') }}</Button>
       <p role="status" aria-live="polite" class="m-0 text-sm text-ink-muted">{{ message }}</p>
     </div>
     <section aria-labelledby="tabel-full">
       <h2 id="tabel-full" class="text-lg">{{ t('tabel.full') }}</h2>
-      <p class="mt-2 text-ink-muted">{{ t('tabel.fullNote') }}</p>
-      <ul class="mt-3 flex list-none flex-col gap-2 p-0">
+      <p class="mt-1 text-ink-muted">{{ t('tabel.fullNote') }}</p>
+      <ul class="mt-2 flex list-none flex-col gap-1 p-0">
         <li v-for="x in FULL" :key="x.file">
           {{ t(x.label) }}:
           <a :href="`/unduh/${x.file}.csv`" download>CSV<template v-if="sizes.data.value?.[x.file]"> ({{ mb(sizes.data.value[x.file]!.csv) }})</template></a>,
           <a :href="`/unduh/${x.file}.xlsx`" download>XLSX<template v-if="sizes.data.value?.[x.file]"> ({{ mb(sizes.data.value[x.file]!.xlsx) }})</template></a>
         </li>
       </ul>
-      <p class="mt-4">
+      <p class="mt-3">
         {{ t('tabel.api') }}:
         <a href="https://pico-api.banuacoder.com/api/v1" rel="noopener">API</a>,
         <a href="https://pico-api.banuacoder.com/swagger/index.html" rel="noopener">{{ t('tabel.apiDocs') }}</a>.

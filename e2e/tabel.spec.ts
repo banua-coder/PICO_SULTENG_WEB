@@ -4,7 +4,7 @@ import * as XLSX from 'xlsx'
 import { expect, test } from './support/test'
 import { expectNoA11yViolations } from './support/a11y'
 import { synthProvinceSeries } from './support/synth'
-import { horizontalOverflow, visit, watchConsole, watchRequests } from './support/visit'
+import { horizontalOverflow, toggle, visit, watchConsole, watchRequests } from './support/visit'
 
 const SERIES = '**/api/v1/provinces/72/cases**'
 const full = (page: Page) =>
@@ -77,7 +77,7 @@ test.describe('Tabel Data', () => {
     await visit(page, '/tabel-data?tingkat=kabupaten&wilayah=kota-palu')
     await expect(page.locator('caption')).toContainText('Kota Palu')
     await expect(page.locator('thead')).not.toContainText('Dirawat')
-    await page.getByRole('radio', { name: 'Indonesia' }).check()
+    await toggle(page, 'Indonesia').click()
     await expect(page).toHaveURL(/tingkat=indonesia/)
     await expect(page.locator('caption')).toContainText('Indonesia')
     await expect(page.locator('thead')).toContainText('Dirawat')

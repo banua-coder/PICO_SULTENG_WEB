@@ -19,12 +19,14 @@ describe('WikiView', () => {
     it(`${lang}: no photo or third-party image, brand tips are decorative with a caption, the dated note shows and no review marker is left`, async () => {
       const { wrapper } = await mountApp(WikiView, {}, path)
       await flush()
-      expect(wrapper.findAll('img')).toHaveLength(0)
+      // the only pictures are the two small old PICO illustrations (wash hands, mask), decorative with a caption
+      expect(wrapper.findAll('img')).toHaveLength(2)
+      for (const i of wrapper.findAll('img')) expect(i.attributes('alt')).toBe('')
       expect(wrapper.findAll('iframe')).toHaveLength(0)
       const figs = wrapper.findAll('figure')
       expect(figs).toHaveLength(4)
       for (const f of figs) {
-        expect(f.find('svg').attributes('aria-hidden')).toBe('true')
+        expect(f.find('img, svg').attributes('aria-hidden') ?? f.find('img, svg').attributes('alt')).toMatch(/^(true|)$/)
         expect(f.find('figcaption').text().length).toBeGreaterThan(10)
       }
       const ids = [...wrapper.element.querySelectorAll('[id]')].map((e) => e.id)

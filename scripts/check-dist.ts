@@ -1,7 +1,7 @@
 /**
  * Checks the built site (spec 15 and spec 80 link check):
- *  - 114 prerendered pages + 404.html, each with a unique <title>, a canonical and hreflang links, no inline state script
- *  - sitemap.xml lists the 114 URLs and each exists in dist
+ *  - 116 prerendered pages + 404.html, each with a unique <title>, a canonical and hreflang links, no inline state script
+ *  - sitemap.xml lists the 116 URLs and each exists in dist
  *  - every internal link in every page points at a file that exists
  *  - the kabupaten snapshot has 13 rows
  * Exits 1 with the list of problems.
@@ -85,5 +85,5 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     console.error(problems.join('\n') + `\n${problems.length} problem(s) in dist/`)
     process.exit(1)
   }
-  console.log('dist ok: 114 pages + 404.html, unique titles, canonical and hreflang, sitemap, no broken internal link')
+  console.log('dist ok: 116 pages + 404.html, unique titles, canonical and hreflang, sitemap, no broken internal link')
 }

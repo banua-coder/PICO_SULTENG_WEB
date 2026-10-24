@@ -1,6 +1,6 @@
 # PICO Sulteng web
 
-Static, prerendered Vue 3 site for the COVID-19 record of Sulawesi Tengah and Indonesia (2020-03-02 to 2024-01-14), served at `pico.banuacoder.com`. It replaces the Laravel + Inertia + Vue 2 dashboard. The old code lives on the `legacy/laravel` branch.
+Static, prerendered Vue 3 site for the COVID-19 record of Sulawesi Tengah and Indonesia (2020-03-02 to 2024-01-14), served at `pico.banuacoder.com`. It continues the design of the Laravel + Inertia + Vue 2 dashboard (the old code lives on the `legacy/laravel` branch) on shadcn-vue, and is also the entry point (`/mulai`) for the open API and the Android app. See `docs/redesign-plan.md` for what was kept and what was improved.
 
 Specs, contracts and ADRs live in the PICO repo (`specs/web/`). Layout follows ADR-0105: features in `src/features/<page>/`, shared parts in `src/components/`, `src/api/`, `src/app/`.
 
@@ -12,16 +12,16 @@ Needs Node 22 and pnpm 10 (`corepack enable`).
 |---|---|
 | `pnpm install` | Install dependencies |
 | `pnpm dev` | Vite dev server |
-| `pnpm build` | Snapshot and downloads from the live API, then prerender 114 pages + 404 with vite-ssg, then sitemap (`dist/`). Fails when the API stays down |
+| `pnpm build` | Snapshot and downloads from the live API, then prerender 116 pages + 404 with vite-ssg, then sitemap (`dist/`). Fails when the API stays down |
 | `pnpm build:data` | Only the data step: `public/data/kabupaten-latest.json` and `public/unduh/*.csv|xlsx` (one-day disk cache in `.cache/`, `PICO_NO_CACHE=1` to skip it) |
-| `pnpm check:dist` | The built site: 114 pages, unique titles, canonical, hreflang, sitemap, no broken internal link, and no unreviewed `data-todo` marker (see Review markers) |
-| `pnpm check:budget` | Size budget (spec 80). Fails when xlsx, d3 or lottie are in a page's initial JS |
+| `pnpm check:dist` | The built site: 116 pages, unique titles, canonical, hreflang, sitemap, no broken internal link, and no unreviewed `data-todo` marker (see Review markers) |
+| `pnpm check:budget` | Size budget (spec 80). Fails when xlsx or d3 are in a page's initial JS |
 | `pnpm preview` | Serve `dist/` on port 4173 (SPA fallback: use `pnpm exec tsx scripts/serve-dist.ts` to route like nginx) |
 | `pnpm lint` | ESLint (feature-boundary rule), raw-colour lint, locale key parity, brand manifest check |
 | `pnpm typecheck` | `vue-tsc --noEmit` |
 | `pnpm test` | Vitest unit and component tests |
 | `pnpm e2e` | Playwright. Builds with `VITE_KIT=1` (adds the `/_kit` component page) and serves it with `vite preview`. First time: `pnpm exec playwright install chromium` |
-| `pnpm sync:brand` | Copy brand assets from the PICO repo (`$PICO_BRAND_DIR`, default `../../PICO/brand`) and rewrite `brand.manifest.json` |
+| `pnpm sync:brand` | Copy the logo, icons and token file from the PICO repo (`$PICO_BRAND_DIR`, default `../../PICO/brand`) and rewrite `brand.manifest.json`. The Tenun patterns, illustrations and Lottie files are no longer mirrored |
 | `pnpm fixtures:record` | Record the live API into `test/fixtures/api/` (series trimmed) |
 | `pnpm fixtures:check` | Drift check against the live API (nightly job) |
 | `pnpm build:geo` | Project the map sources in `scripts/geo-src/` into `src/components/maps/geo/*.paths.json` (fails on an unmatched feature) |
@@ -37,12 +37,14 @@ A tag `vX.Y.Z` builds the Docker image (nginx, prerendered `dist/`) and deploys 
 - A feature never imports from another feature. Move shared code to `components/`, `api/` or `app/`.
 - `<script setup lang="ts">`, typed props and emits, composables for state and side effects.
 
-## Brand, tokens and fonts
+## Design system, tokens and fonts
 
-- `src/assets/brand/` and the brand files in `public/` are copies from the PICO repo. Never edit them. Run `pnpm sync:brand`, then commit. `pnpm lint` fails if a copy differs from `brand.manifest.json`.
-- `src/styles/theme.css` maps the tokens in `pico-tokens.css` into the Tailwind v4 theme. The Tailwind palette, shadows and spacing multiplier are removed, so `bg-red-500` does not exist. `p-5` means the brand's 16 px step.
-- No raw colour (hex, `rgb()`, `bg-[#fff]`) in `src/` outside `assets/brand/`. Colour is `var(--pico-*)` or a theme class.
-- Fonts are WOFF2 subsets in `src/assets/fonts/`, built by `python3 scripts/build-fonts.py` (needs `pip install fonttools brotli`). The outputs are committed.
+- UI parts are shadcn-vue components (reka-ui + Tailwind v4) copied into `src/components/ui/` by the CLI (`components.json`; add one with `pnpm dlx shadcn-vue@latest add <name>`). They are excluded from the style lint. Local changes: 44 px touch size, token colours instead of white/black, a localised "Close". `src/lib/cn.ts` is a small stand-in for `cn` + tailwind-merge (the real one is 14 KB gzipped); the components import `cn` and an alias points it there.
+- Colours are the old PICO palette in `src/styles/palette.css` (light and dark, `--pico-*` variables). It overrides the colour tokens of `src/assets/brand/pico-tokens.css`, which stays a byte-exact copy of the PICO brand repo and carries the other tokens (type sizes, marks, motion). `src/styles/theme.css` maps them to Tailwind and to the shadcn names (`background`, `card`, `primary`, `muted`, `border`, `ring`).
+- No raw colour (hex, `rgb()`, `bg-[#fff]`) in `src/` outside `assets/brand/` and `styles/palette.css`. Colour is `var(--pico-*)` or a theme class. Raw Tailwind colours (`bg-red-500`) do not exist.
+- The categorical colours of the charts (Positif, Dirawat, Sembuh, Meninggal) were checked with the dataviz palette validator, see `docs/redesign-plan.md`.
+- Font: Nunito, one Latin variable WOFF2 in `src/assets/fonts/` (SIL OFL 1.1), as the old site.
+- The logo, icons and favicon files are copies from the PICO repo. Never edit `src/assets/brand/` by hand; run `pnpm sync:brand`, then commit. `pnpm lint` fails if a copy differs from `brand.manifest.json`.
 
 ## Data layer
 
@@ -54,7 +56,7 @@ Bahasa Indonesia has no URL prefix, English is `/en`. The route is the single so
 
 ## Component kit
 
-Shared components are in `src/components/` (contract C3). `/_kit` and `/en/_kit` show all of them. The page exists in dev and in builds made with `VITE_KIT=1`. Production builds do not contain it. It is covered by axe in light and dark, in both locales.
+Shared components are in `src/components/` (contract C3) and the shadcn parts in `src/components/ui/`. `/_kit` and `/en/_kit` show them. The page exists in dev and in builds made with `VITE_KIT=1`. Production builds do not contain it. It is covered by axe in light and dark, in both locales.
 
 ## Kabupaten latest figures
 
@@ -64,8 +66,7 @@ Shared components are in `src/components/` (contract C3). `/_kit` and `/en/_kit`
 
 - Maps are SVG paths projected at build time (`pnpm build:geo`, d3-geo is a dev dependency). No map library reaches the browser. Sources are in `scripts/geo-src/PROVENANCE.md`. The boundary files have no recorded author or licence, see `NOTICE`.
 - Magnitude is a mark size on the `--pico-mark-1..6` ramp (by quantile) plus its number, never a colour ramp. Every map has its table next to it.
-- The kabupaten band patterns are interpretations that Dinas Kebudayaan has not reviewed (see `NOTICE`). The map draws one only as the identity fill of the selected area, and only with `VITE_MAP_BANDS=1`. Off by default.
-- Charts are hand-rolled SVG on d3-scale, d3-shape and d3-array. Every series has its line form, mark and a direct label, and every chart has a table view.
+- Charts are hand-rolled SVG on d3-scale, d3-shape and d3-array. Every series has its line form, mark and a direct label, a legend when there are two or more, and every chart has a table view. Windows end on the last day with real counts, Rt on its last non-null day; zero rows the source padded the record with are never shown as 0.
 
 ## Prerender and data
 
@@ -85,4 +86,4 @@ is in `PICO/specs/web/README.md` ("Review markers").
 
 ## Licence
 
-The code is released under the [MIT licence](LICENSE). The licence covers the code only: the PICO logo, the illustrations, the weave patterns and the data are not automatically part of it (see the Metodologi page).
+The code is released under the [MIT licence](LICENSE). The licence covers the code only: the PICO logo, the pictures and the data are not automatically part of it (see the Metodologi page).
