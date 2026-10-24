@@ -1,5 +1,6 @@
+import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { legendRamp, lightText, markSteps, rampVar, readingOrder } from './quantile'
+import { classSteps, legendClasses, legendRamp, lightText, markSteps, rampVar, readingOrder } from './quantile'
 
 describe('markSteps', () => {
   it('spreads distinct values over the six steps in order', () => {
@@ -63,7 +64,51 @@ describe('legend counts and ramp variables', () => {
   it('one ramp per case, light text only on the dark steps', () => {
     expect(rampVar('recovered', 3)).toBe('var(--pico-ramp-recovered-3)')
     expect(rampVar('rt', 2)).toBe('var(--pico-ramp-positive-2)')
-    expect([1, 2, 3, 4, 5, 6].map((s) => lightText('active', s))).toEqual([false, false, false, false, true, true])
-    expect([1, 2, 3, 4, 5, 6].map((s) => lightText('positive', s))).toEqual([false, false, false, true, true, true])
+    expect([1, 2, 3, 4, 5, 6, 7, 8, 9].map((s) => lightText('active', s))).toEqual([false, false, false, false, false, false, false, false, true])
+    expect([1, 2, 3, 4, 5, 6, 7, 8, 9].map((s) => lightText('positive', s))).toEqual([false, false, false, false, false, false, true, true, true])
+    expect([1, 5, 9].map((s) => lightText('recovered', s))).toEqual([false, false, false]) // black text on the exact green and orange
+  })
+})
+
+describe('classSteps (9 quantile classes, the legacy map)', () => {
+  it('13 distinct values use 9 classes, ascending, ends on the two ends of the ramp', () => {
+    const s = classSteps(Array.from({ length: 13 }, (_, i) => (i + 1) * 100)) as number[]
+    expect(new Set(s).size).toBe(9)
+    expect(Math.min(...s)).toBe(1)
+    expect(Math.max(...s)).toBe(9)
+    for (let i = 1; i < s.length; i++) expect(s[i]!).toBeGreaterThanOrEqual(s[i - 1]!)
+  })
+  it('fallback: never more classes than distinct values, no empty class, equal values share one, null has none', () => {
+    expect(classSteps([5, 5, 5])).toEqual([9, 9, 9])
+    const two = classSteps([1, 2, 2, null]) as (number | null)[]
+    expect(two).toEqual([1, 9, 9, null])
+    expect(new Set(classSteps([1, 2, 3, 4, 5])).size).toBe(5)
+    expect(classSteps([null])).toEqual([null])
+  })
+  it('legend rows cover every non-null value once', () => {
+    const v = [3, 9, 9, 40, 41, 100, 250, 251, 900, 5000, 5001, 7000, null]
+    const rows = legendClasses(v)
+    expect(rows.reduce((n, r) => n + r.count, 0)).toBe(12)
+    expect(rows.length).toBeLessThanOrEqual(9)
+  })
+})
+
+describe('palette-ramps.css', () => {
+  const css = readFileSync(`${process.cwd()}/src/styles/palette-ramps.css`, 'utf8')
+  const hex = (name: string) => css.match(new RegExp(`--pico-ramp-${name}:\\s*(#[0-9a-f]{6})`))![1]!
+  const lum = (h: string) => {
+    const f = (i: number) => {
+      const v = parseInt(h.slice(i, i + 2), 16) / 255
+      return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
+    }
+    return 0.2126 * f(1) + 0.7152 * f(3) + 0.0722 * f(5)
+  }
+  const contrast = (a: string, b: string) => (Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05)
+  it('ends on the exact legacy colours, and lightness only goes down', () => {
+    expect([hex('positive-9'), hex('active-9'), hex('recovered-9'), hex('deceased-9')]).toEqual(['#991b1b', '#2563eb', '#10b981', '#f97316'])
+    for (const r of ['positive', 'active', 'recovered', 'deceased']) for (let i = 2; i <= 9; i++) expect(lum(hex(`${r}-${i}`))).toBeLessThan(lum(hex(`${r}-${i - 1}`)))
+  })
+  it('the label colour of every step (black or white) has at least 4.5:1', () => {
+    for (const r of ['positive', 'active', 'recovered', 'deceased']) for (let i = 1; i <= 9; i++) expect(contrast(hex(`${r}-${i}`), lightText(r, i) ? '#ffffff' : '#000000')).toBeGreaterThanOrEqual(4.5)
   })
 })

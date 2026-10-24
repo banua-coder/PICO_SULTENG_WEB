@@ -134,8 +134,11 @@ describe('OdpPdpNote', () => {
     )
     const t = wrapper.find('[data-testid="odp-note"]').text()
     expect(t).toContain('8 Mei 2022')
-    expect(t).toContain('Data ODP/PDP tidak tersedia setelah 8 Mei 2022, karena sumber berhenti melaporkannya.')
-    expect(t).toMatch(/ODP.*total/)
+    expect(t).toContain('Sumber berhenti melaporkan ODP dan PDP setelah 8 Mei 2022')
+    // the two legacy cards, PDP first, with their three figures; never NaN
+    expect(wrapper.findAll('[data-testid="suspect-card"]').map((c) => c.attributes('data-kind'))).toEqual(['pdp', 'odp'])
+    expect(t).toContain('Orang Dalam Pemantauan (ODP)')
+    expect(t).not.toContain('NaN')
   })
 
   it('the country has no note, and neither does a series without ODP numbers', async () => {

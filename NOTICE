@@ -51,6 +51,10 @@ licence or have no determined licence.
 
 7. Brand v2 illustrations (written for PICO, MIT)
    public/illustrations/{light,dark}/: cuci-tangan, pakai-masker, jaga-jarak, vaksinasi, gejala-demam, gejala-batuk,
-   gejala-sakit-kepala, state-kosong, state-galat, state-luring, state-periode-kosong, telepon-119. Source: the PICO brand
-   repository, brand/v2/flat (scripts/copy-illustrations.sh copies them). Used on the home page (prevention and symptoms) and in the
-   page-size empty, error and offline states. The Lottie files of brand v2 are not used (no player in the bundle).
+   gejala-sakit-kepala, gejala-sesak-napas, gejala-hilang-penciuman, isolasi-mandiri, telekonsultasi, bantuan-antar, rumah-sakit,
+   state-kosong, state-galat, state-luring, state-memuat, state-periode-kosong, state-pemeliharaan, telepon-119. Source: the PICO brand
+   repository, brand/v2/flat (scripts/copy-illustrations.sh copies them). Used on the home page, Wiki, Kontak and Isoman, and in the
+   empty, error, offline, loading and no-data-for-period states (page size 200 px, in a card or chart 96 px).
+   Lottie: public/lottie/{loading,success,offline,empty,handwash-loop,logo-reveal,logo-reveal-dark}.json and posters/*.svg from the same
+   source (written for PICO, MIT). Player: lottie-web (MIT, Copyright Airbnb), light SVG build, loaded as its own chunk only when a moment
+   is in view and motion is not reduced. No Lottie file comes from LottieFiles or another third party.

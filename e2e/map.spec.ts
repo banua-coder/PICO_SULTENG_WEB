@@ -114,3 +114,30 @@ test('zoom: the buttons zoom and reset, Ctrl+wheel zooms, a plain wheel scrolls 
   await page.keyboard.press('Enter')
   await expect(map).toHaveAttribute('data-zoom-level', '1.50')
 })
+
+test('wheel: a plain wheel scrolls the page until the map is clicked, then it zooms; Escape ends it', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await page.goto('/_kit')
+  await hydrated(page)
+  const map = page.locator('[data-testid="geo-map"]').first()
+  const host = page.locator('[data-testid="geo-host"]').first()
+  await host.scrollIntoViewIfNeeded()
+  const box = (await host.boundingBox())!
+  await page.mouse.move(box.x + box.width / 2, box.y + 20)
+  const y0 = await page.evaluate(() => window.scrollY)
+  await page.mouse.wheel(0, 200)
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(y0)
+  await expect(map).toHaveAttribute('data-zoom-level', '1.00')
+  await host.scrollIntoViewIfNeeded()
+  const b2 = (await host.boundingBox())!
+  await page.mouse.click(b2.x + 5, b2.y + b2.height / 2) // the empty left edge of the map: arms the wheel
+  await expect(page.locator('figure:has([data-testid="geo-host"]) [data-testid="wheel-hint"]').first()).toContainText('Zoom roda aktif')
+  await page.mouse.wheel(0, -300)
+  await expect(map).not.toHaveAttribute('data-zoom-level', '1.00')
+  await page.keyboard.press('Escape')
+  await page.locator('[data-zoom="reset"]').first().click()
+  await expect(map).toHaveAttribute('data-zoom-level', '1.00')
+  await page.mouse.move(b2.x + 20, b2.y + b2.height / 2)
+  await page.mouse.wheel(0, -300)
+  await expect(map).toHaveAttribute('data-zoom-level', '1.00')
+})

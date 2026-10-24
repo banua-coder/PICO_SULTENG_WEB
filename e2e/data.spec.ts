@@ -87,7 +87,7 @@ test('changing the area keeps dari, sampai and tampilan', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
   await page.goto('/data/provinsi/aceh?dari=2021-07-01&sampai=2021-07-31&tampilan=kumulatif')
   await hydrated(page)
-  await chooseOption(page, page.getByRole('combobox', { name: 'Pilih provinsi (34)' }), 'Sulawesi Tengah')
+  await chooseOption(page, page.getByRole('combobox', { name: 'Pilih provinsi (34)' }), /^Sulawesi Tengah$/)
   await expect(page).toHaveURL(/\/data\/provinsi\/sulawesi-tengah\?(?=.*dari=2021-07-01)(?=.*sampai=2021-07-31)(?=.*tampilan=kumulatif)/)
   await toggle(page, 'Kabupaten/Kota', 'Tingkat').click()
   await expect(page.getByRole('combobox', { name: /Pilih kabupaten/ })).toBeVisible()

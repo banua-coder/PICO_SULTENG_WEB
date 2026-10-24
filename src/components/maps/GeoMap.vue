@@ -8,7 +8,7 @@ import RoleMark from '../charts/RoleMark.vue'
 import { useChartSize, useMarkRamp } from '../charts/core/useChartSize'
 import AreaTable from './AreaTable.vue'
 import MapLegend from './MapLegend.vue'
-import { lightText, markSteps, rampVar, readingOrder } from './quantile'
+import { classSteps, lightText, markSteps, rampVar, readingOrder } from './quantile'
 import type { PathItem } from './quantile'
 import type { MapItem, MapProps } from './types'
 import { fullView, panBy, zoomAt, zoomLevel } from './zoom'
@@ -45,12 +45,13 @@ const zoom = computed(() => zoomLevel(vb.value, props.viewSize))
 const k = computed(() => (width.value > 0 ? vb.value.w / width.value : 1)) // user units per CSS px, at the current zoom
 const itemByCode = computed(() => new Map(props.items.map((i) => [i.code, i])))
 const ordered = computed(() => readingOrder(props.paths).filter((p) => itemByCode.value.has(p.code)))
+const points = computed(() => props.mode === 'points')
+// Sebaran: up to 9 quantile classes on the 9-step ramp. Titik: the 6-step mark size.
 const steps = computed(() => {
-  const s = markSteps(props.items.map((i) => i.value))
+  const s = (points.value ? markSteps : classSteps)(props.items.map((i) => i.value))
   return new Map(props.items.map((i, n) => [i.code, s[n] ?? null]))
 })
 const compact = computed(() => props.compactBelow > 0 && width.value > 0 && width.value < props.compactBelow)
-const points = computed(() => props.mode === 'points')
 const showMarks = computed(() => width.value > 0 && !compact.value)
 const hatch = `hatch-${uid}`
 
@@ -110,8 +111,13 @@ const tipStyle = computed(() => {
 // ---- zoom and pan: +/- buttons, Ctrl/Cmd + wheel (and trackpad pinch), two-finger pinch, one-finger or mouse drag when zoomed ----
 const zoomBy = (f: number, fx = 0.5, fy = 0.5) => (vb.value = zoomAt(vb.value, props.viewSize, f, fx, fy))
 const reset = () => (vb.value = fullView(props.viewSize))
+// A plain wheel zooms only once the map is armed: after a click or focus on it, until blur or Escape. Ctrl/Cmd + wheel always works.
+const armed = ref(false)
+function onFocusOut(e: FocusEvent) {
+  if (!host.value?.contains(e.relatedTarget as Node | null)) armed.value = false
+}
 function onWheel(e: WheelEvent) {
-  if (!e.ctrlKey && !e.metaKey) return // a plain wheel keeps scrolling the page
+  if (!e.ctrlKey && !e.metaKey && !armed.value) return // else the page keeps scrolling
   e.preventDefault()
   const r = host.value!.getBoundingClientRect()
   zoomBy(e.deltaY < 0 ? 1.25 : 0.8, (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height)
@@ -124,6 +130,7 @@ const dist = () => {
   return Math.hypot(a!.x - b!.x, a!.y - b!.y)
 }
 function onDown(e: PointerEvent) {
+  if (e.pointerType !== 'touch') armed.value = true
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
   dragged = false
   if (pointers.size === 2) pinch = dist()
@@ -175,7 +182,11 @@ const title = computed(() => (props.areaName ? t('map.title', { metric: props.me
           class="relative w-full overflow-hidden rounded-sm"
           :style="{ aspectRatio: `${viewSize[0]} / ${viewSize[1]}`, touchAction: zoom > 1 ? 'none' : 'pan-y' }"
           data-testid="geo-host"
+          tabindex="-1"
           @wheel="onWheel"
+          @focusin="armed = true"
+          @focusout="onFocusOut"
+          @keydown.esc="armed = false"
           @pointerdown="onDown"
           @pointermove="onMove"
           @pointerup="onUp"
@@ -250,6 +261,7 @@ const title = computed(() => (props.areaName ? t('map.title', { metric: props.me
         </div>
       </div>
       <p v-if="zoom > 1" class="m-0 mt-1 text-xs text-ink-muted">{{ t('map.zoomHint') }}</p>
+      <p role="status" aria-live="polite" class="m-0 mt-1 text-xs text-ink-muted" data-testid="wheel-hint" :data-armed="armed">{{ armed ? t('map.wheelOn') : t('map.wheelHint') }}</p>
       <MapLegend class="mt-3" :items="items" :metric="metric" :mode="mode" :date="date" />
     </figure>
     <AreaTable :items="items" :metric="metric" :selected="selected" :pin="pin" :href-for="hrefFor" @select="emit('select', $event)" />

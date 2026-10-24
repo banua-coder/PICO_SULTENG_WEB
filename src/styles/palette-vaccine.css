@@ -39,3 +39,13 @@
     --pico-track: #374151;
   }
 }
+
+/* The legacy PCR and RDT blocks of the data page: exact fills #18ad5b and rgb(33 123 196); white on them is 2.93 and 4.47 to 1, so the
+   panel uses a darker step of the same hue (white 5.5 and 5.3 to 1) and the exact legacy hex is the left rule and the chip. */
+:root {
+  --pico-test-pcr: #18ad5b;
+  --pico-test-pcr-ground: #11793f;
+  --pico-test-rdt: #217bc4;
+  --pico-test-rdt-ground: #1a6fb0;
+  --pico-on-test: #ffffff;
+}

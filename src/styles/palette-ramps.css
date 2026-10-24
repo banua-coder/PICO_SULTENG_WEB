@@ -1,31 +1,44 @@
-/* Sequential ramps of the map (Sebaran mode): one hue per case category, light to dark, 6 quantile classes.
-   Each ramp ends on, or near, the exact colour of the legacy site (red-800 #991b1b, blue-600 #2563eb, green-500 #10b981, orange-500 #f97316).
-   The same in light and dark: fills carry their own label colour (see components/maps/quantile.ts, LIGHT_TEXT_FROM), so no theme variant is needed. */
+/* Sequential ramps of the map (Sebaran mode): one hue per case category, 9 steps from a light tint to the EXACT colour of the legacy site
+   (red-800 #991b1b, blue-600 #2563eb, green-500 #10b981, orange-500 #f97316), linear in sRGB so lightness only goes down.
+   The same in light and dark: fills carry their own label colour, black or white, whichever has >= 4.5:1 (see components/maps/quantile.ts,
+   LIGHT_TEXT_FROM, and the test in maps/quantile.test.ts that reads this file). */
 :root {
   --pico-ramp-positive-1: #fee2e2;
-  --pico-ramp-positive-2: #fca5a5;
-  --pico-ramp-positive-3: #f87171;
-  --pico-ramp-positive-4: #dc2626;
-  --pico-ramp-positive-5: #b91c1c;
-  --pico-ramp-positive-6: #991b1b;
+  --pico-ramp-positive-2: #f1c9c9;
+  --pico-ramp-positive-3: #e5b0b0;
+  --pico-ramp-positive-4: #d89797;
+  --pico-ramp-positive-5: #cc7f7f;
+  --pico-ramp-positive-6: #bf6666;
+  --pico-ramp-positive-7: #b24d4d;
+  --pico-ramp-positive-8: #a63434;
+  --pico-ramp-positive-9: #991b1b;
   --pico-ramp-active-1: #dbeafe;
-  --pico-ramp-active-2: #bfdbfe;
-  --pico-ramp-active-3: #93c5fd;
-  --pico-ramp-active-4: #60a5fa;
-  --pico-ramp-active-5: #2563eb;
-  --pico-ramp-active-6: #1e3a8a;
+  --pico-ramp-active-2: #c4d9fc;
+  --pico-ramp-active-3: #aec8f9;
+  --pico-ramp-active-4: #97b7f7;
+  --pico-ramp-active-5: #80a7f5;
+  --pico-ramp-active-6: #6996f2;
+  --pico-ramp-active-7: #5385f0;
+  --pico-ramp-active-8: #3c74ed;
+  --pico-ramp-active-9: #2563eb;
   --pico-ramp-recovered-1: #d1fae5;
-  --pico-ramp-recovered-2: #a7f3d0;
-  --pico-ramp-recovered-3: #6ee7b7;
-  --pico-ramp-recovered-4: #10b981;
-  --pico-ramp-recovered-5: #047857;
-  --pico-ramp-recovered-6: #064e3b;
+  --pico-ramp-recovered-2: #b9f2d9;
+  --pico-ramp-recovered-3: #a1eacc;
+  --pico-ramp-recovered-4: #89e2c0;
+  --pico-ramp-recovered-5: #71dab3;
+  --pico-ramp-recovered-6: #58d1a7;
+  --pico-ramp-recovered-7: #40c99a;
+  --pico-ramp-recovered-8: #28c18e;
+  --pico-ramp-recovered-9: #10b981;
   --pico-ramp-deceased-1: #ffedd5;
-  --pico-ramp-deceased-2: #fed7aa;
-  --pico-ramp-deceased-3: #fdba74;
-  --pico-ramp-deceased-4: #f97316;
-  --pico-ramp-deceased-5: #c2410c;
-  --pico-ramp-deceased-6: #7c2d12;
-  --pico-ramp-ink: #1f2937;
+  --pico-ramp-deceased-2: #fedebd;
+  --pico-ramp-deceased-3: #fecfa5;
+  --pico-ramp-deceased-4: #fdbf8d;
+  --pico-ramp-deceased-5: #fcb076;
+  --pico-ramp-deceased-6: #fba15e;
+  --pico-ramp-deceased-7: #fb9246;
+  --pico-ramp-deceased-8: #fa822e;
+  --pico-ramp-deceased-9: #f97316;
+  --pico-ramp-ink: #000000;
   --pico-ramp-paper: #ffffff;
 }

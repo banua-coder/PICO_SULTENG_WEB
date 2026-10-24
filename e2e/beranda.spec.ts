@@ -30,7 +30,7 @@ test.describe('Beranda', () => {
     expect(await bottom(page.locator('h1'))).toBeLessThan(740)
     expect(await bottom(page.getByTestId('call-center'))).toBeLessThan(740)
     const positive = page.locator('[data-testid="headline"] [data-state="positive"]').first()
-    expect(await bottom(positive.locator('[data-figure]').first())).toBeLessThan(900) // within the second screen: the banners and the three tiles come first, as on the old home
+    expect(await bottom(positive.locator('[data-figure]').first())).toBeLessThan(1100) // within the second screen: the banners and the four call tiles come first, as on the old home (its first figure sat at about 1150)
     expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0)
   })
 
@@ -71,6 +71,29 @@ test.describe('Beranda', () => {
     test(`axe: no violations (${locale}, ${theme})`, async ({ page }) => {
       await visit(page, '/', { locale, theme })
       await expect(page.getByTestId('headline')).toBeVisible()
+      await expectNoA11yViolations(page)
+    })
+  }
+})
+
+test.describe('legacy blocks of the home page', () => {
+  test('hotline, social card, risk CTA, protect card, ODP/PDP cards and Info praktikal rows', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 })
+    await visit(page, '/')
+    await expect(page.getByTestId('hotline')).toContainText('+62811-404-119')
+    await expect(page.getByTestId('social-card').getByRole('link', { name: /Instagram/ })).toBeVisible()
+    await expect(page.getByTestId('risk-cta').getByRole('link', { name: 'Periksa sekarang' })).toHaveAttribute('href', '/isoman')
+    await expect(page.getByTestId('protect-card').locator('li')).toHaveCount(8)
+    await expect(page.getByTestId('suspect-card')).toHaveCount(2)
+    await expect(page.getByTestId('suspect-cards')).toContainText('8 Mei 2022')
+    await expect(page.getByTestId('latest-infographics').locator('li').first().getByRole('button', { name: /Bagikan/ })).toBeVisible()
+    await expect(page.getByTestId('partner-logos').locator('img').first()).toBeVisible()
+  })
+  for (const [w, theme] of [[1280, 'light'], [1280, 'dark'], [360, 'light'], [360, 'dark']] as const) {
+    test(`axe: the home page passes at ${w} px, ${theme}`, async ({ page }) => {
+      await page.setViewportSize({ width: w, height: 800 })
+      await visit(page, '/', { theme })
+      await expect(page.getByTestId('suspect-cards')).toBeVisible()
       await expectNoA11yViolations(page)
     })
   }

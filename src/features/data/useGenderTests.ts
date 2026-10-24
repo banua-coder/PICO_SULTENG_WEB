@@ -40,3 +40,15 @@ export function useTestSeries(periods: TestPeriod[], type: 'pcr' | 'rdt', labels
 
 /** The description of a test type from `/stats/test-types`. */
 export const typeInfo = (types: TestType[], key: 'pcr' | 'rdt'): TestType | undefined => types.find((t) => t.key === key)
+
+/**
+ * The legacy PCR/RDT block figures: totals over every reporting period of a type, and each result's share of the total
+ * (the legacy `jumlah_sampling`: positive + negative + invalid + still in process). Share is null when nothing was tested.
+ */
+export function testTotals(periods: TestPeriod[], type: 'pcr' | 'rdt') {
+  const sum = (k: 'positive' | 'negative' | 'invalid' | 'process') => periods.filter((p) => p.type === type).reduce((s, p) => s + p[k], 0)
+  const parts = { positive: sum('positive'), negative: sum('negative'), invalid: sum('invalid'), process: sum('process') }
+  const total = parts.positive + parts.negative + parts.invalid + parts.process
+  const share = (n: number) => (total > 0 ? (n / total) * 100 : null)
+  return { total, ...parts, share: { positive: share(parts.positive), negative: share(parts.negative), invalid: share(parts.invalid), process: share(parts.process) } }
+}

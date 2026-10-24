@@ -4,6 +4,7 @@ import { useDonations, useTelemedicines } from '@/api/useContent'
 import { usePageHead } from '@/app/head'
 import { useLocale } from '@/app/useLocale'
 import ArchiveNotice from '@/components/ArchiveNotice.vue'
+import Illustration from '@/components/Illustration.vue'
 import StatusView from '@/components/StatusView.vue'
 import DonationList from './components/DonationList.vue'
 import TelemedicineList from './components/TelemedicineList.vue'
@@ -27,18 +28,18 @@ const retry = () => Promise.all([tele.refresh(), donations.refresh()])
       <p class="m-0">{{ t('isoman.notice') }}</p>
       <p class="m-0 font-strong">{{ t('isoman.noticeMoney') }}</p>
     </ArchiveNotice>
-    <component :is="locale === 'en' ? IsomanGuideEn : IsomanGuideId" class="mt-12" />
+    <div class="mt-12 flex flex-col gap-6 md:flex-row md:items-start"><Illustration name="isolasi-mandiri" :width="200" class="shrink-0" /><component :is="locale === 'en' ? IsomanGuideEn : IsomanGuideId" class="min-w-0 flex-1" /></div>
     <StatusView v-if="failed()" class="mt-12" kind="error" @retry="retry" />
     <StatusView v-else-if="!tele.data.value || !donations.data.value" class="mt-12" kind="loading" />
     <template v-else>
       <section class="mt-12" aria-labelledby="telemedicine">
-        <h2 id="telemedicine" class="text-xl">{{ t('isoman.telemedicine') }}</h2>
+        <h2 id="telemedicine" class="flex items-center gap-3 text-xl"><Illustration name="telekonsultasi" :width="72" />{{ t('isoman.telemedicine') }}</h2>
         <p class="mt-1 max-w-prose text-ink-muted">{{ t('isoman.telemedicineIntro') }}</p>
         <p v-if="tele.data.value.length === 0" class="mt-2">{{ t('isoman.telemedicineEmpty') }}</p>
         <TelemedicineList v-else class="mt-3" :items="tele.data.value" />
       </section>
       <section class="mt-12" aria-labelledby="donasi">
-        <h2 id="donasi" class="text-xl">{{ t('isoman.donations') }}</h2>
+        <h2 id="donasi" class="flex items-center gap-3 text-xl"><Illustration name="bantuan-antar" :width="72" />{{ t('isoman.donations') }}</h2>
         <p class="mt-1 max-w-prose text-ink-muted">{{ t('isoman.donationsIntro') }}</p>
         <p v-if="donations.data.value.length === 0" class="mt-2">{{ t('isoman.donationsEmpty') }}</p>
         <DonationList v-else class="mt-3" :items="donations.data.value" />

@@ -25,5 +25,6 @@ const text = computed(() => (props.zoom.zoomed.value && props.range ? t('chart.z
     <label v-if="zoom.zoomed.value" :for="id" class="sr-only">{{ t('chart.zoomSlider') }}</label>
     <input v-if="zoom.zoomed.value" :id="id" type="range" class="min-h-touch min-w-40 flex-1 accent-[var(--pico-primary)]" min="0" :max="zoom.maxOffset.value" step="1" :value="zoom.offset.value" @input="zoom.setOffset(+($event.target as HTMLInputElement).value)">
     <p role="status" aria-live="polite" class="m-0 w-full text-sm text-ink-muted" data-testid="zoom-status">{{ text }}</p>
+    <p role="status" aria-live="polite" class="m-0 w-full text-sm text-ink-muted" data-testid="wheel-hint" :data-armed="zoom.armed.value">{{ zoom.armed.value ? t('chart.wheelOn') : t('chart.wheelHint') }}</p>
   </div>
 </template>

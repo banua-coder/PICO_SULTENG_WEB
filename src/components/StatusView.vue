@@ -1,21 +1,22 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { FileQuestion, Inbox, TriangleAlert, WifiOff } from '@lucide/vue'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import Illustration from './Illustration.vue'
+// the player wrapper is its own chunk: only a loading state needs it
+const LottieMoment = defineAsyncComponent(() => import('./LottieMoment.vue'))
 
-export type StatusKind = 'loading' | 'empty' | 'error' | 'offline' | 'not-found'
+export type StatusKind = 'loading' | 'empty' | 'error' | 'offline' | 'not-found' | 'period-empty'
 
 const props = defineProps<{ kind: StatusKind; title?: string; compact?: boolean; /** element for the title: 'h1' on a page of its own */ heading?: 'p' | 'h1' | 'h2' }>()
 const emit = defineEmits<{ retry: [] }>()
 
 const { t } = useI18n()
-const ICON = { empty: Inbox, error: TriangleAlert, offline: WifiOff, 'not-found': FileQuestion } as const
-const shownTitle = computed(() => props.title ?? t(`status.${props.kind === 'not-found' ? 'notFound' : props.kind}`))
-// the page-size states carry a brand v2 illustration; the compact ones (inside a card) keep the small icon
-const ART: Partial<Record<StatusKind, string>> = { empty: 'state-kosong', error: 'state-galat', offline: 'state-luring', 'not-found': 'state-kosong' }
+const shownTitle = computed(() => props.title ?? t(`status.${props.kind === 'not-found' ? 'notFound' : props.kind === 'period-empty' ? 'periodEmpty' : props.kind}`))
+// every state carries a brand v2 picture: page-size at 200 px, inside a card or chart at 96 px. Loading plays the Lottie (poster first).
+const ART: Record<Exclude<StatusKind, 'loading'>, string> = { empty: 'state-kosong', error: 'state-galat', offline: 'state-luring', 'not-found': 'state-kosong', 'period-empty': 'state-periode-kosong' }
+const size = computed(() => (props.compact ? 96 : 200))
 const retryable = computed(() => props.kind === 'error' || props.kind === 'offline')
 </script>
 
@@ -27,10 +28,10 @@ const retryable = computed(() => props.kind === 'error' || props.kind === 'offli
     :data-kind="kind"
   >
     <div v-if="kind === 'loading'" class="flex w-full flex-col items-center gap-3" aria-hidden="true">
-      <Skeleton class="h-6 w-2/3" /><Skeleton class="h-24 w-full" />
+      <LottieMoment name="loading" :width="size" />
+      <Skeleton class="h-6 w-2/3" /><Skeleton v-if="compact" class="h-16 w-full" />
     </div>
-    <Illustration v-else-if="!compact && ART[kind]" :name="ART[kind]!" :width="200" />
-    <component :is="ICON[kind]" v-else class="size-12 text-ink-muted" aria-hidden="true" />
+    <Illustration v-else :name="ART[kind]" :width="size" />
     <component :is="props.heading ?? 'p'" class="m-0 font-display text-lg font-heading text-ink" :class="kind === 'loading' ? 'sr-only' : ''">{{ shownTitle }}</component>
     <div class="flex flex-wrap items-center justify-center gap-3">
       <Button v-if="retryable" type="button" @click="emit('retry')">{{ t('common.retry') }}</Button>

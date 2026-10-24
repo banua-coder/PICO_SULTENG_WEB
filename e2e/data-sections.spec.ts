@@ -1,5 +1,5 @@
 import { expect, test } from './support/test'
-import { expectNoA11yViolations } from './support/a11y'
+import { expectNoA11yViolations, hydrated } from './support/a11y'
 import { horizontalOverflow, visit, watchConsole } from './support/visit'
 
 const SULTENG = '/data/provinsi/sulawesi-tengah'
@@ -11,7 +11,7 @@ test.describe('Data page sections', () => {
     await expect(page.getByTestId('curves').locator('figure').first()).toBeVisible()
     const ids = await page.locator('main section[aria-labelledby]').evaluateAll((s) => s.map((e) => e.getAttribute('aria-labelledby')))
     await expect(page.getByTestId('curves').locator('[data-peak]')).toHaveCount(1) // the one ink-coloured peak bar of the chart
-    expect(ids).toEqual(['ringkasan', 'tes', 'peta', 'kurva', 'rt', 'odp-pdp', 'gender', 'akses-data']) // the order of the old data page: cards, tests, map, charts, Rt, gender and age, public data
+    expect(ids).toEqual(['ringkasan', 'tes', 'peta', 'kurva', 'rt', 'kasus-baru', 'odp-pdp', 'gender', 'akses-data']) // the order of the old data page: cards, tests, map, charts, Rt, gender and age, public data
     expect(log).toEqual([])
   })
 
@@ -108,5 +108,22 @@ test.describe('Data page sections', () => {
       await expect(page.getByTestId('tests').locator('figure').first()).toBeVisible()
       await expectNoA11yViolations(page)
     })
+  }
+})
+
+test('Sulawesi Tengah: PCR then RDT blocks, new cases per kabupaten and the case share (bars), at 1280 and 360, axe light and dark', async ({ page }) => {
+  for (const [w, theme] of [[1280, 'light'], [360, 'dark']] as const) {
+    await page.setViewportSize({ width: w, height: 900 })
+    await page.addInitScript((t) => localStorage.setItem('pico-theme', t), theme)
+    await page.goto('/data/provinsi/sulawesi-tengah')
+    await hydrated(page)
+    const blocks = page.locator('[data-block]')
+    await expect(blocks).toHaveCount(2)
+    await expect(blocks.first()).toHaveAttribute('data-block', 'pcr')
+    await expect(page.getByTestId('new-cases-caption')).toContainText('Kasus baru pada')
+    await expect(page.getByTestId('new-cases-chart').locator('svg[role="img"]')).toBeVisible()
+    await expect(page.getByTestId('case-share').locator('svg[role="img"]')).toBeVisible()
+    await expect(page.getByTestId('case-share')).not.toContainText('NaN')
+    await expectNoA11yViolations(page)
   }
 })

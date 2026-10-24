@@ -29,6 +29,18 @@ export function buildHomeLatest(input: {
     rt: { indonesia: lastRtOf(input.national), 'sulawesi-tengah': lastRtOf(input.sulteng) },
     lastReal: { indonesia: lastRealRow(input.national) ?? null, 'sulawesi-tengah': lastRealRow(input.sulteng) ?? null },
     vaccination: { indonesia: input.vaccination.indonesia.at(-1) ?? null, 'sulawesi-tengah': input.vaccination['sulawesi-tengah'].at(-1) ?? null },
+    observation: ((r) => (r ? { date: r.date, odp: r.odp, pdp: r.pdp } : null))(lastObservationRow(input.sulteng)),
     infographics: [...input.infographics].sort((a, b) => b.id - a.id).slice(0, HOME_INFOGRAPHICS),
   }
+}
+
+const reported = (o: DailyRow['odp']) => o !== null && [o.active, o.finished, o.total].some((n) => n !== null && n > 0)
+
+/**
+ * The newest row that still carries ODP or PDP numbers, for the early-pandemic note. A row of zeros is not a report
+ * (C1 Q5: zero means unknown), so an area that never had a non-zero figure gets no note.
+ */
+export function lastObservationRow(rows: DailyRow[]): DailyRow | undefined {
+  for (let i = rows.length - 1; i >= 0; i--) if (reported(rows[i]!.odp) || reported(rows[i]!.pdp)) return rows[i]
+  return undefined
 }

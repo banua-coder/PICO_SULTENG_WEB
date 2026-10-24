@@ -69,6 +69,34 @@ describe('zoom on TimeSeriesChart', () => {
   })
 })
 
+describe('plain wheel zoom needs a click or focus first', () => {
+  for (const [name, comp, props] of [['TimeSeriesChart', TimeSeriesChart, { series, kind: 'line', a11y }], ['RtChart', RtChart, { points: band, a11y }]] as const) {
+    it(`${name}: not armed scrolls, a click arms, Escape and blur end it`, async () => {
+      const { wrapper } = await mountApp(comp, props, '/')
+      await flush()
+      const plot = wrapper.get('[role="group"][tabindex="0"]')
+      const status = () => wrapper.get('[data-testid="zoom-status"]').text()
+      expect(wrapper.get('[data-testid="wheel-hint"]').text()).toContain('Klik grafik')
+      await plot.trigger('wheel', { deltaY: -300, clientX: 300 })
+      expect(status()).toMatch(/^Seret/)
+      await plot.trigger('pointerdown', { pointerId: 1, pointerType: 'mouse', button: 0, clientX: 100 })
+      await plot.trigger('pointerup', { pointerId: 1, pointerType: 'mouse', clientX: 100 })
+      expect(wrapper.get('[data-testid="wheel-hint"]').text()).toContain('Zoom roda aktif')
+      await plot.trigger('wheel', { deltaY: -300, clientX: 300 })
+      expect(status()).toMatch(/^Menampilkan/)
+      await wrapper.get('[data-testid="zoom-reset"]').trigger('click')
+      await plot.trigger('focusin')
+      await plot.trigger('keydown', { key: 'Escape' })
+      await plot.trigger('wheel', { deltaY: -300, clientX: 300 })
+      expect(status()).toMatch(/^Seret/)
+      await plot.trigger('focusin')
+      await plot.trigger('focusout')
+      await plot.trigger('wheel', { deltaY: -300, clientX: 300 })
+      expect(status()).toMatch(/^Seret/)
+    })
+  }
+})
+
 describe('RtChart bounds and scale', () => {
   it('draws both bounds, lists the clipped value, and Skala penuh removes the clipping', async () => {
     const { wrapper } = await mountApp(RtChart, { points: band, a11y }, '/')

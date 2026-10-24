@@ -2,6 +2,7 @@
 import { computed, defineAsyncComponent, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useFormat } from '@/app/useFormat'
+import Illustration from '@/components/Illustration.vue'
 import OptionToggle from '@/components/OptionToggle.vue'
 import SectionHeading from '@/components/SectionHeading.vue'
 import StatusView from '@/components/StatusView.vue'
@@ -69,7 +70,7 @@ const dailyTitle = computed(() => (single.value ? t('data.curves.dailyOf', { typ
     <OptionToggle class="mt-4" :model-value="type" :options="typeOptions" :label="t('data.curves.type')" @update:model-value="state.setCaseType" />
 
     <p v-if="isActive && state.view.value === 'harian'" class="mt-2 text-sm text-ink-muted" data-testid="active-note">{{ t('data.curves.activeNote') }}</p>
-    <div v-if="curves && curves.rows.length === 0" class="mt-4 text-ink-muted">{{ t('data.curves.noRows') }}</div>
+    <div v-if="curves && curves.rows.length === 0" class="mt-4 flex flex-col items-center gap-2 text-ink-muted"><Illustration name="state-periode-kosong" :width="96" />{{ t('data.curves.noRows') }}</div>
     <Card v-else-if="curves" class="mt-4">
       <CardContent class="flex flex-col gap-8">
         <template v-if="state.view.value === 'harian'">

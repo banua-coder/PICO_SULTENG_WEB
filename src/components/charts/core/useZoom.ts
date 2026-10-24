@@ -21,6 +21,7 @@ export const extentOf = (xs: IsoDate[]): [IsoDate, IsoDate] | undefined => {
  * Zoom state of a time chart: a view range inside `full` (the range the page asked for). A new `full` (presets, calendar) resets it.
  * Inputs: drag = brush a range, Shift + drag = pan, Ctrl/Cmd + wheel and two-finger pinch = zoom at the pointer,
  * keys + - 0 and Shift + arrows. The buttons and the slider call the same actions.
+ * A plain wheel zooms only while the chart is "armed": after a click or focus on it, until blur or Escape. Before that the wheel scrolls the page.
  */
 export function useZoom(opts: {
   full: ComputedRef<[IsoDate, IsoDate] | undefined>
@@ -31,6 +32,9 @@ export function useZoom(opts: {
   xInvert: (px: number) => number
 }) {
   const view = ref<DayRange | null>(null)
+  const armed = ref(false)
+  const arm = () => (armed.value = true)
+  const disarm = () => (armed.value = false)
   const bounds = computed<DayRange | null>(() => (opts.full.value ? [dayNumber(opts.full.value[0]), dayNumber(opts.full.value[1])] : null))
   watch(() => opts.full.value?.join('|'), () => (view.value = null))
 
@@ -76,6 +80,7 @@ export function useZoom(opts: {
   }
 
   const onDown = (e: PointerEvent) => {
+    if (e.pointerType !== 'touch') arm() // touch is unchanged: no wheel
     if (e.pointerType === 'touch') {
       touches.set(e.pointerId, { x: e.clientX, y: e.clientY })
       if (touches.size === 2) pinchDist = dist()
@@ -129,12 +134,16 @@ export function useZoom(opts: {
     brush.value = null
   }
   const onWheel = (e: WheelEvent) => {
-    if (!(e.ctrlKey || e.metaKey)) return // a plain wheel keeps scrolling the page
+    if (!(e.ctrlKey || e.metaKey || armed.value)) return // a plain wheel keeps scrolling the page until the chart is armed
     e.preventDefault()
     zoomBy(Math.exp(Math.max(-600, Math.min(600, e.deltaY)) * 0.002), opts.xInvert(plotPx(e)))
   }
   /** + - 0 and Shift + arrows. True when the key was used. */
   const onKey = (e: KeyboardEvent): boolean => {
+    if (e.key === 'Escape') {
+      disarm()
+      return false
+    }
     if (e.ctrlKey || e.metaKey || e.altKey) return false
     const k = e.key
     if (k === '+' || k === '=') zoomIn()
@@ -147,7 +156,7 @@ export function useZoom(opts: {
   }
   const brushRect = computed(() => (brush.value && Math.abs(brush.value.x1 - brush.value.x0) >= 4 ? { x: Math.min(brush.value.x0, brush.value.x1), w: Math.abs(brush.value.x1 - brush.value.x0) } : null))
 
-  return { range, zoomed, canIn, canOut, span, offset, maxOffset, zoomIn, zoomOut, reset, pan, setOffset, brushRect, onDown, onMove, onUp, onWheel, onKey }
+  return { armed, arm, disarm, range, zoomed, canIn, canOut, span, offset, maxOffset, zoomIn, zoomOut, reset, pan, setOffset, brushRect, onDown, onMove, onUp, onWheel, onKey }
 }
 
 export type Zoom = ReturnType<typeof useZoom>

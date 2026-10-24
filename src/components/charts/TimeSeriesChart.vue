@@ -3,6 +3,7 @@ import { computed, ref, useId } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { IsoDate } from '@/api/types'
 import { useFormat } from '@/app/useFormat'
+import Illustration from '../Illustration.vue'
 import StateMark from '../StateMark.vue'
 import Axis from './Axis.vue'
 import ChartTable from './ChartTable.vue'
@@ -103,7 +104,7 @@ const legend = computed(() => [...props.series, ...(props.overlay ? [props.overl
 
     <div ref="box" :style="{ height: `${height}px` }" class="relative w-full" :data-kind="kind">
       <template v-if="!asTable && drawn">
-        <p v-if="empty" class="absolute inset-0 flex items-center justify-center text-ink-muted">{{ t('chart.noData') }}</p>
+        <p v-if="empty" class="absolute inset-0 flex flex-col items-center justify-center gap-2 text-ink-muted"><Illustration name="state-periode-kosong" :width="96" />{{ t('chart.noData') }}</p>
         <div
           v-else
           ref="surface"
@@ -121,6 +122,8 @@ const legend = computed(() => [...props.series, ...(props.overlay ? [props.overl
           @pointercancel="zoom.onUp"
           @pointerleave="onLeave"
           @wheel="zoom.onWheel"
+          @focusin="zoom.arm"
+          @focusout="zoom.disarm"
         >
           <svg :width="model.width" :height="model.height" role="img" :aria-label="a11y.summary" class="block">
             <g :transform="`translate(${model.margin.left} ${model.margin.top})`">

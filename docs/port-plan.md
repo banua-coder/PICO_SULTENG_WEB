@@ -39,3 +39,11 @@ vaccine groups blue-500, purple-500, orange-500, pink-600, pink-400, total green
 
 See the PR description for the item-by-item table. Decisions: `docs/adr/0001-chart-library.md` (Unovis evaluated, not adopted), `docs/legacy-vs-new.md`
 (screens side by side), `NOTICE` (provenance of every copied file).
+
+## Data page: PCR/RDT, new cases, case share (fork DATA)
+
+| Legacy | New | Status |
+|---|---|---|
+| `_pages/data/DataPCR.vue`, `DataRDT.vue` (coloured blocks, white text) | `features/data/components/TestBlock.vue` above each chart card in `TestsByType.vue`, PCR first | ported. Total = positive + negative + invalid + in process over all periods (legacy `jumlah_sampling`), each result with its share, last update date. White on the exact hex fails (`#18ad5b` 2.93, `#217bc4` 4.47 to 1): the panel is the next darker step (`#11793f`, `#1a6fb0`, white 5.5 and 5.3 to 1) and the exact legacy hex is the 8 px left rule (`--pico-test-*` in `palette-vaccine.css`). |
+| `chart/NewCase.vue` ("Perubahan Data di Kabupaten/Kota") | `features/data/components/NewCases.vue` (BarList, table view), `src/app/newCases.ts`, build file `public/data/kabupaten-newcases.json` | ported as one metric at a time (Positif / Sembuh / Meninggal toggle) instead of three grouped bars, sorted largest first, on the last day any kabupaten reported a new positive (20 June 2023 in the API; the zero rows after it are padding). Shown on the Sulawesi Tengah and kabupaten pages; loads after hydration (client only). |
+| `chart/PieChart.vue` (pie of Dirawat, Sembuh, Meninggal) | same file, "Komposisi kasus": three labelled bars | **not a pie**: three shares that are compared read better as bars, and each label carries count and percent as text. Kabupaten pages have no Dirawat (stated, not 0). Shown on every area. |

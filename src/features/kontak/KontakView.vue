@@ -5,6 +5,7 @@ import { usePageHead } from '@/app/head'
 import ArchiveNotice from '@/components/ArchiveNotice.vue'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import Illustration from '@/components/Illustration.vue'
 import StatusView from '@/components/StatusView.vue'
 import HospitalCard from './components/HospitalCard.vue'
 import TaskForceList from './components/TaskForceList.vue'
@@ -25,7 +26,7 @@ const retry = () => Promise.all([s.hospitals.refresh(), s.taskForces.refresh()])
     <h1 class="text-xl md:text-2xl">{{ t('kontak.title') }}</h1>
     <ArchiveNotice class="mt-4">
       <p class="m-0">{{ t('kontak.notice') }}</p>
-      <p class="m-0 font-strong">{{ t('kontak.emergency') }}</p>
+      <p class="m-0 flex items-center gap-3 font-strong"><Illustration name="telepon-119" :width="72" />{{ t('kontak.emergency') }}</p>
     </ArchiveNotice>
     <div class="mt-6 flex flex-col gap-1">
       <Label for="kontak-kabupaten" class="text-sm font-semibold text-ink-muted">{{ t('kontak.filter') }}</Label>
@@ -41,8 +42,8 @@ const retry = () => Promise.all([s.hospitals.refresh(), s.taskForces.refresh()])
     <StatusView v-else-if="!s.hospitals.data.value || !s.taskForces.data.value" class="mt-8" kind="loading" />
     <template v-else>
       <section class="mt-8" aria-labelledby="rumah-sakit">
-        <h2 id="rumah-sakit" class="text-xl">{{ t('kontak.hospitals') }}</h2>
-        <p v-if="s.hospitalRows.value.length === 0" class="mt-2 text-ink-muted">{{ t('kontak.hospitalsEmpty') }}</p>
+        <h2 id="rumah-sakit" class="flex items-center gap-3 text-xl"><Illustration name="rumah-sakit" :width="72" />{{ t('kontak.hospitals') }}</h2>
+        <p v-if="s.hospitalRows.value.length === 0" class="mt-2 flex flex-col items-center gap-2 text-ink-muted"><Illustration name="state-kosong" :width="96" />{{ t('kontak.hospitalsEmpty') }}</p>
         <div v-else class="mt-3 grid gap-4 md:grid-cols-2">
           <HospitalCard v-for="h in s.hospitalRows.value" :key="h.code" :hospital="h" />
         </div>

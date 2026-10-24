@@ -138,6 +138,30 @@ describe('BerandaView', () => {
     expect(a.text()).toContain('Tautan luar')
   })
 
+  it('the legacy blocks: social card, risk CTA to /isoman, protect checklist with brand pictures, ODP/PDP cards', async () => {
+    const { wrapper } = await open()
+    const links = wrapper.findAll('[data-testid="social-card"] a').map((a) => a.attributes('href'))
+    expect(links).toEqual(['https://instagram.com/sultenglawancovid', 'https://x.com/SultengVsCovid'])
+    expect(wrapper.find('[data-testid="risk-cta"] a').attributes('href')).toBe('/isoman')
+    expect(wrapper.find('[data-testid="risk-cta"]').text()).toContain('Periksa sekarang')
+    const protect = wrapper.find('[data-testid="protect-card"]')
+    expect(protect.findAll('li')).toHaveLength(8)
+    expect(protect.findAll('.pico-ill')).toHaveLength(2)
+    // ODP/PDP: the last real figures with their date, never NaN
+    const cards = wrapper.findAll('[data-testid="suspect-card"]')
+    expect(cards.map((c) => c.attributes('data-kind'))).toEqual(['pdp', 'odp'])
+    expect(wrapper.find('[data-testid="suspect-cards"]').text()).toContain('8 Mei 2022')
+    expect(wrapper.find('[data-testid="suspect-cards"]').text()).not.toContain('NaN')
+  })
+
+  it('Info praktikal: a row per infographic with Lihat and Bagikan', async () => {
+    const { wrapper } = await open()
+    const rows = wrapper.findAll('[data-testid="latest-infographics"] li')
+    expect(rows).toHaveLength(5)
+    expect(rows[0]!.find('button').text()).toContain('Bagikan')
+    expect(rows[0]!.find('a').text()).toContain('Lihat')
+  })
+
   it('banners are hidden with none', async () => {
     seedAll()
     cache.seed({ [ENDPOINTS.banners.path]: [] })
@@ -153,7 +177,11 @@ describe('BerandaView', () => {
     expect(info[0]!.attributes('href')).toMatch(/^\/infografis\?id=\d+$/)
     expect(wrapper.findAll('[data-testid="hospital-teaser"] li')).toHaveLength(3)
     expect(wrapper.find('[data-testid="call-center"]').text()).toContain('119')
-    expect(wrapper.html()).not.toContain('0811404119')
+    // the old Hotline (Dinkes Sulteng) is back as the legacy card, marked as a pandemic number and not a link
+    const hot = wrapper.find('[data-testid="hotline"]')
+    expect(hot.text()).toContain('+62811-404-119')
+    expect(hot.text()).toContain('mungkin sudah tidak aktif')
+    expect(hot.find('a').exists()).toBe(false)
     expect(wrapper.find('[data-todo="beranda-119"]').exists()).toBe(false)
   })
 

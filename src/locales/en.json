@@ -78,7 +78,8 @@
     "empty": "No data yet",
     "error": "Data could not be loaded",
     "offline": "No connection",
-    "notFound": "Page not found"
+    "notFound": "Page not found",
+    "periodEmpty": "No data for this period"
   },
   "area": {
     "label": "Area",
@@ -173,6 +174,21 @@
   },
   "data": {
     "areaTitle": "{area} data",
+    "newCases": {
+      "title": "New cases by regency/city",
+      "caption": "New cases on {date}, the last day any regency/city reported a new positive case. The days after it are zeros the source padded and are not shown.",
+      "chart": "New {type} cases per regency/city, {date}",
+      "summary": "{top} has the most with {value} new cases on {date}.",
+      "type": "Case type",
+      "none": "No new-case data per regency/city."
+    },
+    "composition": {
+      "title": "Case composition",
+      "caption": "How total positive cases split on {date}. Replaces the pie chart: labelled bars with the count and the percent.",
+      "chart": "Composition of {area} on {date}",
+      "summary": "{values}.",
+      "noActive": "The number in care is not available for a regency/city; the percent is of recovered and deceased."
+    },
     "level": {
       "label": "Level",
       "indonesia": "National",
@@ -269,6 +285,12 @@
     },
     "tests": {
       "title": "Testing",
+      "descPcr": "Polymerase Chain Reaction (PCR) is the diagnostic test considered the most accurate to confirm COVID-19. The counts are worked out from the data the Central Sulawesi health office published.",
+      "descRdt": "A Rapid Diagnostic Test (RDT) is used as an early screening for COVID-19. A reactive RDT is checked further with a swab or PCR.",
+      "updated": "Last update",
+      "total": "Total {type}",
+      "totalHint": "Sum of all periods: positive, negative, invalid and still in process",
+      "blockFigures": "Total {type} by result",
       "note": "Testing data is only available until {date}.",
       "chart": "{type}: positive and negative per period",
       "positive": "Positive",
@@ -308,6 +330,8 @@
     "rtScaleCut": "Cut at {max}",
     "rtClippedList": "Above the axis: {items}.",
     "zoomGroup": "Chart zoom",
+    "wheelHint": "Click the chart to zoom with the mouse wheel.",
+    "wheelOn": "Wheel zoom is on. Press Esc or click outside the chart to stop.",
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
     "panLeft": "Pan left",
@@ -336,6 +360,8 @@
     "zoomOut": "Zoom out",
     "zoomReset": "Reset the map view",
     "zoomHint": "Drag to pan. Ctrl or Cmd with the mouse wheel, or pinch, to zoom.",
+    "wheelHint": "Click the map to zoom with the mouse wheel.",
+    "wheelOn": "Wheel zoom is on. Press Esc or click outside the map to stop.",
     "name": "Area",
     "selected": "selected",
     "noValue": "not available",
@@ -557,6 +583,15 @@
     "notes": "Notes",
     "shown": "Showing {shown} of {total} sites"
   },
+  "suspect": {
+    "inStatus": "Under {status}",
+    "finished": "Finished {status}",
+    "total": "Total",
+    "asOf": "Last figures: {date}",
+    "note": "The source stopped reporting ODP and PDP after {date}; the figures above are its last report, not today's situation.",
+    "pdp": { "title": "Patients under supervision (PDP)", "status": "supervision" },
+    "odp": { "title": "People under monitoring (ODP)", "status": "monitoring" }
+  },
   "beranda": {
     "title": "Home",
     "description": "COVID-19 records for Central Sulawesi and Indonesia, 2 March 2020 to 14 January 2024: cases, Rt, vaccination, hospital contacts and a home isolation guide.",
@@ -582,7 +617,10 @@
     "bannersTitle": "Announcements",
     "external": "External link",
     "bannerOld": "Announcement from the pandemic",
-    "infoTitle": "Latest infographics",
+    "infoTitle": "Practical info",
+    "infoIntro": "Some infographics about COVID-19. Source:",
+    "infoView": "View",
+    "infoShare": "Share",
     "infoMore": "All infographics",
     "infoCount": "{n} images",
     "hospitalsTitle": "Referral hospitals",
@@ -594,6 +632,24 @@
     "symptomsTitle": "Symptoms",
     "symptomsText": "The most common symptoms: fever, cough, tiredness, and loss of taste or smell. Shortness of breath is a serious sign. Some people have no symptoms.",
     "tipsTitle": "Prevention",
+    "riskTitle": "Know the risk of COVID-19",
+    "riskText": "COVID-19 is a disease caused by the SARS-CoV-2 virus. Its symptoms look like a common flu, but it is deadlier. The virus passes quickly from person to person, even from people with no symptoms.",
+    "riskAsk": "Do you have symptoms? Read the home isolation guide to know what to do.",
+    "riskCta": "Check now",
+    "protectTitle": "Protect yourself and others",
+    "protectIntro": "The best way not to be infected is to avoid exposure to the virus.",
+    "protectLead": "COVID-19 spreads from person to person through small droplets when coughing or sneezing. What we can all do:",
+    "protectSource": "Source:",
+    "check": {
+      "wash": "Wash your hands often with soap, or use hand sanitizer",
+      "face": "Avoid touching your face, especially nose, mouth and eyes",
+      "clean": "Clean surfaces that many people touch",
+      "distancing": "Physical distancing: reduce physical contact with others",
+      "meter": "Keep 1 to 3 metres from other people",
+      "home": "Stay at home and avoid public places when you do not need to go",
+      "mask": "Wear a mask when you must go out or meet others",
+      "vaccine": "Follow the vaccination advice"
+    },
     "tipWash": "Wash your hands with soap and water.",
     "tipMask": "Wear a mask when sick or in public places.",
     "tipDistance": "Keep about one metre apart.",
@@ -612,6 +668,9 @@
     "startNote": "The entry point to the open API and the app.",
     "callCenter": "Call Center",
     "callCenterNote": "Emergency number",
+    "hotline": "Hotline",
+    "hotlineNote": "Central Sulawesi health office, a pandemic-era number (may no longer answer)",
+    "socialText": "Follow the latest COVID-19 news for Central Sulawesi on the social channels of Sulteng Lawan COVID.",
     "daily": "Daily change",
     "kabTitle": "13 regencies/cities of Central Sulawesi",
     "kabNote": "By total positive cases.",

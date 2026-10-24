@@ -113,6 +113,8 @@ export type HomeLatest = {
   /** the last day that has real counts (a positive, recovered or deceased above 0): after it the source padded the series with zeros */
   lastReal: Record<'indonesia' | 'sulawesi-tengah', DailyRow | null>
   vaccination: Record<'indonesia' | 'sulawesi-tengah', VaccinationDay | null>
+  /** the last day of Sulawesi Tengah that carries ODP or PDP figures (the source stopped on 8 May 2022), or null */
+  observation: { date: IsoDate; odp: Observation | null; pdp: Observation | null } | null
   infographics: Infographic[]
 }
 export type Partner = { id: number; name: string; href: string; inFooter: boolean; /** local copy of the logo (public/partners), null when there is none */ logo: string | null }

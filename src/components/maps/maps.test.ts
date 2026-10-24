@@ -68,9 +68,9 @@ describe('KabupatenMap', () => {
   it('Sebaran: each area is filled by its quantile class from the ramp of the case, with its number as text and no marks', async () => {
     const { wrapper } = await kab({ metric: { label: 'Dirawat', role: 'active' } })
     const fill = (c: string) => wrapper.find(`g[data-code="${c}"] path`).attributes('style')!.match(/fill: ([^;]+)/)![1]
-    expect(fill('7202')).toBe('var(--pico-ramp-active-1)') // smallest value
-    expect(fill('7271')).toBe('var(--pico-ramp-active-6)') // biggest
-    expect(new Set(areas(wrapper).map((l) => fill(l.attributes('data-code')!))).size).toBeGreaterThanOrEqual(5)
+    expect(fill('7201')).toBe('var(--pico-ramp-active-1)') // smallest value
+    expect(fill('7271')).toBe('var(--pico-ramp-active-9)') // biggest, the exact legacy blue
+    expect(new Set(areas(wrapper).map((l) => fill(l.attributes('data-code')!))).size).toBeGreaterThanOrEqual(8) // up to 9 classes like the legacy map
     expect(wrapper.find('[data-mark]').exists()).toBe(false)
     expect(wrapper.find('[data-mark-for="7271"] text[data-value]').text()).toMatch(/^\d/)
     expect(wrapper.find('svg[data-testid="geo-map"]').attributes('data-mode')).toBe('choropleth')
@@ -87,9 +87,11 @@ describe('KabupatenMap', () => {
   it('Sebaran legend: swatch, range and count per class, and the date of the numbers in the title', async () => {
     const { wrapper } = await kab({ date: '2024-01-14' })
     const li = wrapper.findAll('[data-testid="map-legend"] li[data-step]')
-    expect(li).toHaveLength(6)
+    expect(li.length).toBeGreaterThanOrEqual(8)
+    expect(li.length).toBeLessThanOrEqual(9)
     expect(li[0]!.find('[data-swatch]').attributes('style')).toContain('--pico-ramp-positive-1')
-    expect(li[0]!.text()).toMatch(/\d.*sampai.*\d.*\(\d+ wilayah\)/)
+    expect(li.map((l) => l.text()).some((x) => /\d.*sampai.*\d.*\(\d+ wilayah\)/.test(x))).toBe(true)
+    expect(li[0]!.text()).toMatch(/\(\d+ wilayah\)/)
     expect(wrapper.find('figure').text()).toContain('14 Januari 2024')
   })
 
@@ -130,6 +132,27 @@ describe('KabupatenMap', () => {
     expect(wrapper.find('svg[data-testid="geo-map"]').attributes('viewBox')).toBe('0 0 800 600')
     await host.trigger('wheel', { deltaY: -100, ctrlKey: true })
     expect(wrapper.find('svg[data-testid="geo-map"]').attributes('viewBox')).not.toBe('0 0 800 600')
+  })
+
+  it('a plain wheel zooms only after a click or focus, and Escape or blur ends it', async () => {
+    const { wrapper } = await kab()
+    const host = wrapper.find('[data-testid="geo-host"]')
+    const vb = () => wrapper.find('svg[data-testid="geo-map"]').attributes('viewBox')
+    expect(wrapper.find('[data-testid="wheel-hint"]').text()).toContain('Klik peta')
+    await host.trigger('wheel', { deltaY: -100 })
+    expect(vb()).toBe('0 0 800 600') // not armed: the page scrolls
+    await host.trigger('pointerdown', { pointerId: 1, pointerType: 'mouse', clientX: 1, clientY: 1 })
+    expect(wrapper.find('[data-testid="wheel-hint"]').text()).toContain('Zoom roda aktif')
+    await host.trigger('wheel', { deltaY: -100 })
+    expect(vb()).not.toBe('0 0 800 600')
+    await wrapper.find('[data-zoom="reset"]').trigger('click')
+    await host.trigger('keydown', { key: 'Escape' })
+    await host.trigger('wheel', { deltaY: -100 })
+    expect(vb()).toBe('0 0 800 600')
+    await host.trigger('focusin')
+    await host.trigger('focusout')
+    await host.trigger('wheel', { deltaY: -100 })
+    expect(vb()).toBe('0 0 800 600')
   })
 
   it('pin lists one area first in the table', async () => {

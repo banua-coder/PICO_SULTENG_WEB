@@ -78,7 +78,8 @@
     "empty": "Belum ada data",
     "error": "Data gagal dimuat",
     "offline": "Tidak ada koneksi",
-    "notFound": "Halaman tidak ditemukan"
+    "notFound": "Halaman tidak ditemukan",
+    "periodEmpty": "Tidak ada data untuk periode ini"
   },
   "area": {
     "label": "Wilayah",
@@ -173,6 +174,21 @@
   },
   "data": {
     "areaTitle": "Data {area}",
+    "newCases": {
+      "title": "Kasus baru di kabupaten/kota",
+      "caption": "Kasus baru pada {date}, hari terakhir dengan kasus positif baru di salah satu kabupaten/kota. Hari-hari sesudahnya diisi nol oleh sumber dan tidak ditampilkan.",
+      "chart": "Kasus {type} baru per kabupaten/kota, {date}",
+      "summary": "{top} paling banyak dengan {value} kasus baru pada {date}.",
+      "type": "Jenis kasus",
+      "none": "Tidak ada data kasus baru per kabupaten/kota."
+    },
+    "composition": {
+      "title": "Komposisi kasus",
+      "caption": "Pembagian total kasus positif per {date}. Pengganti diagram lingkaran: batang berlabel dengan angka dan persennya.",
+      "chart": "Komposisi {area} per {date}",
+      "summary": "{values}.",
+      "noActive": "Jumlah dirawat tidak tersedia untuk kabupaten/kota; persen dihitung dari sembuh dan meninggal."
+    },
     "level": {
       "label": "Tingkat",
       "indonesia": "Nasional",
@@ -269,6 +285,12 @@
     },
     "tests": {
       "title": "Pemeriksaan (tes)",
+      "descPcr": "Polymerase Chain Reaction atau PCR adalah pemeriksaan diagnostik yang dianggap paling akurat untuk memastikan apakah seseorang menderita COVID-19. Jumlah tes diolah dari data yang dipublikasikan Dinas Kesehatan Sulawesi Tengah.",
+      "descRdt": "Rapid Diagnostic Test (RDT) atau tes diagnostik cepat dipakai sebagai skrining awal untuk mendeteksi COVID-19. Hasil RDT yang reaktif diperiksa lebih lanjut dengan swab atau PCR.",
+      "updated": "Pembaruan terakhir",
+      "total": "Jumlah {type}",
+      "totalHint": "Jumlah semua periode: positif, negatif, tidak valid, dan masih diproses",
+      "blockFigures": "Jumlah {type} menurut hasil",
       "note": "Data pemeriksaan hanya tersedia sampai {date}.",
       "chart": "{type}: positif dan negatif per periode",
       "positive": "Positif",
@@ -308,6 +330,8 @@
     "rtScaleCut": "Potong di {max}",
     "rtClippedList": "Di atas batas sumbu: {items}.",
     "zoomGroup": "Zoom grafik",
+    "wheelHint": "Klik grafik untuk zoom dengan roda mouse.",
+    "wheelOn": "Zoom roda aktif. Tekan Esc atau klik di luar grafik untuk berhenti.",
     "zoomIn": "Perbesar",
     "zoomOut": "Perkecil",
     "panLeft": "Geser ke kiri",
@@ -336,6 +360,8 @@
     "zoomOut": "Perkecil",
     "zoomReset": "Kembalikan ukuran peta",
     "zoomHint": "Seret untuk menggeser peta. Ctrl atau Cmd dengan roda tetikus, atau cubit, untuk memperbesar.",
+    "wheelHint": "Klik peta untuk zoom dengan roda mouse.",
+    "wheelOn": "Zoom roda aktif. Tekan Esc atau klik di luar peta untuk berhenti.",
     "name": "Wilayah",
     "selected": "dipilih",
     "noValue": "tidak tersedia",
@@ -557,6 +583,15 @@
     "notes": "Catatan",
     "shown": "Menampilkan {shown} dari {total} lokasi"
   },
+  "suspect": {
+    "inStatus": "Dalam {status}",
+    "finished": "Selesai {status}",
+    "total": "Total",
+    "asOf": "Angka terakhir: {date}",
+    "note": "Sumber berhenti melaporkan ODP dan PDP setelah {date}; angka di atas adalah laporan terakhirnya, bukan keadaan hari ini.",
+    "pdp": { "title": "Pasien Dalam Pengawasan (PDP)", "status": "Pengawasan" },
+    "odp": { "title": "Orang Dalam Pemantauan (ODP)", "status": "Pemantauan" }
+  },
   "beranda": {
     "title": "Beranda",
     "description": "Catatan COVID-19 Sulawesi Tengah dan Indonesia, 2 Maret 2020 sampai 14 Januari 2024: kasus, Rt, vaksinasi, kontak rumah sakit dan panduan isolasi mandiri.",
@@ -582,7 +617,10 @@
     "bannersTitle": "Pengumuman",
     "external": "Tautan luar",
     "bannerOld": "Pengumuman dari masa pandemi",
-    "infoTitle": "Infografis terbaru",
+    "infoTitle": "Info praktikal",
+    "infoIntro": "Berikut beberapa infografis seputar COVID-19. Sumber:",
+    "infoView": "Lihat",
+    "infoShare": "Bagikan",
     "infoMore": "Semua infografis",
     "infoCount": "{n} gambar",
     "hospitalsTitle": "Rumah sakit rujukan",
@@ -594,6 +632,24 @@
     "symptomsTitle": "Gejala",
     "symptomsText": "Gejala yang paling umum: demam, batuk, lelah, serta hilangnya penciuman atau pengecapan. Sesak napas adalah tanda serius. Sebagian orang tidak bergejala.",
     "tipsTitle": "Pencegahan",
+    "riskTitle": "Ketahui risiko dari COVID-19",
+    "riskText": "COVID-19 adalah penyakit yang disebabkan virus SARS-CoV-2. Gejalanya mirip flu biasa, tetapi fatalitasnya lebih tinggi. Virus ini menular cepat dari orang ke orang, bahkan dari orang yang tidak bergejala.",
+    "riskAsk": "Apakah kamu bergejala? Baca panduan isolasi mandiri untuk mengetahui apa yang perlu dilakukan.",
+    "riskCta": "Periksa sekarang",
+    "protectTitle": "Lindungi diri dan orang lain",
+    "protectIntro": "Cara terbaik agar tidak tertular adalah menghindari paparan virus.",
+    "protectLead": "COVID-19 menyebar dari orang ke orang lewat tetesan kecil (droplet) saat batuk atau bersin. Yang bisa kita semua lakukan:",
+    "protectSource": "Sumber materi:",
+    "check": {
+      "wash": "Sering cuci tangan pakai sabun atau hand sanitizer",
+      "face": "Hindari menyentuh wajah, terutama hidung, mulut, dan mata",
+      "clean": "Bersihkan permukaan benda yang disentuh banyak orang",
+      "distancing": "Physical distancing: kurangi kontak fisik dengan sesama",
+      "meter": "Jaga jarak 1 sampai 3 meter dengan sesama",
+      "home": "Tetap di rumah dan hindari tempat umum bila tidak perlu",
+      "mask": "Pakai masker bila harus keluar rumah atau bertemu orang lain",
+      "vaccine": "Ikuti anjuran vaksinasi"
+    },
     "tipWash": "Cuci tangan dengan air dan sabun.",
     "tipMask": "Pakai masker saat sakit atau di tempat umum.",
     "tipDistance": "Jaga jarak sekitar satu meter.",
@@ -612,6 +668,9 @@
     "startNote": "Pintu masuk ke API terbuka dan aplikasi.",
     "callCenter": "Call Center",
     "callCenterNote": "Nomor darurat",
+    "hotline": "Hotline",
+    "hotlineNote": "Dinkes Sulteng, nomor masa pandemi (mungkin sudah tidak aktif)",
+    "socialText": "Ikuti perkembangan dan situasi terkini COVID-19 di Sulawesi Tengah lewat kanal media sosial Sulteng Lawan COVID.",
     "daily": "Perubahan harian",
     "kabTitle": "13 kabupaten/kota Sulawesi Tengah",
     "kabNote": "Menurut total kasus positif.",

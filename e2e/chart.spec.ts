@@ -172,6 +172,27 @@ test.describe('zoom', () => {
     await expect(ts(page).getByRole('slider')).toBeVisible()
   })
 
+  test('a plain wheel scrolls the page until the chart is clicked, then it zooms; Escape ends it', async ({ page }) => {
+    await plot(page).scrollIntoViewIfNeeded()
+    const box = (await plot(page).boundingBox())!
+    await page.mouse.move(box.x + 400, box.y + 100)
+    const y0 = await page.evaluate(() => window.scrollY)
+    await page.mouse.wheel(0, 200)
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(y0)
+    await expect(status(page)).toContainText('Seret pada grafik')
+    await expect(ts(page).getByTestId('wheel-hint')).toContainText('Klik grafik')
+    const box2 = (await plot(page).boundingBox())!
+    await page.mouse.click(box2.x + 400, box2.y + 60)
+    await expect(ts(page).getByTestId('wheel-hint')).toContainText('Zoom roda aktif')
+    await page.mouse.wheel(0, -300)
+    await expect(status(page)).toContainText('Menampilkan')
+    await page.keyboard.press('0')
+    await page.keyboard.press('Escape')
+    await expect(ts(page).getByTestId('wheel-hint')).toContainText('Klik grafik')
+    await page.mouse.wheel(0, -300)
+    await expect(status(page)).toContainText('Seret pada grafik')
+  })
+
   test('keyboard: + zooms, Shift+ArrowLeft pans, 0 resets, the live region keeps the crosshair values', async ({ page }) => {
     await plot(page).focus()
     await page.keyboard.press('+')

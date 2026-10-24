@@ -19,9 +19,12 @@ describe('WikiView', () => {
     it(`${lang}: no photo or third-party image, brand tips are decorative with a caption, the dated note shows and no review marker is left`, async () => {
       const { wrapper } = await mountApp(WikiView, {}, path)
       await flush()
-      // the only pictures are the two small old PICO illustrations (wash hands, mask), decorative with a caption
-      expect(wrapper.findAll('img')).toHaveLength(2)
-      for (const i of wrapper.findAll('img')) expect(i.attributes('alt')).toBe('')
+      // the only pictures are the brand v2 illustrations (own files, a light and a dark copy each), decorative: the caption or the label carries the meaning
+      expect(wrapper.findAll('img').length).toBeGreaterThan(0)
+      for (const i of wrapper.findAll('img')) {
+        expect(i.attributes('alt')).toBe('')
+        expect(i.attributes('src')).toMatch(/^\/(illustrations|lottie)\//)
+      }
       expect(wrapper.findAll('iframe')).toHaveLength(0)
       const figs = wrapper.findAll('figure')
       expect(figs).toHaveLength(4)

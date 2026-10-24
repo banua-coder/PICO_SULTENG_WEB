@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import TipFigure from '@/components/TipFigure.vue'
-import wash from '@/assets/images/wash_hands.png'
-import mask from '@/assets/images/wear_mask.png'
+import Illustration from '@/components/Illustration.vue'
 import PicoIcon from '@/components/PicoIcon.vue'
 import WikiLayout from './WikiLayout.vue'
 
@@ -44,6 +43,7 @@ const myths: [string, string][] = [
     <section aria-labelledby="gejala">
       <h2 id="gejala" class="flex items-center gap-2"><PicoIcon name="symptoms" :size="24" class="text-indigo" /> Symptoms</h2>
       <p>The most common symptoms are fever, cough, tiredness, and loss of taste or smell. Others include sore throat, headache, and aches and pains. A serious sign is difficulty breathing or shortness of breath. Some people are infected without any symptoms.</p>
+      <ul class="m-0 mb-3 flex list-none flex-wrap gap-4 p-0"><li class="flex flex-col items-center text-center text-sm"><Illustration name="gejala-demam" :width="96" />Fever</li><li class="flex flex-col items-center text-center text-sm"><Illustration name="gejala-batuk" :width="96" />Cough</li><li class="flex flex-col items-center text-center text-sm"><Illustration name="gejala-sakit-kepala" :width="96" />Headache</li><li class="flex flex-col items-center text-center text-sm"><Illustration name="gejala-sesak-napas" :width="96" />Shortness of breath</li><li class="flex flex-col items-center text-center text-sm"><Illustration name="gejala-hilang-penciuman" :width="96" />Loss of smell</li></ul>
       <p>If you have symptoms, read <a href="#jika-terinfeksi">If you are infected</a>.</p>
     </section>
 
@@ -59,10 +59,10 @@ const myths: [string, string][] = [
         <li>Indoors, open the windows to let outside air in.</li>
       </ol>
       <div class="mt-4 grid grid-cols-2 gap-4">
-        <TipFigure :src="wash" caption="Wash your hands with soap and water." />
-        <TipFigure :src="mask" caption="Wear a mask when you cannot keep your distance." />
-        <TipFigure icon="prevention.distancing" caption="Keep about one metre apart." />
-        <TipFigure icon="vaccine" caption="Ask a health facility about vaccination." />
+        <TipFigure lottie="handwash-loop" illustration="cuci-tangan" caption="Wash your hands with soap and water." />
+        <TipFigure illustration="pakai-masker" caption="Wear a mask when you cannot keep your distance." />
+        <TipFigure illustration="jaga-jarak" caption="Keep about one metre apart." />
+        <TipFigure illustration="vaksinasi" caption="Ask a health facility about vaccination." />
       </div>
     </section>
 

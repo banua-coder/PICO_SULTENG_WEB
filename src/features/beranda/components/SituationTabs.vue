@@ -10,6 +10,7 @@ import type { CaseCardData } from '@/components/CaseCardGroup.vue'
 import type { CaseColumn } from '@/components/CaseCard.vue'
 import type { DataState } from '@/components/StateMark.vue'
 import LegacyTabs from '@/components/LegacyTabs.vue'
+import SuspectCards from '@/components/SuspectCards.vue'
 import RtNow from './RtNow.vue'
 
 // The old home "Situasi Terkini": the tab strip Statistik / Vaksinasi (legacy DataTabs), the four case cards with Sulawesi Tengah and
@@ -54,6 +55,7 @@ const scopes = computed(() => [
     <LegacyTabs v-model="tab" class="mt-3" :tabs="tabs" :label="t('beranda.situationTitle')">
       <template #stats>
         <CaseCardGroup :cards="cards" />
+        <SuspectCards v-if="home.observation" class="mt-5 block" :date="home.observation.date" :odp="home.observation.odp" :pdp="home.observation.pdp" />
         <RtNow class="mt-5" :home="home" />
         <p class="mt-3"><RouterLink :to="localize('/data')">{{ t('beranda.seeMore') }}</RouterLink></p>
       </template>
