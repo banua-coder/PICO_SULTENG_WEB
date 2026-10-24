@@ -9,7 +9,7 @@ import { HOME_LATEST_URL, KABUPATEN_SNAPSHOT_URL } from '@/api/useSeries'
 import { INDONESIA, SULTENG } from '@/app/areas'
 import { buildHomeLatest } from '@/app/homeLatest'
 import { fx, type WireHospital, type WireInfographic, type WireNationalCase, type WireProvince, type WireProvinceCase } from '../../../test/fixtures/load'
-import { flush, mountApp } from '../../../test/support/mount'
+import { flush, mountApp, until } from '../../../test/support/mount'
 import snapshot from '../../../test/fixtures/kabupaten-latest.snapshot.json'
 import BerandaView from './BerandaView.vue'
 import { dailyPick, jakartaDay, provinceRows } from './useBeranda'
@@ -115,6 +115,7 @@ describe('BerandaView', () => {
     const { wrapper } = await open()
     await wrapper.findAll('[role="tab"]').find((t) => t.text() === 'Vaksinasi')!.trigger('mousedown', { button: 0, ctrlKey: false })
     await flush()
+    await until(() => wrapper.find('[data-testid="vaccine-card"]').exists()) // the card is its own chunk
     const v = wrapper.find('[data-testid="vaccine-summary"]')
     // Sulawesi Tengah first: the two dose cards (the owner's CardVaccineHome), each with its five coloured segments and five group lines
     const cards = v.findAll('[data-testid="vaccine-card"]')
