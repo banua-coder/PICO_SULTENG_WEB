@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useAreaSeries } from '@/api/useSeries'
 import type { AreaRef, Resource, Series } from '@/api/types'
 import { useLocale } from '@/app/useLocale'
+import { areaBySlug, INDONESIA } from '@/app/areas'
 import { lastRealRow } from '@/app/homeLatest'
 import { clampDate, daysBetween, parseIso, RECORD_FIRST, RECORD_LAST, resolveWindow } from '@/app/dateWindow'
 import type { DataWindow } from '@/app/dateWindow'
@@ -12,8 +13,9 @@ import type { DataWindow } from '@/app/dateWindow'
 export { RECORD_FIRST, RECORD_LAST }
 export type { DataWindow }
 export type DataView = 'harian' | 'kumulatif'
-export type CaseType = 'positive' | 'recovered' | 'deceased' | 'all'
-export const CASE_TYPES: CaseType[] = ['positive', 'recovered', 'deceased', 'all']
+export type CaseType = 'positive' | 'active' | 'recovered' | 'deceased' | 'all'
+// the old order: Positif, Dirawat, Sembuh, Meninggal. 'active' (Dirawat) has no daily bars: it is a stock, drawn as a line (kabupaten has none)
+export const CASE_TYPES: CaseType[] = ['positive', 'active', 'recovered', 'deceased', 'all']
 
 /** Contract of spec 40: sections read the page only through this state. */
 export type DataPageState = {
@@ -41,6 +43,15 @@ export const parseCaseType = (v: unknown): CaseType => {
 export const parseView = (v: unknown): DataView => ((Array.isArray(v) ? v[0] : v) === 'kumulatif' ? 'kumulatif' : 'harian')
 
 export { parseIso, clampDate, resolveWindow, daysBetween }
+
+/** Area named by ?tingkat (nasional, provinsi, kabupaten) and ?wilayah (slug); nasional needs no slug. Undefined for anything else. */
+export function areaFromLevelQuery(query: Record<string, unknown>): AreaRef | undefined {
+  const one = (v: unknown) => (Array.isArray(v) ? v[0] : v)
+  const level = one(query.tingkat)
+  if (level === 'nasional' || level === 'indonesia') return INDONESIA
+  if (level === 'provinsi' || level === 'kabupaten') return areaBySlug(level, String(one(query.wilayah) ?? ''))
+  return undefined
+}
 
 /** Path of an area's page (C5). Sulawesi Tengah has its own page, /data is the same view. */
 export function areaPath(area: AreaRef): string {

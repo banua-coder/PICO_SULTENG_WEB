@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { BandPoint } from '../types'
 import { dayNumber, isoFromDay } from './days'
-import { buildRtModel, RT_Y_MAX } from './rtModel'
+import { buildRtModel, fullYMax, RT_Y_MAX } from './rtModel'
 
 const pt = (i: number, v: number | null, spread = 0.2): BandPoint =>
   v === null ? { x: isoFromDay(dayNumber('2021-01-01') + i), y: null, lo: null, hi: null } : { x: isoFromDay(dayNumber('2021-01-01') + i), y: v, lo: v - spread, hi: v + spread }
@@ -77,5 +77,31 @@ describe('buildRtModel', () => {
     expect((m.thread.match(/[ML]/g) ?? []).length).toBeLessThanOrEqual(Math.round(m.plotW))
     expect(m.thread).toContain(m.y(3.9).toFixed(1).replace(/\.0$/, ''))
     expect(m.visible).toHaveLength(1414)
+  })
+})
+
+describe('bounds, clipping rule and full scale', () => {
+  it('draws an upper and a lower bound line, broken at gaps like the thread', () => {
+    const m = model([1, 1.1, null, 0.9, 0.8])
+    expect(subPaths(m.upperLine)).toBe(2)
+    expect(subPaths(m.lowerLine)).toBe(2)
+    expect(m.endUpper!.y).toBeLessThan(m.end!.y)
+    expect(m.endLower!.y).toBeGreaterThan(m.end!.y)
+  })
+
+  it('the bounds are clipped at the axis edge too, and each run above it is listed once', () => {
+    const m = model([1, 9, 12, 1, 6, 1])
+    expect(m.clipped.map((c) => c.value)).toEqual([12, 6])
+    expect(m.endUpper).not.toBeNull()
+    expect(m.y(12)).toBeCloseTo(0)
+  })
+
+  it('full scale takes the highest bound, nice, never under 4', () => {
+    const pts = [pt(0, 1), pt(1, 9, 0.5), pt(2, 1)]
+    expect(fullYMax(pts)).toBe(10)
+    expect(fullYMax([pt(0, 1)])).toBe(RT_Y_MAX)
+    expect(fullYMax(pts, ['2021-01-03', '2021-01-03'])).toBe(RT_Y_MAX)
+    const m = buildRtModel({ points: pts, width: 640, height: 280, yMax: fullYMax(pts) })
+    expect(m.clipped).toEqual([])
   })
 })

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { legendRamp, markSteps, readingOrder } from './quantile'
+import { legendRamp, lightText, markSteps, rampVar, readingOrder } from './quantile'
 
 describe('markSteps', () => {
   it('spreads distinct values over the six steps in order', () => {
@@ -38,7 +38,7 @@ describe('legendRamp', () => {
     const vals = [10, 20, 30, 40, 50, 60, null]
     const ramp = legendRamp(vals)
     expect(ramp.map((r) => r.step)).toEqual([1, 2, 3, 4, 5, 6])
-    expect(ramp[0]).toEqual({ step: 1, min: 10, max: 10 })
+    expect(ramp[0]).toEqual({ step: 1, min: 10, max: 10, count: 1 })
     expect(ramp.at(-1)!.max).toBe(60)
   })
   it('lists only the steps that exist', () => {
@@ -51,5 +51,19 @@ describe('readingOrder', () => {
   it('west to east, ties north to south', () => {
     const o = readingOrder([{ cx: 5, cy: 1, k: 'c' }, { cx: 1, cy: 9, k: 'b' }, { cx: 1, cy: 2, k: 'a' }])
     expect(o.map((i) => i.k)).toEqual(['a', 'b', 'c'])
+  })
+})
+
+describe('legend counts and ramp variables', () => {
+  it('counts the areas per class, equal values together', () => {
+    const r = legendRamp([5, 5, 5, 9, null])
+    expect(r.reduce((n, x) => n + x.count, 0)).toBe(4)
+    expect(r.find((x) => x.min === 5)!.count).toBe(3)
+  })
+  it('one ramp per case, light text only on the dark steps', () => {
+    expect(rampVar('recovered', 3)).toBe('var(--pico-ramp-recovered-3)')
+    expect(rampVar('rt', 2)).toBe('var(--pico-ramp-positive-2)')
+    expect([1, 2, 3, 4, 5, 6].map((s) => lightText('active', s))).toEqual([false, false, false, false, true, true])
+    expect([1, 2, 3, 4, 5, 6].map((s) => lightText('positive', s))).toEqual([false, false, false, true, true, true])
   })
 })

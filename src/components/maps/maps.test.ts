@@ -34,7 +34,7 @@ describe('KabupatenMap', () => {
     for (const l of links) expect(l.attributes('tabindex')).toBe('0')
     const poso = wrapper.find('g[data-code="7204"]')
     expect(poso.attributes('aria-label')).toBe('Poso: 4.000')
-    expect(wrapper.find('svg').attributes('role')).toBe('group')
+    expect(wrapper.find('svg[data-testid="geo-map"]').attributes('role')).toBe('group')
   })
 
   it('Tab order is west to east, then north to south', async () => {
@@ -58,14 +58,87 @@ describe('KabupatenMap', () => {
     expect(wrapper.findComponent(KabupatenMap).emitted('select')).toHaveLength(3)
   })
 
-  it('magnitude is a mark size plus a number, never a colour: every area has the same fill', async () => {
-    const { wrapper } = await kab()
+  it('Titik: magnitude is a mark size plus a number, every area has the same fill', async () => {
+    const { wrapper } = await kab({ mode: 'points' })
     const fills = new Set(areas(wrapper).map((l) => l.find('path').attributes('style')!.match(/fill: ([^;]+)/)![1]))
     expect(fills.size).toBe(1)
+    expect(wrapper.find('[data-mark]').exists()).toBe(true)
+  })
+
+  it('Sebaran: each area is filled by its quantile class from the ramp of the case, with its number as text and no marks', async () => {
+    const { wrapper } = await kab({ metric: { label: 'Dirawat', role: 'active' } })
+    const fill = (c: string) => wrapper.find(`g[data-code="${c}"] path`).attributes('style')!.match(/fill: ([^;]+)/)![1]
+    expect(fill('7202')).toBe('var(--pico-ramp-active-1)') // smallest value
+    expect(fill('7271')).toBe('var(--pico-ramp-active-6)') // biggest
+    expect(new Set(areas(wrapper).map((l) => fill(l.attributes('data-code')!))).size).toBeGreaterThanOrEqual(5)
+    expect(wrapper.find('[data-mark]').exists()).toBe(false)
+    expect(wrapper.find('[data-mark-for="7271"] text[data-value]').text()).toMatch(/^\d/)
+    expect(wrapper.find('svg[data-testid="geo-map"]').attributes('data-mode')).toBe('choropleth')
+  })
+
+  it('Sebaran: a missing value is a hatched fill (never a ramp step) and a "tidak tersedia" legend entry', async () => {
+    const withNull = items.map((i) => (i.code === '7204' ? { ...i, value: null } : i))
+    const { wrapper } = await kab({ items: withNull })
+    expect(wrapper.find('g[data-code="7204"] path').attributes('style')).toContain('url(#hatch-')
+    expect(wrapper.find('g[data-code="7204"]').attributes('data-step')).toBeUndefined()
+    expect(wrapper.find('[data-nodata]').text()).toBe('tidak tersedia')
+  })
+
+  it('Sebaran legend: swatch, range and count per class, and the date of the numbers in the title', async () => {
+    const { wrapper } = await kab({ date: '2024-01-14' })
+    const li = wrapper.findAll('[data-testid="map-legend"] li[data-step]')
+    expect(li).toHaveLength(6)
+    expect(li[0]!.find('[data-swatch]').attributes('style')).toContain('--pico-ramp-positive-1')
+    expect(li[0]!.text()).toMatch(/\d.*sampai.*\d.*\(\d+ wilayah\)/)
+    expect(wrapper.find('figure').text()).toContain('14 Januari 2024')
+  })
+
+  it('the title names the metric and the area', async () => {
+    const { wrapper } = await kab({ areaName: 'Sulawesi Tengah' })
+    expect(wrapper.find('figcaption').text()).toBe('Peta sebaran positif kumulatif COVID-19 di Sulawesi Tengah')
+  })
+
+  it('hover and focus show the four numbers of the area in the legacy order; a missing one says so', async () => {
+    const detail = { positive: 100, active: null, recovered: 90, deceased: 10 }
+    const { wrapper } = await kab({ items: items.map((i) => (i.code === '7204' ? { ...i, detail } : i)) })
+    await wrapper.find('g[data-code="7204"]').trigger('pointerenter', { clientX: 50, clientY: 40 })
+    const tip = wrapper.find('[data-tooltip]')
+    expect(tip.text()).toContain('Poso')
+    expect(tip.findAll('tr').map((r) => r.text())).toEqual(['Positif100', 'Dirawattidak tersedia', 'Sembuh90', 'Meninggal10'])
+    await wrapper.find('g[data-code="7204"]').trigger('pointerleave')
+    expect(wrapper.find('[data-tooltip]').exists()).toBe(false)
+    await wrapper.find('g[data-code="7203"]').trigger('focus')
+    expect(wrapper.find('[data-tooltip]').exists()).toBe(true)
+  })
+
+  it('zoom buttons change the viewBox, reset restores it, and the marks keep their pixel size', async () => {
+    const { wrapper } = await kab()
+    const vb = () => wrapper.find('svg[data-testid="geo-map"]').attributes('viewBox')
+    expect(vb()).toBe('0 0 800 600')
+    expect(wrapper.find('[data-zoom="reset"]').attributes('disabled')).toBeDefined()
+    await wrapper.find('[data-zoom="in"]').trigger('click')
+    expect(vb()).not.toBe('0 0 800 600')
+    expect(parseFloat(wrapper.find('svg[data-testid="geo-map"]').attributes('data-zoom-level')!)).toBeCloseTo(1.5, 1)
+    await wrapper.find('[data-zoom="reset"]').trigger('click')
+    expect(vb()).toBe('0 0 800 600')
+  })
+
+  it('Ctrl+wheel zooms, a plain wheel does not', async () => {
+    const { wrapper } = await kab()
+    const host = wrapper.find('[data-testid="geo-host"]')
+    await host.trigger('wheel', { deltaY: -100 })
+    expect(wrapper.find('svg[data-testid="geo-map"]').attributes('viewBox')).toBe('0 0 800 600')
+    await host.trigger('wheel', { deltaY: -100, ctrlKey: true })
+    expect(wrapper.find('svg[data-testid="geo-map"]').attributes('viewBox')).not.toBe('0 0 800 600')
+  })
+
+  it('pin lists one area first in the table', async () => {
+    const { wrapper } = await kab({ pin: '7202' })
+    expect(wrapper.findAll('tbody tr')[0]!.text()).toContain('Banggai')
   })
 
   it('every visible mark has a text value next to it, and bigger values get bigger marks', async () => {
-    const { wrapper } = await kab()
+    const { wrapper } = await kab({ mode: 'points' })
     const marks = wrapper.findAll('[data-mark-for]')
     expect(marks).toHaveLength(13)
     for (const m of marks) {
@@ -78,7 +151,7 @@ describe('KabupatenMap', () => {
   })
 
   it('marks and the legend use the data role (shape), and the legend lists the ramp with text', async () => {
-    const { wrapper } = await kab({ metric: { label: 'Meninggal kumulatif', role: 'deceased' } })
+    const { wrapper } = await kab({ mode: 'points', metric: { label: 'Meninggal kumulatif', role: 'deceased' } })
     expect(wrapper.find('[data-mark]').attributes('data-mark')).toBe('deceased')
     const legend = wrapper.find('[data-testid="map-legend"]')
     expect(legend.findAll('li')).toHaveLength(6)
@@ -135,7 +208,6 @@ describe('KabupatenMap', () => {
     expect(wrapper.find('tr[class*="border-indigo"]').text()).toContain('Poso')
     expect(wrapper.find('tr[class*="border-indigo"]').text()).toContain('dipilih')
     expect(wrapper.find('[data-band]').exists()).toBe(false)
-    expect(wrapper.find('pattern').exists()).toBe(false)
   })
 
   it('table buttons select too, and hrefFor turns the names into links', async () => {

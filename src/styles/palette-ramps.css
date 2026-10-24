@@ -1,0 +1,31 @@
+/* Sequential ramps of the map (Sebaran mode): one hue per case category, light to dark, 6 quantile classes.
+   Each ramp ends on, or near, the exact colour of the legacy site (red-800 #991b1b, blue-600 #2563eb, green-500 #10b981, orange-500 #f97316).
+   The same in light and dark: fills carry their own label colour (see components/maps/quantile.ts, LIGHT_TEXT_FROM), so no theme variant is needed. */
+:root {
+  --pico-ramp-positive-1: #fee2e2;
+  --pico-ramp-positive-2: #fca5a5;
+  --pico-ramp-positive-3: #f87171;
+  --pico-ramp-positive-4: #dc2626;
+  --pico-ramp-positive-5: #b91c1c;
+  --pico-ramp-positive-6: #991b1b;
+  --pico-ramp-active-1: #dbeafe;
+  --pico-ramp-active-2: #bfdbfe;
+  --pico-ramp-active-3: #93c5fd;
+  --pico-ramp-active-4: #60a5fa;
+  --pico-ramp-active-5: #2563eb;
+  --pico-ramp-active-6: #1e3a8a;
+  --pico-ramp-recovered-1: #d1fae5;
+  --pico-ramp-recovered-2: #a7f3d0;
+  --pico-ramp-recovered-3: #6ee7b7;
+  --pico-ramp-recovered-4: #10b981;
+  --pico-ramp-recovered-5: #047857;
+  --pico-ramp-recovered-6: #064e3b;
+  --pico-ramp-deceased-1: #ffedd5;
+  --pico-ramp-deceased-2: #fed7aa;
+  --pico-ramp-deceased-3: #fdba74;
+  --pico-ramp-deceased-4: #f97316;
+  --pico-ramp-deceased-5: #c2410c;
+  --pico-ramp-deceased-6: #7c2d12;
+  --pico-ramp-ink: #1f2937;
+  --pico-ramp-paper: #ffffff;
+}

@@ -5,19 +5,15 @@ import { useLocale } from '@/app/useLocale'
 import TipFigure from '@/components/TipFigure.vue'
 import SectionHeading from '@/components/SectionHeading.vue'
 import { Card, CardContent } from '@/components/ui/card'
-import wash from '@/assets/images/wash_hands.png'
-import mask from '@/assets/images/wear_mask.png'
-import fever from '@/assets/images/fever.png'
-import cough from '@/assets/images/caugh.png'
-import headache from '@/assets/images/headache.png'
+import Illustration from '@/components/Illustration.vue'
 
 // "Apa yang harus dilakukan?" and "Apa yang harus diketahui?" of the old home page, with its own small illustrations.
 const { t } = useI18n()
 const { localize } = useLocale()
 const SYMPTOMS = [
-  { key: 'symFever', src: fever },
-  { key: 'symCough', src: cough },
-  { key: 'symHeadache', src: headache },
+  { key: 'symFever', art: 'gejala-demam' },
+  { key: 'symCough', art: 'gejala-batuk' },
+  { key: 'symHeadache', art: 'gejala-sakit-kepala' },
 ] as const
 </script>
 
@@ -34,10 +30,10 @@ const SYMPTOMS = [
       </Card>
       <h3 class="mb-0 mt-5 text-lg">{{ t('beranda.tipsTitle') }}</h3>
       <div class="mt-3 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <TipFigure :src="wash" :caption="t('beranda.tipWash')" />
-        <TipFigure :src="mask" :caption="t('beranda.tipMask')" />
-        <TipFigure icon="prevention.distancing" :caption="t('beranda.tipDistance')" />
-        <TipFigure icon="vaccine" :caption="t('beranda.tipVaccine')" />
+        <TipFigure illustration="cuci-tangan" :caption="t('beranda.tipWash')" />
+        <TipFigure illustration="pakai-masker" :caption="t('beranda.tipMask')" />
+        <TipFigure illustration="jaga-jarak" :caption="t('beranda.tipDistance')" />
+        <TipFigure illustration="vaksinasi" :caption="t('beranda.tipVaccine')" />
       </div>
     </section>
 
@@ -49,7 +45,7 @@ const SYMPTOMS = [
           <p class="mt-1 max-w-prose">{{ t('beranda.aboutText') }}</p>
           <h3 class="m-0 mt-4 text-lg">{{ t('beranda.symptomsTitle') }}</h3>
           <ul class="m-0 mt-2 flex list-none flex-wrap gap-6 p-0">
-            <li v-for="s in SYMPTOMS" :key="s.key" class="flex items-center gap-2"><img :src="s.src" alt="" width="85" height="81" loading="lazy" decoding="async" class="size-12"><span class="font-semibold">{{ t(`beranda.${s.key}`) }}</span></li>
+            <li v-for="s in SYMPTOMS" :key="s.key" class="flex items-center gap-2"><Illustration :name="s.art" :width="72" /><span class="font-semibold">{{ t(`beranda.${s.key}`) }}</span></li>
           </ul>
           <p class="mt-3 max-w-prose">{{ t('beranda.symptomsText') }}</p>
         </CardContent>

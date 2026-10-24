@@ -7,7 +7,15 @@ import { DOWNSAMPLE_ABOVE } from './downsample'
 import { MARGIN_BOTTOM, MARGIN_LEFT, MARGIN_TOP, marginRight } from './model'
 import { xTicks, yTicks } from './scales'
 
+/** The y axis stops at 4 unless the visitor asks for the full scale. Early estimates of 2020 go far above it (up to ~20). */
 export const RT_Y_MAX = 4
+
+/** Full-scale axis maximum: the highest value in range (upper bound included), rounded up to a nice number, at least RT_Y_MAX. */
+export function fullYMax(points: BandPoint[], range?: [IsoDate, IsoDate]): number {
+  let m = 0
+  for (const p of points) if (filled(p) && (!range || (p.x >= range[0] && p.x <= range[1]))) m = Math.max(m, p.hi, p.y)
+  return Math.max(RT_Y_MAX, scaleLinear().domain([0, m]).nice(4).domain()[1]!)
+}
 
 export type RtModelInput = { points: BandPoint[]; range?: [IsoDate, IsoDate]; width: number; height: number; yMax?: number }
 export type ClippedRun = { date: IsoDate; value: number; x: number }
@@ -58,6 +66,12 @@ export function buildRtModel({ points, range, width, height, yMax = RT_Y_MAX }: 
     .y0((p) => y(clip(p.lo as number)))
     .y1((p) => y(clip(p.hi as number)))
 
+  const bound = (k: 'lo' | 'hi') =>
+    line<BandPoint>()
+      .defined(filled)
+      .x((p) => x(dayNumber(p.x)))
+      .y((p) => y(clip(p[k] as number)))
+
   // clipped runs are found in the full visible data, not the reduced one, so a spike is never lost
   const clipped: ClippedRun[] = []
   let run: Filled | undefined
@@ -84,7 +98,11 @@ export function buildRtModel({ points, range, width, height, yMax = RT_Y_MAX }: 
     threshold: yMax >= 1 ? y(1) : null,
     thread: hasAny ? (thread(drawn) ?? '') : '',
     band: hasAny ? (band(drawn) ?? '') : '',
+    upperLine: hasAny ? (bound('hi')(drawn) ?? '') : '',
+    lowerLine: hasAny ? (bound('lo')(drawn) ?? '') : '',
     clipped,
+    endUpper: lastReal ? { x: x(dayNumber(lastReal.x)), y: y(clip(lastReal.hi)), value: lastReal.hi } : null,
+    endLower: lastReal ? { x: x(dayNumber(lastReal.x)), y: y(clip(lastReal.lo)), value: lastReal.lo } : null,
     end: lastReal ? { x: x(dayNumber(lastReal.x)), y: y(clip(lastReal.y)), value: lastReal.y } : null,
     x: (iso: IsoDate) => x(dayNumber(iso)),
     xInvert: (px: number) => x.invert(px),

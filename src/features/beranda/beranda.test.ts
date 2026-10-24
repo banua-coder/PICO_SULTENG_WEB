@@ -116,8 +116,12 @@ describe('BerandaView', () => {
     await wrapper.findAll('[role="tab"]').find((t) => t.text() === 'Vaksinasi')!.trigger('mousedown', { button: 0, ctrlKey: false })
     await flush()
     const v = wrapper.find('[data-testid="vaccine-summary"]')
-    expect(v.findAll('[role="progressbar"]')).toHaveLength(4)
-    expect(v.text()).toContain('25 Maret 2022')
+    // Sulawesi Tengah first: the two dose cards (the owner's CardVaccineHome), each with its five coloured segments and five group lines
+    const cards = v.findAll('[data-testid="vaccine-card"]')
+    expect(cards.map((c) => c.attributes('data-dose'))).toEqual(['dose1', 'dose2'])
+    expect(cards[0]!.findAll('[data-segment]')).toHaveLength(5)
+    expect(cards[0]!.findAll('li[data-group]').map((l) => l.attributes('data-group'))).toEqual(['elderly', 'public_officer', 'health_worker', 'public', 'teenager'])
+    expect(wrapper.text()).toContain('25 Maret 2022')
     expect(wrapper.find('a[href="/vaksin"]').exists()).toBe(true)
   })
 
@@ -125,7 +129,8 @@ describe('BerandaView', () => {
     const { wrapper } = await open()
     const b = wrapper.find('[data-testid="banners"]')
     expect(b.findAll('li')).toHaveLength(2) // the first two on the home page
-    expect(b.findAll('img')).toHaveLength(0) // the pictures were on a server that is gone: the card is its title
+    // the pictures were on a server that is gone: they are served from the backup of its storage
+    expect(b.findAll('img').every((i) => i.attributes('src')?.startsWith('/media/banners/'))).toBe(true)
     const a = b.find('a')
     expect(a.attributes('target')).toBe('_blank')
     expect(a.attributes('rel')).toContain('noopener')

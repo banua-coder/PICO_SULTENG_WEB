@@ -84,17 +84,16 @@ test.describe('Infografis', () => {
     await expect(dlg).toContainText('1 dari 3')
   })
 
-  test('all images blocked: placeholders with titles, no layout shift, no console error but the failed loads', async ({ page }) => {
+  test('all images blocked: tiles collapse to their titles, no console error but the failed loads', async ({ page }) => {
     await serveList(page)
     await page.route(IMAGES, (r) => r.abort('failed'))
     const log = watchConsole(page)
     await visit(page, '/infografis')
     const card = page.locator('button[data-id="60"]')
     await expect(card).toContainText('Infografis nomor 60')
-    await expect(card.locator('[data-placeholder="plate"]')).toBeVisible()
-    const h1 = (await card.boundingBox())!.height
-    await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))) // let a couple of frames pass
-    expect((await card.boundingBox())!.height).toBe(h1)
+    // the picture is on another host and cannot load: the tile collapses to its title and count, no broken-image box
+    await expect(card.locator('img')).toHaveCount(0)
+    await expect(card.locator('[data-placeholder="plate"]')).toHaveCount(0)
     expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0)
     expect(log).toEqual([])
   })

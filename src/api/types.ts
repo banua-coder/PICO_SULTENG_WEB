@@ -51,6 +51,8 @@ export type VaccinationDay = {
   target: number
   total: { daily: Doses; cumulative: Doses; coverage: Doses }
   groups: { key: VaccinationGroupKey; target: number; cumulative: Doses; coverage: Doses }[]
+  /** the injections of the day before in the series (for the daily change rate of the vaccine card); absent on the first day */
+  previousDaily?: Doses
 }
 export type VaccineLocation = {
   id: number
@@ -113,4 +115,4 @@ export type HomeLatest = {
   vaccination: Record<'indonesia' | 'sulawesi-tengah', VaccinationDay | null>
   infographics: Infographic[]
 }
-export type Partner = { id: number; name: string; href: string; inFooter: boolean }
+export type Partner = { id: number; name: string; href: string; inFooter: boolean; /** local copy of the logo (public/partners), null when there is none */ logo: string | null }

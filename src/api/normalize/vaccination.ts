@@ -22,7 +22,11 @@ export function vaccinationSeries(wire: WireVaccinationDay[]): VaccinationDay[] 
       }),
     })
   }
-  return [...byDate.values()].sort((a, b) => (a.date < b.date ? -1 : 1))
+  const days = [...byDate.values()].sort((a, b) => (a.date < b.date ? -1 : 1))
+  days.forEach((d, i) => {
+    if (i > 0) d.previousDaily = days[i - 1]!.total.daily
+  })
+  return days
 }
 
 export const vaccineLocations = (wire: WireVaccineLocation[]): VaccineLocation[] =>

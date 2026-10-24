@@ -29,14 +29,16 @@ const SOCIAL = [
 <template>
   <footer class="mx-auto mt-12 w-full max-w-6xl px-4 pb-24 xl:pb-8" :aria-label="t('footer.label')">
     <Card>
-      <CardContent class="grid gap-6 text-sm md:grid-cols-3">
+      <CardContent class="grid gap-6 text-sm md:grid-cols-[1.7fr_1fr_1fr]">
         <div>
           <h2 class="text-lg">{{ t('footer.partners') }}</h2>
           <!-- partners are in the prerendered HTML and in the page's initial state -->
-          <ul class="m-0 grid list-none p-0 sm:grid-cols-2">
-            <li v-for="p in partners.data.value?.filter((x) => x.inFooter)" :key="p.id">
-              <a v-if="p.href" :class="link" :href="p.href" rel="noopener">{{ p.name }}</a>
-              <span v-else :class="link">{{ p.name }}</span>
+          <ul class="m-0 grid list-none grid-cols-2 items-center gap-x-4 gap-y-2 p-0 sm:grid-cols-3" data-testid="partner-logos">
+            <li v-for="p in partners.data.value?.filter((x) => x.inFooter)" :key="p.id" class="flex min-h-touch items-center">
+              <component :is="p.href ? 'a' : 'span'" :class="link" :href="p.href || undefined" :rel="p.href ? 'noopener' : undefined">
+                <img v-if="p.logo" :src="p.logo" :alt="p.name" loading="lazy" decoding="async" class="h-12 w-auto max-w-full rounded-sm object-contain p-1" style="background: var(--pico-logo-ground)">
+                <template v-else>{{ p.name }}</template>
+              </component>
             </li>
           </ul>
         </div>

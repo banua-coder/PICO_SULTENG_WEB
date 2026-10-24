@@ -8,6 +8,8 @@ const props = defineProps<{
   items: MapItem[]
   metric: MapMetric
   selected?: string
+  /** an area code listed first (Sulawesi Tengah on the province map) */
+  pin?: string
   /** When given, an area name is a link to this address. Otherwise it is a button that emits `select`. */
   hrefFor?: (code: string) => string
 }>()
@@ -15,9 +17,11 @@ const emit = defineEmits<{ select: [code: string] }>()
 
 const { t } = useI18n()
 const fmt = useFormat()
-// biggest first, areas without a number last, then by name
+// the pinned area first, then biggest first, areas without a number last, then by name
 const rows = computed(() =>
-  [...props.items].sort((a, b) => (b.value ?? -Infinity) - (a.value ?? -Infinity) || a.name.localeCompare(b.name, 'id')),
+  [...props.items].sort(
+    (a, b) => Number(b.code === props.pin) - Number(a.code === props.pin) || (b.value ?? -Infinity) - (a.value ?? -Infinity) || a.name.localeCompare(b.name, 'id'),
+  ),
 )
 </script>
 

@@ -10,7 +10,7 @@ import snapshot from '../../../test/fixtures/kabupaten-latest.snapshot.json'
 import { fx, type WireNationalCase, type WireProvince, type WireProvinceCase, type WireRegencyCase } from '../../../test/fixtures/load'
 import { flush, mountApp, until } from '../../../test/support/mount'
 import DataView from './DataView.vue'
-import { mapDate, mapKind, selectedCode, useSubAreaItems } from './useSubAreaItems'
+import { mapDate, mapKinds, metricsFor, selectedCode, useSubAreaItems } from './useSubAreaItems'
 
 beforeEach(() => {
   vi.spyOn(window, 'matchMedia').mockImplementation((q) => ({ matches: q.includes('reduce'), media: q, addEventListener: () => undefined, removeEventListener: () => undefined }) as unknown as MediaQueryList)
@@ -162,10 +162,15 @@ describe('SubAreaMap (W17)', () => {
     const k = snapshot as LatestByArea[]
     const items = useSubAreaItems(k, 'deceased')
     expect(items).toHaveLength(13)
-    expect(items.find((i) => i.code === '7204')).toEqual({ code: '7204', name: 'Poso', value: k.find((x) => x.area.code === '7204')!.latest.cumulative.deceased })
-    expect([mapKind(INDONESIA), mapKind(SULTENG), mapKind(areaByCode('kabupaten', '7204')!), mapKind(areaByCode('provinsi', '11')!)]).toEqual(['provinces', 'kabupaten', 'kabupaten', null])
-    expect(selectedCode(areaByCode('kabupaten', '7204')!)).toBe('7204')
-    expect(selectedCode(SULTENG)).toBeUndefined()
+    expect(items.find((i) => i.code === '7204')).toMatchObject({ code: '7204', name: 'Poso', value: k.find((x) => x.area.code === '7204')!.latest.cumulative.deceased })
+    // a kabupaten has no "dirawat": null (not available), never 0
+    expect(useSubAreaItems(k, 'active').every((i) => i.value === null && i.detail!.active === null)).toBe(true)
+    expect([INDONESIA, SULTENG, areaByCode('kabupaten', '7204')!, areaByCode('provinsi', '11')!].map(mapKinds)).toEqual([['provinces'], ['provinces', 'kabupaten'], ['kabupaten'], ['provinces']])
+    expect(metricsFor(['kabupaten'])).toEqual(['positive', 'recovered', 'deceased'])
+    expect(metricsFor(['provinces'])).toEqual(['positive', 'active', 'recovered', 'deceased'])
+    expect(selectedCode(areaByCode('kabupaten', '7204')!, 'kabupaten')).toBe('7204')
+    expect(selectedCode(SULTENG, 'kabupaten')).toBeUndefined()
+    expect(selectedCode(SULTENG, 'provinces')).toBe('72')
     expect(mapDate(k)).toBe('2024-01-14')
   })
 
@@ -196,12 +201,38 @@ describe('SubAreaMap (W17)', () => {
     expect(wrapper.find('[data-testid="submap"] td[data-code="7271"]').text()).not.toBe(before)
   })
 
-  it('the country gets the 34 provinces; another province gets no section and no empty box', async () => {
+  it('the country gets the 34 provinces, any province gets the province map with itself selected, Sulawesi Tengah also its 13 kabupaten', async () => {
     const nat = await openMap('/data/indonesia')
     expect(nat.wrapper.find('[data-testid="submap"]').findAll('tbody tr')).toHaveLength(34)
-    const aceh = await openMap('/data/provinsi/aceh', false)
-    expect(aceh.wrapper.find('[data-testid="submap"]').exists()).toBe(false)
-    expect(aceh.wrapper.find('#peta').exists()).toBe(false)
+    const aceh = await openMap('/data/provinsi/aceh')
+    const m = aceh.wrapper.find('[data-testid="submap"]')
+    expect(m.findAll('table')).toHaveLength(1)
+    expect(m.find('g[role="link"][aria-current="true"]').attributes('data-code')).toBe('11')
+    const st = await openMap('/data/provinsi/sulawesi-tengah')
+    await until(() => st.wrapper.findAll('[data-testid="submap"] table').length === 2)
+    const rows = st.wrapper.findAll('[data-testid="submap"] table')
+    expect(rows.map((r) => r.findAll('tbody tr').length)).toEqual([34, 13])
+    expect(rows[0]!.findAll('tbody tr')[0]!.text()).toContain('Sulawesi Tengah') // pinned first
+  })
+
+  it('"dirawat": the province map has it, the kabupaten map says it is not available instead of drawing zeros', async () => {
+    const st = await openMap('/data/provinsi/sulawesi-tengah')
+    await until(() => st.wrapper.findAll('[data-testid="submap"] table').length === 2)
+    await st.wrapper.find('[data-testid="submap"] [data-value="active"]').trigger('click')
+    const blocks = st.wrapper.findAll('[data-map-kind]')
+    expect(blocks[0]!.find('table').exists()).toBe(true)
+    expect(blocks[1]!.find('table').exists()).toBe(false)
+    expect(blocks[1]!.text()).toContain('tidak tersedia untuk kabupaten/kota')
+    const kab = await openMap('/data/kabupaten/poso')
+    expect(kab.wrapper.find('[data-testid="submap"] [data-value="active"]').exists()).toBe(false)
+    expect(kab.wrapper.find('[data-testid="map-no-active"]').exists()).toBe(true)
+  })
+
+  it('Titik switches the map to proportional marks', async () => {
+    const { wrapper } = await openMap('/data/kabupaten/poso')
+    expect(wrapper.find('[data-testid="submap"] [data-mark]').exists()).toBe(false)
+    await wrapper.find('[data-testid="submap"] [data-value="points"]').trigger('click')
+    expect(wrapper.find('[data-testid="submap"] [data-mark]').exists()).toBe(true)
   })
 })
 

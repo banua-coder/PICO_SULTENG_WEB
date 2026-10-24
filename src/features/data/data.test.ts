@@ -51,20 +51,21 @@ describe('DataView routes', () => {
     }
   })
 
-  it('kabupaten: three figures, no "dirawat" (C2: active is null)', async () => {
+  it('kabupaten: the Dirawat card says it is not available (C2: active is null), never 0', async () => {
     seedLatest()
     const { wrapper } = await mountApp(DataView, {}, '/data/kabupaten/kota-palu')
     await flush()
     const s = wrapper.find('[data-testid="summary"]')
-    expect(s.findAll('svg[data-state]').map((e) => e.attributes('data-state'))).toEqual(['positive', 'recovered', 'deceased'])
-    expect(s.text()).not.toContain('Dirawat')
+    expect(s.findAll('[data-state]').map((e) => e.attributes('data-state'))).toEqual(['positive', 'active', 'recovered', 'deceased'])
+    const active = s.find('[data-state="active"]')
+    expect(active.find('[data-figure]').text()).toBe('tidak tersedia')
   })
 
   it('province and country: four figures including dirawat', async () => {
     seedLatest()
     const nat = await mountApp(DataView, {}, '/data/indonesia')
     await flush()
-    expect(nat.wrapper.find('[data-testid="summary"]').findAll('svg[data-state]')).toHaveLength(4)
+    expect(nat.wrapper.find('[data-testid="summary"]').findAll('[data-state]')).toHaveLength(4)
     expect(nat.wrapper.find('h1').text()).toBe('Data Indonesia')
   })
 

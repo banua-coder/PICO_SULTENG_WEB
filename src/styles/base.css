@@ -97,7 +97,7 @@
     outline: none;
   }
   .map-area:hover > path:first-child {
-    fill: var(--pico-cotton-deep) !important;
+    stroke: var(--pico-ink) !important;
   }
   .map-area:focus-visible {
     outline: 2px solid var(--pico-primary-strong);
@@ -110,4 +110,23 @@
 :focus-visible {
   outline: 2px solid var(--pico-primary-strong);
   outline-offset: 2px;
+}
+
+/* Brand v2 illustrations: the light or the dark file, by the theme (the switch or the system) */
+.pico-ill-dark {
+  display: none;
+}
+[data-theme='dark'] .pico-ill-light {
+  display: none;
+}
+[data-theme='dark'] .pico-ill-dark {
+  display: block;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .pico-ill-light {
+    display: none;
+  }
+  :root:not([data-theme='light']) .pico-ill-dark {
+    display: block;
+  }
 }

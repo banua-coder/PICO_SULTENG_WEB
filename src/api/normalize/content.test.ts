@@ -22,10 +22,10 @@ describe('content normalisers on live fixtures', () => {
     expect(groups.find((g) => g.kabupaten.code === '7202')?.members[0]?.contacts[0]?.kind).toBe('phone')
   })
 
-  it('banners: banuacoders.com images become null, links stay https', () => {
+  it('banners: banuacoders.com images map to the backup copies, links stay https', () => {
     const list = banners(fx<W.WireBanner[]>('banners'))
     expect(list.length).toBeGreaterThan(0)
-    expect(list.every((b) => b.image === null)).toBe(true)
+    expect(list.every((b) => b.image?.startsWith('/media/banners/') === true)).toBe(true)
     expect(list[0]?.href).toMatch(/^https:/)
   })
 
@@ -45,7 +45,7 @@ describe('content normalisers on live fixtures', () => {
   it('donations: relative image is null, account numbers stay text, contacts are built', () => {
     const list = donations(fx<W.WireDonation[]>('donations'))
     expect(list.length).toBe(8)
-    expect(list.find((d) => d.id === 2)?.image).toBeNull()
+    expect(list.find((d) => d.id === 2)?.image).toBe('/media/donations/eihpXTSucqIThKxLYGeT.webp')
     const acc = list.flatMap((d) => d.accounts)[0]!
     expect(typeof acc.number).toBe('string')
     expect(list.find((d) => d.id === 2)?.contacts.map((c) => c.kind)).toContain('whatsapp')
@@ -56,7 +56,7 @@ describe('content normalisers on live fixtures', () => {
     expect(t[0]).toMatchObject({ name: 'dr. Evans Suryani', free: true })
     expect(t[0]?.schedules[0]).toEqual({ days: 'Senin-Jumat', hours: '07:00-20:00', tz: 'WIB' })
     const p = partners(fx<W.WirePartner[]>('partners'))
-    expect(p[0]).toEqual({ id: 1, name: 'Detexi', href: 'https://detexi.id/', inFooter: true })
+    expect(p[0]).toEqual({ id: 1, name: 'Detexi', href: 'https://detexi.id/', inFooter: true, logo: '/partners/detexi.webp' })
     expect(p.filter((x) => x.inFooter).length).toBeGreaterThan(0)
   })
 

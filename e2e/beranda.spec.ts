@@ -30,7 +30,7 @@ test.describe('Beranda', () => {
     expect(await bottom(page.locator('h1'))).toBeLessThan(740)
     expect(await bottom(page.getByTestId('call-center'))).toBeLessThan(740)
     const positive = page.locator('[data-testid="headline"] [data-state="positive"]').first()
-    expect(await bottom(positive.locator('p.font-display').first())).toBeLessThan(900) // within the second screen: the banners and the three tiles come first, as on the old home
+    expect(await bottom(positive.locator('[data-figure]').first())).toBeLessThan(900) // within the second screen: the banners and the three tiles come first, as on the old home
     expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0)
   })
 
@@ -42,7 +42,8 @@ test.describe('Beranda', () => {
     await page.getByLabel('Cari provinsi').fill('bali')
     await expect(page.getByTestId('province-list').locator('li')).toHaveCount(1)
     await page.getByRole('tab', { name: 'Vaksinasi' }).click()
-    await expect(page.getByTestId('vaccine-summary').getByRole('progressbar')).toHaveCount(4)
+    await expect(page.getByTestId('vaccine-summary').getByTestId('vaccine-card')).toHaveCount(2)
+    await expect(page.getByTestId('vaccine-summary').locator('[data-bar]')).toHaveCount(2)
     await page.getByRole('tab', { name: 'Statistik' }).click()
     await expect(page.getByTestId('kabupaten-list').locator('li')).toHaveCount(13)
   })

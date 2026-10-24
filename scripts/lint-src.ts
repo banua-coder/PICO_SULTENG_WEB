@@ -19,7 +19,7 @@ export function findRawColours(file: string, text: string): string[] {
   )
 }
 
-const SKIP_DIR = /(^|\/)(assets\/brand|node_modules)(\/|$)|styles\/palette\.css$/
+const SKIP_DIR = /(^|\/)(assets\/brand|node_modules)(\/|$)|styles\/palette(-[a-z]+)?\.css$/
 const CHECKED = /\.(vue|ts|css)$/
 const SKIP_FILE = /\.test\.ts$/
 

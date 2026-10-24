@@ -66,9 +66,10 @@ test.describe('Data page sections', () => {
     await expect(page).toHaveURL(/\/data\/kabupaten\/kota-palu\?dari=2021-07-01&sampai=2021-07-31/)
   })
 
-  test('another province has no map, no gender and no tests; the country has the 34 provinces', async ({ page }) => {
+  test('another province has the province map with itself selected, but no gender and no tests; the country has the 34 provinces', async ({ page }) => {
     await visit(page, '/data/provinsi/aceh')
-    await expect(page.getByTestId('submap')).toHaveCount(0)
+    await expect(page.getByTestId('submap').locator('g[role="link"][aria-current="true"]')).toHaveAttribute('data-code', '11')
+    await expect(page.getByTestId('submap').locator('table')).toHaveCount(1)
     await expect(page.getByTestId('gender')).toHaveCount(0)
     await expect(page.getByTestId('tests')).toHaveCount(0)
     await visit(page, '/data/indonesia')
