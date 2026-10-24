@@ -2,6 +2,8 @@
 
 /** The day of the build (YYYY-MM-DD). The home page picks its 3 hospitals from it, so the prerender and the first client render agree. */
 declare const __BUILD_DAY__: string
+/** true only in a build made with VITE_MAP_BANDS=1: the band strips are in the bundle then, never otherwise (check:dist) */
+declare const __MAP_BANDS__: boolean
 
 interface ImportMetaEnv {
   readonly VITE_API_BASE_URL?: string

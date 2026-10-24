@@ -12,7 +12,7 @@ export default defineConfig({
     // ADR-0102: messages are precompiled at build time, so the runtime-only vue-i18n ships (no message compiler, no eval)
     VueI18nPlugin({ include: [fileURLToPath(new URL('./src/locales/**', import.meta.url))], runtimeOnly: true, compositionOnly: true, strictMessage: true }),
   ],
-  define: { __BUILD_DAY__: JSON.stringify(process.env.PICO_BUILD_DAY ?? new Date().toISOString().slice(0, 10)) },
+  define: { __MAP_BANDS__: JSON.stringify(!!process.env.VITE_MAP_BANDS), __BUILD_DAY__: JSON.stringify(process.env.PICO_BUILD_DAY ?? new Date().toISOString().slice(0, 10)) },
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   build: {
     rollupOptions: {

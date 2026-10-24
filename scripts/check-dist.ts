@@ -6,7 +6,7 @@
  *  - the kabupaten snapshot has 13 rows
  * Exits 1 with the list of problems.
  */
-import { existsSync } from 'node:fs'
+import { existsSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { sitePaths } from '../src/app/siteRoutes'
@@ -19,7 +19,13 @@ export function findTodos(dist: string): [string, string][] {
   return walkHtml(dist).flatMap((f) => [...read(f).matchAll(/data-todo="([^"]+)"/g)].map((m) => [m[1]!, f.replace(dist, '')] as [string, string]))
 }
 
-export function checkDist(dist: string, { kit = false, allowTodo = false }: { kit?: boolean; allowTodo?: boolean } = {}): string[] {
+/** Files in dist whose name starts with `band-`: the kabupaten band patterns (DESIGN.md), as files or as emitted chunks. */
+export function findBands(dist: string): string[] {
+  const walk = (d: string): string[] => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : /^band-/.test(e.name) ? [join(d, e.name)] : []))
+  return existsSync(dist) ? walk(dist).map((f) => f.replace(dist, '')) : []
+}
+
+export function checkDist(dist: string, { kit = false, allowTodo = false, allowBands = false }: { kit?: boolean; allowTodo?: boolean; allowBands?: boolean } = {}): string[] {
   const problems: string[] = []
   const paths = sitePaths()
   const titles = new Map<string, string>()
@@ -64,6 +70,8 @@ export function checkDist(dist: string, { kit = false, allowTodo = false }: { ki
   } else problems.push('missing data/kabupaten-latest.json')
   // Unreviewed content (open item O-5): a visible TODO marker in a page. Branch builds may carry them, releases may not.
   if (!allowTodo) for (const [id, file] of findTodos(dist)) problems.push(`unreviewed TODO "${id}" in ${file} (PICO_ALLOW_TODO=1 lets a branch build pass, a release must not)`)
+  // The 14 band strips are interpretations that wait for the cultural review (pico-jlc.8): they must not be fetchable from a normal build.
+  if (!allowBands) for (const f of findBands(dist)) problems.push(`band pattern in the build: ${f} (only a VITE_MAP_BANDS=1 build may have it; pico-jlc.8 is open)`)
   return problems
 }
 
@@ -72,7 +80,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const todos = findTodos(dist)
   const ids = [...new Set(todos.map(([id]) => id))]
   if (ids.length) console.log(`TODO markers in the build (${ids.length}): ${ids.join(', ')}`)
-  const problems = checkDist(dist, { kit: !!process.env.VITE_KIT, allowTodo: !!process.env.PICO_ALLOW_TODO })
+  const problems = checkDist(dist, { kit: !!process.env.VITE_KIT, allowTodo: !!process.env.PICO_ALLOW_TODO, allowBands: !!process.env.VITE_MAP_BANDS })
   if (problems.length) {
     console.error(problems.join('\n') + `\n${problems.length} problem(s) in dist/`)
     process.exit(1)

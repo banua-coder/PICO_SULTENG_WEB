@@ -15,7 +15,7 @@ export default tseslint.config(
     languageOptions: { parserOptions: { parser: tseslint.parser } },
   },
   {
-    languageOptions: { globals: { ...globals.browser, ...globals.node, __BUILD_DAY__: 'readonly' } },
+    languageOptions: { globals: { ...globals.browser, ...globals.node, __BUILD_DAY__: 'readonly', __MAP_BANDS__: 'readonly' } },
     rules: {
       'vue/block-order': ['error', { order: ['script', 'template', 'style'] }],
       'vue/multi-word-component-names': 'off',

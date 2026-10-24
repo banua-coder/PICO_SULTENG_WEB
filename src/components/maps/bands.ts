@@ -3,9 +3,12 @@ import index from '@/assets/brand/patterns/index.json'
 // Kabupaten band patterns (DESIGN.md, brand/patterns). They are interpretations of Kaili motifs that still wait for a
 // cultural review (pico-jlc.8), so the map only uses one, as the identity fill of the selected area, and only when
 // VITE_MAP_BANDS=1. Off by default. The strips are loaded lazily and never ship with the page otherwise.
-export const bandsEnabled = (): boolean => !!import.meta.env?.VITE_MAP_BANDS
+export const bandsEnabled = (): boolean => __MAP_BANDS__
 
-const files = import.meta.glob<string>('@/assets/brand/patterns/band-*.svg', { query: '?raw', import: 'default' })
+// The ternary is a build-time constant: without VITE_MAP_BANDS the glob (and the 14 strips) is dropped from the bundle (check:dist enforces it)
+const files: Record<string, () => Promise<string>> = __MAP_BANDS__
+  ? import.meta.glob<string>('@/assets/brand/patterns/band-*.svg', { query: '?raw', import: 'default' })
+  : {}
 const fileOf = (name: string) => (index.kabupaten as { name: string; file: string }[]).find((k) => k.name === name)?.file
 
 /** The shapes of a band strip and its size, for a <pattern>. Null when the area has no band. */

@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { sitePaths } from '../src/app/siteRoutes'
-import { checkDist, findTodos } from './check-dist'
+import { checkDist, findBands, findTodos } from './check-dist'
 import { fileForPath, sitemapXml } from './site'
 
 let dist: string
@@ -76,5 +76,16 @@ describe('checkDist', () => {
     expect(findTodos(dist)).toEqual([['wiki-terms', expect.stringContaining('wiki')]])
     expect(checkDist(dist).some((p) => p.startsWith('unreviewed TODO "wiki-terms"'))).toBe(true)
     expect(checkDist(dist, { allowTodo: true })).toEqual([])
+  })
+})
+
+describe('band patterns', () => {
+  it('fails when a band strip is in the build, passes when bands are allowed (a VITE_MAP_BANDS build)', () => {
+    put('assets/band-bomba-AbC123.js', 'export default "<svg/>"')
+    expect(checkDist(dist).some((p) => p.includes('band pattern in the build: /assets/band-bomba-AbC123.js'))).toBe(true)
+    expect(checkDist(dist, { allowBands: true }).some((p) => p.includes('band pattern'))).toBe(false)
+  })
+  it('a clean build has none', () => {
+    expect(findBands(dist)).toEqual([])
   })
 })
