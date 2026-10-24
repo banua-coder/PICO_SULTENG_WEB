@@ -108,7 +108,7 @@ const avoided = [
     <section aria-labelledby="lisensi">
       <h2 id="lisensi">Data use and licence</h2>
       <p>PICO did not create the original data. m.andrafarm.com allows its information to be copied and pasted as long as the main source is credited, and it names no licence. PICO grants no licence for this data. If you use it, please credit PICO Sulteng, m.andrafarm.com and the original source (the Ministry of Health).</p>
-      <p>The code of this site is open on <a :href="REPO_URL" rel="noopener">GitHub</a>. <ReviewTodo id="metodologi-kode" note="owner decision: the repository has no LICENSE file. Options: MIT (the spec says MIT), Apache-2.0 (adds a patent grant), AGPL-3.0 (copyleft), or no licence (all rights reserved, so 'open' would then mean readable only). Add the file and change this line to match" /></p>
+      <p>The code of this site is open on <a :href="REPO_URL" rel="noopener">GitHub</a> under the MIT licence. The licence covers the code only. The PICO logo, the illustrations, the weave patterns and the data are not automatically part of it.</p>
       <p>Map data: the old boundary files of the PICO project, in the repository since 23 May 2020. Their origin and licence are not recorded. <ReviewTodo id="metodologi-peta" note="origin and licence of sulteng.json and indonesia.json are not recorded anywhere (git history from 2020-05-23, Flutter repo, PROVENANCE.md); the owner must name the author or replace them with BPS boundaries or another source whose terms are known" /></p>
     </section>
 

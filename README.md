@@ -82,3 +82,7 @@ Wording that nobody has reviewed yet (health copy, the 119 line, licence text, t
 `pnpm check:dist` fails when the built site has any marker. A branch build sets `PICO_ALLOW_TODO=1` (CI does) and lists them;
 a release build must not set it, so the site cannot ship with a marker. The register of markers, who owns each and what closes it,
 is in `PICO/specs/web/README.md` ("Review markers").
+
+## Licence
+
+The code is released under the [MIT licence](LICENSE). The licence covers the code only: the PICO logo, the illustrations, the weave patterns and the data are not automatically part of it (see the Metodologi page).

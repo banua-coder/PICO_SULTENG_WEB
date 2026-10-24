@@ -52,6 +52,6 @@ describe('MetodologiView', () => {
     expect(t).toContain('have not been reviewed by Dinas Kebudayaan')
     expect(t).toContain('m.andrafarm.com')
     expect(t.toLowerCase()).not.toMatch(/\b(users|visitors|downloads per)\b/)
-    expect(wrapper.findAll('[data-todo]').map((e) => e.attributes('data-todo')).sort()).toEqual(['metodologi-budaya', 'metodologi-kode', 'metodologi-peta'])
+    expect(wrapper.findAll('[data-todo]').map((e) => e.attributes('data-todo')).sort()).toEqual(['metodologi-budaya', 'metodologi-peta'])
   })
 })
