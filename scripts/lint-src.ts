@@ -19,7 +19,8 @@ export function findRawColours(file: string, text: string): string[] {
   )
 }
 
-const SKIP_DIR = /(^|\/)(assets\/brand|node_modules)(\/|$)|styles\/palette(-[a-z]+)?\.css$/
+// components/lottie holds the brand v2 dark colour slots as numbers and hex for the animation JSON (they mirror --pico-ill-* of the brand repo)
+const SKIP_DIR = /(^|\/)(assets\/brand|node_modules|components\/lottie)(\/|$)|styles\/palette(-[a-z]+)?\.css$/
 const CHECKED = /\.(vue|ts|css)$/
 const SKIP_FILE = /\.test\.ts$/
 
