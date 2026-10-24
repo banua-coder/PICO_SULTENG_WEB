@@ -1,6 +1,17 @@
 # Deploy
 
-The site is a prerendered static build in a small nginx image, behind the shared Traefik on the VPS (ADR-0104). A tag `vX.Y.Z` runs `.github/workflows/release.yml`: build, smoke test, push to GHCR, deploy over SSH, health gate, rollback if the gate fails.
+The site is a prerendered static build in a small nginx image, behind the shared Traefik on the VPS (ADR-0104). A tag `vX.Y.Z` runs `.github/workflows/release.yml`: validate the tag, build the image once, smoke test that image (curl and a browser CSP check), push that same image to GHCR, deploy over SSH, health gate on the baked version, rollback if the deploy or the gate fails.
+
+## Invariants (the workflow enforces each of them)
+
+- **A manual run never pushes and never deploys**, on any ref (a branch or a tag). Publishing and deploying need `github.event_name == 'push'` on a `v*` tag. `allow_todo` is refused on a tag ref.
+- **Only a clean tag name is accepted**: `^v[0-9]+\.[0-9]+\.[0-9]+$`, checked in the build job and again in the deploy job. The name never goes into a command line: the remote scripts get `VERSION` and `DEPLOY_PATH` as shell-quoted assignments in front of the script on stdin (`deploy/remote-deploy.sh`, `deploy/remote-rollback.sh`).
+- **Only commits on `master` release.** The build job fails when the tagged commit is not an ancestor of `origin/master`. Add required reviewers to the `production` environment as well (Settings, Environments) so a person approves each deploy; restrict who may create `v*` tags with a tag ruleset.
+- **The image that was tested is the image that is pushed.** It is built once with `load: true`, smoke tested, then tagged and pushed (`docker push`), not rebuilt from cache.
+- **The gate asks which image answers.** The image serves `/version.txt` (the version baked at build time, `no-store`); the gate compares it with the tag, then checks `/healthz` and `/data`.
+- **The host key is pinned** (secret `SSH_KNOWN_HOSTS`, `StrictHostKeyChecking=yes`, `IdentitiesOnly=yes`), nothing is scanned at deploy time.
+- **Least permissions**: `contents: read` for every workflow and job; `packages: write` only on the build job of the release.
+- **Third-party actions are pinned by commit SHA** (version in a comment). pnpm is pinned by `packageManager` in `package.json` (`pnpm/action-setup` reads it).
 
 ## Files
 
@@ -10,6 +21,8 @@ The site is a prerendered static build in a small nginx image, behind the shared
 | `deploy/nginx.conf` | Routing, cache classes, gzip, security headers, CSP, `/healthz`. Same rules as `scripts/serve-dist.ts` |
 | `deploy/docker-compose.yml` | Reference compose service and Traefik labels for the owner. Nothing here applies it |
 | `deploy/test-container.sh` | curl checks of every routing rule, header and gzip against a running container |
+| `e2e/container.spec.ts`, `playwright.container.config.ts` | Browser check against the container: no CSP violation, no console error on 12 pages |
+| `deploy/remote-deploy.sh`, `deploy/remote-rollback.sh` | The scripts that run on the VPS (fed over `ssh ... bash -s`) |
 | `public/theme-init.js` | The theme script. External file so the CSP needs no inline script |
 
 ## Build and run locally
@@ -18,6 +31,7 @@ The site is a prerendered static build in a small nginx image, behind the shared
 docker build -t pico-web:local --build-arg PICO_ALLOW_TODO=1 .   # needs network: the build calls pico-api
 docker run -d --name pico-web -p 8080:8080 pico-web:local
 deploy/test-container.sh http://127.0.0.1:8080
+CONTAINER_URL=http://127.0.0.1:8080 pnpm exec playwright test -c playwright.container.config.ts   # real CSP, console errors
 ```
 
 Build args: `VITE_API_BASE_URL` (default `https://pico-api.banuacoder.com/api/v1`), `VITE_SITE_URL` (default `https://pico.banuacoder.com`), `VITE_LIVE_MODE` (empty = archive mode), `PICO_ALLOW_TODO`.
@@ -44,6 +58,7 @@ Create these in the repo (or in the `production` environment). The values come f
 | Secret | Meaning |
 |---|---|
 | `DEPLOY_SSH_KEY` | Private key of a deploy user on the VPS |
+| `SSH_KNOWN_HOSTS` | The host key line(s) of the VPS, in `known_hosts` format. The owner makes it once from a trusted network: `ssh-keyscan -p <port> <host>` (compare the fingerprint with the one on the VPS: `ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub`). Without it the deploy job fails, by design |
 | `DEPLOY_HOST` | VPS host name or IP |
 | `DEPLOY_PORT` | SSH port |
 | `DEPLOY_USER` | SSH user that may run `docker compose` |
@@ -56,7 +71,7 @@ Create these in the repo (or in the `production` environment). The values come f
 
 1. `mkdir -p /opt/docker/apps/pico-web`, copy `deploy/docker-compose.yml` there, and put the deploy user's public key in `authorized_keys`.
 2. Make sure the Docker host can pull `ghcr.io/banua-coder/pico-web` (public package, or `docker login ghcr.io` with a read token).
-3. The workflow writes `.env` (`PICO_WEB_VERSION=x.y.z`) and keeps the previous line in `.env.previous`.
+3. The workflow writes `.env` (`PICO_WEB_VERSION=x.y.z`). It keeps the previous version in `.env.previous` only when the new version differs from the running one, so a re-run never overwrites the real previous version.
 4. Watchtower stays off for this container (`com.centurylinklabs.watchtower.enable=false`): CI deploys it and can see if it fails.
 
 ## Cutover from the placeholder (open item O-1, owner needed)
@@ -87,7 +102,7 @@ curl -sI https://pico.banuacoder.com/data/                                 # 301
 
 ## Rollback
 
-- Automatic: when the health gate fails, the workflow restores `.env.previous` and runs `docker compose up -d`.
+- Automatic: when `docker compose pull`/`up` fails, or the health gate fails (wrong version or no 200), the workflow restores `.env.previous` and runs `docker compose up -d`. The first ever deploy has no previous version: redeploy a known tag by hand.
 - Manual: on the VPS, `cd $DEPLOY_PATH && echo PICO_WEB_VERSION=<previous x.y.z> > .env && docker compose pull && docker compose up -d`. Tags in GHCR are never deleted.
 - Data is part of the image (snapshot at build time), so an old tag shows old data. This is an archive, so that is fine.
 

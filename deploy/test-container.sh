@@ -37,6 +37,8 @@ status /en/ 200
 echo "== healthz"
 status /healthz 200
 has /healthz 'cache-control: no-store'
+has /version.txt 'cache-control: no-store'
+[ -n "$(curl -s "$BASE/version.txt" | tr -d '\r\n')" ] && ok "/version.txt has a version" || bad "/version.txt is empty"
 echo "== methods"
 [ "$(code -X POST "$BASE/data")" = 405 ] && ok "POST /data -> 405" || bad "POST /data not 405"
 echo "== cache classes"

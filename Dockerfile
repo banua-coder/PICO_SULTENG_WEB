@@ -14,6 +14,8 @@ ARG VITE_API_BASE_URL=https://pico-api.banuacoder.com/api/v1
 ARG VITE_SITE_URL=https://pico.banuacoder.com
 ARG VITE_LIVE_MODE=
 ARG PICO_ALLOW_TODO=
+# The version baked into the image, served as /version.txt so the deploy health gate can tell which image answers.
+ARG APP_VERSION=dev
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL \
     VITE_SITE_URL=$VITE_SITE_URL \
     VITE_LIVE_MODE=$VITE_LIVE_MODE \
@@ -26,6 +28,7 @@ COPY . .
 RUN pnpm build
 # gates: 114 pages, titles, sitemap, links, review markers (fails the image build), size budget
 RUN PICO_ALLOW_TODO=$PICO_ALLOW_TODO pnpm check:dist && pnpm check:budget
+RUN printf '%s\n' "$APP_VERSION" > dist/version.txt
 
 FROM nginxinc/nginx-unprivileged:1.29-alpine-slim
 COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf

@@ -15,20 +15,26 @@ jobs:
   contract:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.4.0 (pnpm 10.26.0 from package.json packageManager)
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Fixture and wire-guard check against the live API
         id: fixtures
+        # `shell: bash` runs with pipefail, so a failing command is not hidden by `| tee`
+        shell: bash
         run: pnpm fixtures:check 2>&1 | tee contract.log
         continue-on-error: true
       - name: Full-series acceptance tests against the live API
         id: live
+        shell: bash
         run: LIVE_API=1 pnpm vitest run src/api/live.test.ts src/features/tabel/tabel.live.test.ts src/features/metodologi/facts.live.test.ts 2>&1 | tee -a contract.log
         continue-on-error: true
       - name: Open or update the api-drift issue
@@ -40,9 +46,9 @@ jobs:
           body="The nightly contract job found drift against the live API.\n\nRun: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}\n\n\`\`\`\n$(tail -c 6000 contract.log)\n\`\`\`"
           existing=$(gh issue list --label api-drift --state open --json number --jq '.[0].number')
           if [ -n "$existing" ]; then
-            gh issue comment "$existing" --body "$(printf "$body")"
+            gh issue comment "$existing" --body "$(printf '%b' "$body")"
           else
-            gh issue create --title "API drift detected by the nightly contract job" --label api-drift --body "$(printf "$body")"
+            gh issue create --title "API drift detected by the nightly contract job" --label api-drift --body "$(printf '%b' "$body")"
           fi
       - name: Fail the job when there was drift
         if: steps.fixtures.outcome == 'failure' || steps.live.outcome == 'failure'
