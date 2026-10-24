@@ -77,3 +77,47 @@ jobs:
             test-results
             playwright-report
           retention-days: 7
+
+  # The same container smoke test the Release workflow runs before it pushes an image (curl routing and header checks, then the browser
+  # check of the real CSP and the shadcn popups). Without it a change to the controls passes PR checks and only fails at release time.
+  container:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.4.0 (pnpm 10.26.0 from package.json packageManager)
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+      - name: Build image
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6 (6.19.2 at the time)
+        with:
+          context: .
+          load: true
+          tags: pico-web:ci
+          build-args: |
+            VITE_API_BASE_URL=https://pico-api.banuacoder.com/api/v1
+            VITE_SITE_URL=https://pico.banuacoder.com
+            APP_VERSION=ci
+            PICO_ALLOW_TODO=1
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Smoke test (curl)
+        run: |
+          docker run -d --name pico-web -p 8080:8080 pico-web:ci
+          for _ in $(seq 1 20); do curl -fsS http://127.0.0.1:8080/healthz && break; sleep 1; done
+          deploy/test-container.sh http://127.0.0.1:8080
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Smoke test (browser, CSP violations and console errors against the container)
+        env:
+          CONTAINER_URL: http://127.0.0.1:8080
+        run: pnpm exec playwright test -c playwright.container.config.ts
+      - name: Container log
+        if: failure()
+        run: docker logs pico-web | tail -50

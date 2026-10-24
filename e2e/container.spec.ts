@@ -35,8 +35,15 @@ test('the Select, the calendar popover, the nav menu and the phone sheet open un
   })
   page.on('console', (m) => ['error', 'warning'].includes(m.type()) && !/Failed to load resource/.test(m.text()) && problems.push(`${m.type()}: ${m.text().slice(0, 200)}`))
   await visit(page, '/data')
-  await page.getByRole('combobox', { name: 'Wilayah' }).click()
-  await expect(page.getByRole('option', { name: 'Kota Palu', exact: true })).toBeVisible()
+  // the level switch (Nasional, Provinsi, Kabupaten/Kota) and the area Select of the chosen level
+  await expect(page.getByRole('group', { name: 'Tingkat' })).toBeVisible()
+  await page.getByRole('combobox', { name: 'Pilih provinsi (34)' }).click()
+  await expect(page.getByRole('option', { name: 'Bali', exact: true })).toBeVisible()
+  await page.keyboard.press('Escape')
+  await page.getByRole('group', { name: 'Tingkat' }).locator('[data-slot="toggle-group-item"]', { hasText: /^Kabupaten\/Kota$/ }).click()
+  await expect(page).toHaveURL(/\/data\/kabupaten\/kota-palu/)
+  await page.getByRole('combobox', { name: /Pilih kabupaten/ }).click()
+  await expect(page.getByRole('option', { name: 'Poso', exact: true })).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(page.getByTestId('range-trigger')).toHaveAttribute('aria-haspopup', 'dialog') // the lazy calendar chunk has hydrated
   await page.getByTestId('range-trigger').click()

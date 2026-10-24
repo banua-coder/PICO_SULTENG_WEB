@@ -3,7 +3,7 @@
  *  - 116 prerendered pages + 404.html, each with a unique <title>, a canonical and hreflang links, no inline state script
  *  - sitemap.xml lists the 116 URLs and each exists in dist
  *  - every internal link in every page points at a file that exists
- *  - the kabupaten snapshot has 13 rows
+ *  - the kabupaten snapshot has 13 rows, last-real.json has 34 provinces and 13 kabupaten
  * Exits 1 with the list of problems.
  */
 import { existsSync, readdirSync } from 'node:fs'
@@ -68,6 +68,14 @@ export function checkDist(dist: string, { kit = false, allowTodo = false, allowB
     const rows = JSON.parse(read(snap)) as { latest: { date: string } }[]
     if (rows.length !== 13) problems.push(`kabupaten snapshot has ${rows.length} rows, expected 13`)
   } else problems.push('missing data/kabupaten-latest.json')
+  // the map and the cards say each area's last real day: public/data/last-real.json (34 provinces, 13 kabupaten), built by snapshot-lastreal.ts
+  const lr = join(dist, 'data/last-real.json')
+  if (existsSync(lr)) {
+    const d = JSON.parse(read(lr)) as { provinsi?: Record<string, string>; kabupaten?: Record<string, string> }
+    const np = Object.keys(d.provinsi ?? {}).length
+    const nk = Object.keys(d.kabupaten ?? {}).length
+    if (np !== 34 || nk !== 13) problems.push(`data/last-real.json has ${np} provinces and ${nk} kabupaten, expected 34 and 13`)
+  } else problems.push('missing data/last-real.json')
   // Unreviewed content (open item O-5): a visible TODO marker in a page. Branch builds may carry them, releases may not.
   if (!allowTodo) for (const [id, file] of findTodos(dist)) problems.push(`unreviewed TODO "${id}" in ${file} (PICO_ALLOW_TODO=1 lets a branch build pass, a release must not)`)
   // The 14 band strips are interpretations that wait for the cultural review (pico-jlc.8): they must not be fetchable from a normal build.

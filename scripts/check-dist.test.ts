@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { beforeEach, describe, expect, it } from 'vitest'
@@ -20,6 +20,7 @@ function goodSite() {
   put('404.html', page('Not found'))
   put('sitemap.xml', sitemapXml('https://x.test'))
   put('data/kabupaten-latest.json', JSON.stringify(Array.from({ length: 13 }, () => ({ latest: { date: '2024-01-14' } }))))
+  put('data/last-real.json', JSON.stringify({ provinsi: Object.fromEntries(Array.from({ length: 34 }, (_, i) => [String(i), '2023-12-09'])), kabupaten: Object.fromEntries(Array.from({ length: 13 }, (_, i) => [String(i), '2023-12-09'])) }))
 }
 
 beforeEach(() => {
@@ -69,6 +70,13 @@ describe('checkDist', () => {
     const p = checkDist(dist)
     expect(p).toContain('inline state script: /metodologi')
     expect(p).toContain('kabupaten snapshot has 0 rows, expected 13')
+  })
+
+  it('last-real.json must exist and hold 34 provinces and 13 kabupaten', () => {
+    put('data/last-real.json', JSON.stringify({ provinsi: { '72': '2023-12-09' }, kabupaten: {} }))
+    expect(checkDist(dist)).toContain('data/last-real.json has 1 provinces and 0 kabupaten, expected 34 and 13')
+    rmSync(join(dist, 'data/last-real.json'))
+    expect(checkDist(dist)).toContain('missing data/last-real.json')
   })
 
   it('an unreviewed TODO marker fails the check, unless the build allows TODOs', () => {
