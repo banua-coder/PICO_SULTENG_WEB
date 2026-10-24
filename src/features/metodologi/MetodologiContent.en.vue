@@ -44,7 +44,7 @@ const avoided = [
       <h2 id="sumber">Data sources</h2>
       <p>A program (a <i>scraper</i>) reads cumulative totals from a third-party site. Daily values are the difference between two consecutive days. The data is kept in a database, and an <a :href="API_BASE" rel="noopener">open API</a> serves it to this site.</p>
       <p>Coverage: Indonesia and 34 provinces from {{ d(FACTS.recordFirst) }} to {{ d(FACTS.recordLast) }}, and 13 regencies and cities of Central Sulawesi.</p>
-      <p>The national and provincial figures come from a third-party site. <ReviewTodo id="metodologi-sumber" note="owner to name the upstream source of the national and province figures (O-11)" /></p>
+      <p>The third-party site is <a href="https://m.andrafarm.com/" rel="noopener">m.andrafarm.com</a> (Andra Farm), its pages that list cases by province and by city. The site says its figures come from kemkes.go.id (pusatkrisis.kemkes.go.id), covid19.go.id and BNPB. That is the site's own statement, not a check made by PICO. The pages were read on 24 October 2026.</p>
       <p>Because the data is collected automatically from another source, PICO does not guarantee that it is exact. If it differs from an official source, the official source is right.</p>
       <p>Updates stopped on {{ d(FACTS.recordLast) }}. This site is an archive.</p>
     </section>
@@ -107,9 +107,9 @@ const avoided = [
 
     <section aria-labelledby="lisensi">
       <h2 id="lisensi">Data use and licence</h2>
-      <p>PICO did not create the original data, so PICO names no licence for it. If you use this data, please credit PICO Sulteng and the original source. <ReviewTodo id="metodologi-lisensi" note="owner to confirm the data-terms wording (O-9, decided: credit only)" /></p>
-      <p>The code of this site is open on <a :href="REPO_URL" rel="noopener">GitHub</a>. <ReviewTodo id="metodologi-kode" note="the repository has no LICENSE file; the owner must choose the code licence (the spec says MIT) and add the file" /></p>
-      <p>Map data: PICO (data peta lama). <ReviewTodo id="metodologi-peta" note="origin and licence of the map data are unknown (O-6); the credit is the default" /></p>
+      <p>PICO did not create the original data. m.andrafarm.com allows its information to be copied and pasted as long as the main source is credited, and it names no licence. PICO grants no licence for this data. If you use it, please credit PICO Sulteng, m.andrafarm.com and the original source (the Ministry of Health).</p>
+      <p>The code of this site is open on <a :href="REPO_URL" rel="noopener">GitHub</a>. <ReviewTodo id="metodologi-kode" note="owner decision: the repository has no LICENSE file. Options: MIT (the spec says MIT), Apache-2.0 (adds a patent grant), AGPL-3.0 (copyleft), or no licence (all rights reserved, so 'open' would then mean readable only). Add the file and change this line to match" /></p>
+      <p>Map data: the old boundary files of the PICO project, in the repository since 23 May 2020. Their origin and licence are not recorded. <ReviewTodo id="metodologi-peta" note="origin and licence of sulteng.json and indonesia.json are not recorded anywhere (git history from 2020-05-23, Flutter repo, PROVENANCE.md); the owner must name the author or replace them with BPS boundaries or another source whose terms are known" /></p>
     </section>
 
     <section aria-labelledby="kredit">
@@ -131,7 +131,7 @@ const avoided = [
       <ul class="list-disc"><li v-for="[href, label] in sources" :key="href"><a :href="href" rel="noopener">{{ label }}</a></li></ul>
       <p>Sources read to decide what not to copy:</p>
       <ul class="list-disc"><li v-for="[href, label] in avoided" :key="href"><a :href="href" rel="noopener">{{ label }}</a></li></ul>
-      <p>A cultural review by the responsible bodies is not finished yet. <ReviewTodo id="metodologi-budaya" note="cultural review (bead pico-jlc.8) by Dinas Kebudayaan Sulteng or Dekranasda is pending; the owner decides what this line says after it closes" /></p>
+      <p>These motifs have not been reviewed by Dinas Kebudayaan Sulawesi Tengah or Dekranasda. The artwork is drawn from written descriptions, not from photographs of real cloth. <ReviewTodo id="metodologi-budaya" note="cultural review (bead pico-jlc.8, O-12: launch waits for it) is still open; when it closes, the owner replaces this line with its outcome. Wording follows brand/patterns/RESEARCH.md" /></p>
     </section>
   </ProseLayout>
 </template>

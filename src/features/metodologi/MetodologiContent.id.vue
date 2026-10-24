@@ -44,7 +44,7 @@ const avoided = [
       <h2 id="sumber">Sumber data</h2>
       <p>Sebuah program (<i>scraper</i>) membaca angka kumulatif dari situs pihak ketiga. Nilai harian dihitung sebagai selisih dua hari berturut-turut. Data disimpan dalam basis data, dan sebuah <a :href="API_BASE" rel="noopener">API terbuka</a> melayaninya ke situs ini.</p>
       <p>Cakupan: Indonesia dan 34 provinsi dari {{ d(FACTS.recordFirst) }} sampai {{ d(FACTS.recordLast) }}, serta 13 kabupaten/kota di Sulawesi Tengah.</p>
-      <p>Angka nasional dan provinsi berasal dari sebuah situs pihak ketiga. <ReviewTodo id="metodologi-sumber" note="owner to name the upstream source of the national and province figures (O-11)" /></p>
+      <p>Situs pihak ketiga itu adalah <a href="https://m.andrafarm.com/" rel="noopener">m.andrafarm.com</a> (Andra Farm), halaman daftar kasus per provinsi dan per kota. Situs itu menyatakan angkanya berasal dari kemkes.go.id (pusatkrisis.kemkes.go.id), covid19.go.id dan BNPB. Itu pernyataan situs tersebut, bukan hasil pemeriksaan PICO. Halaman-halaman itu dibaca pada 24 Oktober 2026.</p>
       <p>Karena data diambil otomatis dari sumber lain, PICO tidak menjamin ketepatannya. Bila ada selisih dengan sumber resmi, sumber resminya yang benar.</p>
       <p>Pembaruan data berhenti pada {{ d(FACTS.recordLast) }}. Situs ini adalah arsip.</p>
     </section>
@@ -107,9 +107,9 @@ const avoided = [
 
     <section aria-labelledby="lisensi">
       <h2 id="lisensi">Penggunaan data dan lisensi</h2>
-      <p>Data asalnya bukan buatan PICO, jadi PICO tidak menyebut lisensi untuknya. Bila Anda memakai data ini, mohon cantumkan PICO Sulteng dan sumber aslinya. <ReviewTodo id="metodologi-lisensi" note="owner to confirm the data-terms wording (O-9, decided: credit only)" /></p>
-      <p>Kode situs ini terbuka di <a :href="REPO_URL" rel="noopener">GitHub</a>. <ReviewTodo id="metodologi-kode" note="the repository has no LICENSE file; the owner must choose the code licence (the spec says MIT) and add the file" /></p>
-      <p>Data peta: PICO (data peta lama). <ReviewTodo id="metodologi-peta" note="origin and licence of the map data are unknown (O-6); the credit is the default" /></p>
+      <p>Data asalnya bukan buatan PICO. m.andrafarm.com mengizinkan salin-tempel informasinya asal sumber utamanya dicantumkan, dan tidak menyebut lisensi. PICO tidak memberi lisensi atas data ini. Bila Anda memakainya, mohon cantumkan PICO Sulteng, m.andrafarm.com, dan sumber aslinya (Kementerian Kesehatan).</p>
+      <p>Kode situs ini terbuka di <a :href="REPO_URL" rel="noopener">GitHub</a>. <ReviewTodo id="metodologi-kode" note="owner decision: the repository has no LICENSE file. Options: MIT (the spec says MIT), Apache-2.0 (adds a patent grant), AGPL-3.0 (copyleft), or no licence (all rights reserved, so 'open' would then mean readable only). Add the file and change this line to match" /></p>
+      <p>Data peta: berkas batas wilayah lama proyek PICO, ada di repositori sejak 23 Mei 2020. Asal dan lisensinya tidak tercatat. <ReviewTodo id="metodologi-peta" note="origin and licence of sulteng.json and indonesia.json are not recorded anywhere (git history from 2020-05-23, Flutter repo, PROVENANCE.md); the owner must name the author or replace them with BPS boundaries or another source whose terms are known" /></p>
     </section>
 
     <section aria-labelledby="kredit">
@@ -131,7 +131,7 @@ const avoided = [
       <ul class="list-disc"><li v-for="[href, label] in sources" :key="href"><a :href="href" rel="noopener">{{ label }}</a></li></ul>
       <p>Sumber yang dibaca untuk memutuskan apa yang tidak ditiru:</p>
       <ul class="list-disc"><li v-for="[href, label] in avoided" :key="href"><a :href="href" rel="noopener">{{ label }}</a></li></ul>
-      <p>Tinjauan budaya oleh pihak yang berwenang belum selesai. <ReviewTodo id="metodologi-budaya" note="cultural review (bead pico-jlc.8) by Dinas Kebudayaan Sulteng or Dekranasda is pending; the owner decides what this line says after it closes" /></p>
+      <p>Motif ini belum ditinjau oleh Dinas Kebudayaan Sulawesi Tengah atau Dekranasda. Gambarnya disusun dari deskripsi tertulis, bukan dari foto kain asli. <ReviewTodo id="metodologi-budaya" note="cultural review (bead pico-jlc.8, O-12: launch waits for it) is still open; when it closes, the owner replaces this line with its outcome. Wording follows brand/patterns/RESEARCH.md" /></p>
     </section>
   </ProseLayout>
 </template>
