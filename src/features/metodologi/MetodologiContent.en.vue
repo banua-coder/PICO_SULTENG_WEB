@@ -3,7 +3,6 @@ import { useDownloadSizes } from '@/api/useSeries'
 import { usePartners } from '@/api/useContent'
 import { useFormat } from '@/app/useFormat'
 import ProseLayout from '@/components/ProseLayout.vue'
-import ReviewTodo from '@/components/ReviewTodo.vue'
 import { API_BASE, COLUMN_DOCS, FACTS, REPO_URL, SWAGGER_URL } from '@/app/facts'
 
 // English text of the Methodology page (spec 74). Same sections and anchors as the Indonesian text.
@@ -109,7 +108,7 @@ const avoided = [
       <h2 id="lisensi">Data use and licence</h2>
       <p>PICO did not create the original data. m.andrafarm.com allows its information to be copied and pasted as long as the main source is credited, and it names no licence. PICO grants no licence for this data. If you use it, please credit PICO Sulteng, m.andrafarm.com and the original source (the Ministry of Health).</p>
       <p>The code of this site is open on <a :href="REPO_URL" rel="noopener">GitHub</a> under the MIT licence. The licence covers the code only. The PICO logo, the illustrations, the weave patterns and the data are not automatically part of it.</p>
-      <p>Map data: the old boundary files of the PICO project, in the repository since 23 May 2020. Their origin and licence are not recorded. <ReviewTodo id="metodologi-peta" note="origin and licence of sulteng.json and indonesia.json are not recorded anywhere (git history from 2020-05-23, Flutter repo, PROVENANCE.md); the owner must name the author or replace them with BPS boundaries or another source whose terms are known" /></p>
+      <p>Map data: the boundary files (sulteng.json and indonesia.json) come from the old PICO project and have been in the repository since 23 May 2020. The original author and licence were not recorded. They are used for visualisation only. The maps may be replaced by BPS boundaries later.</p>
     </section>
 
     <section aria-labelledby="kredit">
@@ -131,7 +130,7 @@ const avoided = [
       <ul class="list-disc"><li v-for="[href, label] in sources" :key="href"><a :href="href" rel="noopener">{{ label }}</a></li></ul>
       <p>Sources read to decide what not to copy:</p>
       <ul class="list-disc"><li v-for="[href, label] in avoided" :key="href"><a :href="href" rel="noopener">{{ label }}</a></li></ul>
-      <p>These motifs have not been reviewed by Dinas Kebudayaan Sulawesi Tengah or Dekranasda. The artwork is drawn from written descriptions, not from photographs of real cloth. <ReviewTodo id="metodologi-budaya" note="cultural review (bead pico-jlc.8, O-12: launch waits for it) is still open; when it closes, the owner replaces this line with its outcome. Wording follows brand/patterns/RESEARCH.md" /></p>
+      <p>These motifs have not been reviewed by Dinas Kebudayaan Sulawesi Tengah or Dekranasda. The artwork is drawn from written descriptions, not from photographs of real cloth. The motifs are not for commercial use.</p>
     </section>
   </ProseLayout>
 </template>

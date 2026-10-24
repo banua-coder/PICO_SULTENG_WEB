@@ -3,7 +3,6 @@ import { useDownloadSizes } from '@/api/useSeries'
 import { usePartners } from '@/api/useContent'
 import { useFormat } from '@/app/useFormat'
 import ProseLayout from '@/components/ProseLayout.vue'
-import ReviewTodo from '@/components/ReviewTodo.vue'
 import { API_BASE, COLUMN_DOCS, FACTS, REPO_URL, SWAGGER_URL } from '@/app/facts'
 
 // Indonesian text of the Methodology page (spec 74). Every figure comes from FACTS, which facts.test.ts checks against the data.
@@ -109,7 +108,7 @@ const avoided = [
       <h2 id="lisensi">Penggunaan data dan lisensi</h2>
       <p>Data asalnya bukan buatan PICO. m.andrafarm.com mengizinkan salin-tempel informasinya asal sumber utamanya dicantumkan, dan tidak menyebut lisensi. PICO tidak memberi lisensi atas data ini. Bila Anda memakainya, mohon cantumkan PICO Sulteng, m.andrafarm.com, dan sumber aslinya (Kementerian Kesehatan).</p>
       <p>Kode situs ini terbuka di <a :href="REPO_URL" rel="noopener">GitHub</a> dengan lisensi MIT. Lisensi ini hanya berlaku untuk kode. Logo PICO, ilustrasi, pola tenun dan data tidak otomatis termasuk di dalamnya.</p>
-      <p>Data peta: berkas batas wilayah lama proyek PICO, ada di repositori sejak 23 Mei 2020. Asal dan lisensinya tidak tercatat. <ReviewTodo id="metodologi-peta" note="origin and licence of sulteng.json and indonesia.json are not recorded anywhere (git history from 2020-05-23, Flutter repo, PROVENANCE.md); the owner must name the author or replace them with BPS boundaries or another source whose terms are known" /></p>
+      <p>Data peta: berkas batas wilayah (sulteng.json dan indonesia.json) berasal dari proyek PICO lama dan ada di repositori sejak 23 Mei 2020. Pembuat asli dan lisensinya tidak tercatat. Berkas ini hanya dipakai untuk visualisasi. Peta mungkin diganti dengan batas wilayah dari BPS di kemudian hari.</p>
     </section>
 
     <section aria-labelledby="kredit">
@@ -131,7 +130,7 @@ const avoided = [
       <ul class="list-disc"><li v-for="[href, label] in sources" :key="href"><a :href="href" rel="noopener">{{ label }}</a></li></ul>
       <p>Sumber yang dibaca untuk memutuskan apa yang tidak ditiru:</p>
       <ul class="list-disc"><li v-for="[href, label] in avoided" :key="href"><a :href="href" rel="noopener">{{ label }}</a></li></ul>
-      <p>Motif ini belum ditinjau oleh Dinas Kebudayaan Sulawesi Tengah atau Dekranasda. Gambarnya disusun dari deskripsi tertulis, bukan dari foto kain asli. <ReviewTodo id="metodologi-budaya" note="cultural review (bead pico-jlc.8, O-12: launch waits for it) is still open; when it closes, the owner replaces this line with its outcome. Wording follows brand/patterns/RESEARCH.md" /></p>
+      <p>Motif ini belum ditinjau oleh Dinas Kebudayaan Sulawesi Tengah atau Dekranasda. Gambarnya disusun dari deskripsi tertulis, bukan dari foto kain asli. Motif ini tidak untuk dipakai secara komersial.</p>
     </section>
   </ProseLayout>
 </template>

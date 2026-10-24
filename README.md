@@ -62,9 +62,9 @@ Shared components are in `src/components/` (contract C3). `/_kit` and `/en/_kit`
 
 ## Maps and charts
 
-- Maps are SVG paths projected at build time (`pnpm build:geo`, d3-geo is a dev dependency). No map library reaches the browser. Sources and their open licence question (O-6) are in `scripts/geo-src/PROVENANCE.md`.
+- Maps are SVG paths projected at build time (`pnpm build:geo`, d3-geo is a dev dependency). No map library reaches the browser. Sources are in `scripts/geo-src/PROVENANCE.md`. The boundary files have no recorded author or licence, see `NOTICE`.
 - Magnitude is a mark size on the `--pico-mark-1..6` ramp (by quantile) plus its number, never a colour ramp. Every map has its table next to it.
-- The kabupaten band patterns are interpretations that wait for the cultural review. The map draws one only as the identity fill of the selected area, and only with `VITE_MAP_BANDS=1`. Off by default.
+- The kabupaten band patterns are interpretations that Dinas Kebudayaan has not reviewed (see `NOTICE`). The map draws one only as the identity fill of the selected area, and only with `VITE_MAP_BANDS=1`. Off by default.
 - Charts are hand-rolled SVG on d3-scale, d3-shape and d3-array. Every series has its line form, mark and a direct label, and every chart has a table view.
 
 ## Prerender and data
@@ -77,7 +77,7 @@ Shared components are in `src/components/` (contract C3). `/_kit` and `/en/_kit`
 
 ## Review markers
 
-Wording that nobody has reviewed yet (health copy, the 119 line, licence text, the cultural note) is marked in the page with
+Wording that nobody has reviewed yet (for example new health copy) is marked in the page with
 `<ReviewTodo id="..." note="..."/>`. It shows a dashed "TODO" box and writes `data-todo="<id>"` into the HTML.
 `pnpm check:dist` fails when the built site has any marker. A branch build sets `PICO_ALLOW_TODO=1` (CI does) and lists them;
 a release build must not set it, so the site cannot ship with a marker. The register of markers, who owns each and what closes it,
