@@ -5,7 +5,7 @@ import { horizontalOverflow, visit, watchConsole, watchRequests } from './suppor
 test.describe('Metodologi', () => {
   test('the prerendered HTML holds the method, the credit, and the download sizes; hydrating makes no API request', async ({ page }) => {
     const html = await (await page.request.get('/metodologi')).text()
-    for (const s of ['EpiEstim', 'PICO (data peta lama)', 'Tobungku', 'positive_daily', '/unduh/provinsi.csv']) expect(html, s).toContain(s)
+    for (const s of ['EpiEstim', 'm.andrafarm.com', 'Tobungku', 'positive_daily', '/unduh/provinsi.csv']) expect(html, s).toContain(s)
     expect(html).toMatch(/unduh\/provinsi\.csv[\s\S]{0,120}MB\)/)
     const api = watchRequests(page)
     const log = watchConsole(page)

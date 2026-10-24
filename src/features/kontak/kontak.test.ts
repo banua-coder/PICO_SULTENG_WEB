@@ -37,13 +37,13 @@ describe('logic', () => {
 })
 
 describe('KontakView', () => {
-  it('shows the archive notice with the 119 TODO, an article per hospital with a captioned bed table', async () => {
+  it('shows the archive notice with the 119 line, an article per hospital with a captioned bed table', async () => {
     seed()
     const { wrapper } = await mountApp(KontakView, {}, '/kontak')
     await flush()
     expect(wrapper.find('h1').text()).toBe('Kontak')
     expect(wrapper.find('[data-testid="archive-notice"]').text()).toContain('hubungi 119')
-    expect(wrapper.find('[data-todo="kontak-119"]').exists()).toBe(true)
+    expect(wrapper.find('[data-todo="kontak-119"]').exists()).toBe(false)
     const cards = wrapper.findAll('article')
     expect(cards).toHaveLength(hospitals().length)
     expect(cards[0]!.find('h3').exists()).toBe(true)

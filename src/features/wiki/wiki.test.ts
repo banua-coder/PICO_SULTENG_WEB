@@ -16,7 +16,7 @@ describe('WikiView', () => {
       expect(wrapper.find('article').findAll('h3')).toHaveLength(0) // order h1, h2 only: no skipped level
     })
 
-    it(`${lang}: no photo or third-party image, brand tips are decorative with a caption, the dated note and review markers show`, async () => {
+    it(`${lang}: no photo or third-party image, brand tips are decorative with a caption, the dated note shows and no review marker is left`, async () => {
       const { wrapper } = await mountApp(WikiView, {}, path)
       await flush()
       expect(wrapper.findAll('img')).toHaveLength(0)
@@ -30,7 +30,7 @@ describe('WikiView', () => {
       const ids = [...wrapper.element.querySelectorAll('[id]')].map((e) => e.id)
       expect(new Set(ids).size).toBe(ids.length) // inline SVG ids are unique
       expect(wrapper.find('[data-testid="archive-notice"]').text()).toMatch(lang === 'id' ? /2020 sampai 2022/ : /2020 and 2022/)
-      expect(wrapper.findAll('[data-todo]').map((e) => e.attributes('data-todo')).sort()).toEqual(['wiki-review', 'wiki-satusehat', 'wiki-terms-source', 'wiki-vaccine'])
+      expect(wrapper.findAll('[data-todo]')).toHaveLength(0)
     })
   }
 
@@ -38,6 +38,6 @@ describe('WikiView', () => {
     const { wrapper } = await mountApp(WikiView, {}, '/wiki')
     await flush()
     const text = wrapper.text()
-    for (const gone of ['belum ada vaksin', '98%', 'Tiongkok', 'feses', 'protap']) expect(text, gone).not.toContain(gone)
+    for (const gone of ['belum ada vaksin', '98%', 'Tiongkok', 'feses', 'protap', 'Wuhan', 'ODP (Orang', 'tersedia dan dianjurkan']) expect(text, gone).not.toContain(gone)
   })
 })
