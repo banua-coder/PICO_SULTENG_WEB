@@ -59,7 +59,8 @@ describe('IsomanView', () => {
     expect(root.element.children[1]!.getAttribute('data-testid')).toBe('archive-notice')
     expect(wrapper.find('[data-testid="archive-notice"]').text()).toContain('Jangan mengirim uang')
     expect(wrapper.findAll('h2')[0]!.text()).toContain('Tanda bahaya')
-    expect(wrapper.findAll('[data-todo]').map((e) => e.attributes('data-todo')).sort()).toEqual(['isoman-danger-signs', 'isoman-review'])
+    expect(wrapper.findAll('[data-todo]')).toHaveLength(0)
+    expect(wrapper.text()).toContain('Hubungi 119')
   })
 
   it('the day filter narrows the doctors and says how many', async () => {
