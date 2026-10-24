@@ -207,11 +207,21 @@ describe('ProgressWeave', () => {
     expect(wr.find('[role="progressbar"]').attributes('aria-valuetext')).toContain('melebihi target')
   })
 
-  it('no target: says so instead of dividing by zero', async () => {
-    const wr = await prog({ value: 5, target: 0 })
-    expect(wr.find('[data-testid="progress-text"]').text()).toBe('Target tidak tersedia')
-    expect(wr.find('[data-fill]').exists()).toBe(false)
-    expect(wr.find('[role="progressbar"]').attributes('aria-valuenow')).toBeUndefined()
+  it('no target, or no value: "tidak tersedia", no bar at all (not 0 %, not an empty track)', async () => {
+    for (const props of [{ value: 5, target: 0 }, { value: null, target: 100 }, { value: null, target: 0 }]) {
+      const wr = await prog(props)
+      expect(wr.find('[data-testid="progress-text"]').text()).toBe('tidak tersedia')
+      expect(wr.find('[data-fill]').exists()).toBe(false)
+      expect(wr.find('[role="progressbar"]').exists()).toBe(false)
+      expect(wr.text()).not.toContain('0,0%')
+    }
+    expect((await prog({ value: null, target: 100 }, '/en/')).find('[data-testid="progress-text"]').text()).toBe('not available')
+  })
+
+  it('a real zero is 0 %, with a bar', async () => {
+    const wr = await prog({ value: 0, target: 100 })
+    expect(wr.find('[data-testid="progress-text"]').text()).toContain('0,0%')
+    expect(wr.find('[role="progressbar"]').attributes('aria-valuenow')).toBe('0')
   })
 
   it('English and the role weave follow the prop', async () => {

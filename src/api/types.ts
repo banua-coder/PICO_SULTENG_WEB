@@ -34,7 +34,7 @@ export type Series = { area: AreaRef; rows: DailyRow[]; first: IsoDate; last: Is
 export type LatestByArea = { area: AreaRef; latest: DailyRow }
 
 export type AgeKey = '0_14' | '15_19' | '20_24' | '25_49' | '50_54' | '55_plus'
-export type AgeBucket = { key: AgeKey; label: { id: string; en: string }; count: number }
+export type AgeBucket = { key: AgeKey; label: { id: string; en: string }; /** null when the source has no number for the group: never a 0 that reads as a count */ count: number | null }
 export type GenderSnapshot = {
   asOf: IsoDate | null // null until API ask A2
   positive: Record<'male' | 'female', { total: number; ages: AgeBucket[] }>

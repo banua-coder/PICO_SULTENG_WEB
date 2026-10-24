@@ -21,7 +21,7 @@ export function useGenderBars(snap: GenderSnapshot, kind: GenderKind, locale: 'i
 }
 
 /** The one largest value across both sexes' age bars, so the two charts share a scale and can be compared. */
-export const ageMax = (a: BarDatum[], b: BarDatum[]): number => Math.max(0, ...[...a, ...b].map((x) => x.value ?? 0))
+export const ageMax = (a: BarDatum[], b: BarDatum[]): number => Math.max(0, ...[...a, ...b].map((x) => x.value ?? 0)) // a missing number counts as nothing for the scale only
 
 /**
  * Positive and negative per reporting period for one test type. Each point sits on the first day of its period. The roles only pick

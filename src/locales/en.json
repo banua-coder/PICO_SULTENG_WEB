@@ -265,7 +265,6 @@
   "progress": {
     "of": "{value} of {target}",
     "over": "over target",
-    "na": "Target not available",
     "text": "{label}: {pct} percent, {of}"
   },
   "todo": {

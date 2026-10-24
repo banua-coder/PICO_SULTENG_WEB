@@ -26,6 +26,13 @@ describe('useGenderBars', () => {
     expect(useGenderBars(zero, 'pdp', 'id', L, pct).sex.map((x) => x.label)).toEqual(['Laki-laki', 'Perempuan'])
     expect(ageMax([], [])).toBe(0)
   })
+  it('a missing age number stays null in the bars (the chart then says "tidak tersedia")', () => {
+    const s2 = structuredClone(snap)
+    s2.positive.male.ages[1]!.count = null
+    const b = useGenderBars(s2, 'positive', 'id', L, pct)
+    expect(b.male[1]!.value).toBeNull()
+    expect(ageMax(b.male, b.female)).toBe(3924)
+  })
   it('never invents a date', () => expect(snap.asOf).toBeNull())
 })
 

@@ -265,7 +265,6 @@
   "progress": {
     "of": "{value} dari {target}",
     "over": "melebihi target",
-    "na": "Target tidak tersedia",
     "text": "{label}: {pct} persen, {of}"
   },
   "todo": {

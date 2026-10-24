@@ -10,7 +10,7 @@ const AGES: { key: AgeKey; label: { id: string; en: string } }[] = [
   { key: '50_54', label: { id: '50 sampai 54 tahun', en: '50 to 54 years' } },
   { key: '55_plus', label: { id: '55 tahun ke atas', en: '55 years and over' } },
 ]
-const buckets = (g: WireAgeGroups): AgeBucket[] => AGES.map((a) => ({ ...a, count: g[a.key] ?? 0 }))
+const buckets = (g: WireAgeGroups): AgeBucket[] => AGES.map((a) => ({ ...a, count: typeof g[a.key] === 'number' ? g[a.key]! : null }))
 
 /** The API row has no date (C1 Q4, `day` cannot be dated), so `asOf` is null until API ask A2. */
 export function genderSnapshot(w: WireGenderLatest): GenderSnapshot {
