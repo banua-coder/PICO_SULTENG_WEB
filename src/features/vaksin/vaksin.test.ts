@@ -3,7 +3,7 @@ import { cache } from '@/api/cache'
 import { ENDPOINTS } from '@/api/endpoints'
 import { vaccinationSeries, vaccineLocations } from '@/api/normalize/vaccination'
 import { fx } from '../../../test/fixtures/load'
-import { flush, mountApp } from '../../../test/support/mount'
+import { flush, mountApp, until } from '../../../test/support/mount'
 import VaksinView from './VaksinView.vue'
 
 beforeEach(() => {
@@ -27,7 +27,8 @@ const open = async (path = '/vaksin') => {
   seed()
   const out = await mountApp(VaksinView, {}, path)
   await flush()
-  await flush()
+  // the charts arrive through lazy chunks
+  await until(() => ['doses-over-time', 'coverage-groups'].every((id) => out.wrapper.find(`[data-testid="${id}"] figure`).exists()))
   return out
 }
 

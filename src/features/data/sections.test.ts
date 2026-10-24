@@ -8,7 +8,7 @@ import { KABUPATEN_SNAPSHOT_URL } from '@/api/useSeries'
 import { areaByCode, INDONESIA, SULTENG } from '@/app/areas'
 import snapshot from '../../../test/fixtures/kabupaten-latest.snapshot.json'
 import { fx, type WireNationalCase, type WireProvince, type WireProvinceCase, type WireRegencyCase } from '../../../test/fixtures/load'
-import { flush, mountApp } from '../../../test/support/mount'
+import { flush, mountApp, until } from '../../../test/support/mount'
 import DataView from './DataView.vue'
 import { mapDate, mapKind, selectedCode, useSubAreaItems } from './useSubAreaItems'
 
@@ -32,17 +32,20 @@ const seedAll = () =>
     '/national?all=true': nationalSeries(INDONESIA, fx<WireNationalCase[]>('national')),
     '/regencies/7271/cases': regencySeries({ level: 'kabupaten', code: '7271', slug: 'kota-palu', name: 'Kota Palu' }, fx<WireRegencyCase[]>('regency-7271-cases')),
   })
-const open = async (path: string) => {
+// `ready` is a selector that exists once the lazy chart chunk has loaded. Without one, only the synchronous parts are awaited.
+const open = async (path: string, ready?: string) => {
   seedAll()
   const out = await mountApp(DataView, {}, path)
   await flush()
-  await flush()
+  if (ready) await until(() => out.wrapper.find(ready).exists())
   return out
 }
+const CURVES = '[data-testid="curves"] figure'
+const RT_CHART = '[data-testid="rt-section"] figure'
 
 describe('CaseCurves (W15)', () => {
   it('daily view: a bar chart with the 7-day average over it and one crimson peak bar, plus recovered and deceased', async () => {
-    const { wrapper } = await open('/data/provinsi/sulawesi-tengah')
+    const { wrapper } = await open('/data/provinsi/sulawesi-tengah', CURVES)
     const figs = wrapper.find('[data-testid="curves"]').findAll('figure')
     expect(figs).toHaveLength(2)
     const bars = figs[0]!
@@ -54,20 +57,20 @@ describe('CaseCurves (W15)', () => {
   })
 
   it('English summary sentence', async () => {
-    const { wrapper } = await open('/en/data/provinsi/sulawesi-tengah')
+    const { wrapper } = await open('/en/data/provinsi/sulawesi-tengah', CURVES)
     expect(wrapper.find('[data-testid="curves"] svg[role="img"]').attributes('aria-label')).toMatch(/^Peak daily cases [\d,]+ on \d+ \w+ \d{4}\. Last value 0 on 14 January 2024\.$/)
   })
 
   it('cumulative view: four lines for a province, three for a kabupaten; the table lists the same days', async () => {
-    const p = await open('/data/provinsi/sulawesi-tengah?tampilan=kumulatif')
+    const p = await open('/data/provinsi/sulawesi-tengah?tampilan=kumulatif', CURVES)
     expect(p.wrapper.find('[data-testid="curves"]').findAll('[data-end-label]').map((e) => e.text())).toEqual(['Positif', 'Sembuh', 'Meninggal', 'Dirawat'])
     expect(p.wrapper.find('[data-testid="curves"] svg[role="img"]').attributes('aria-label')).toContain('Total kasus positif 63.614 pada 14 Januari 2024.')
-    const k = await open('/data/kabupaten/kota-palu?tampilan=kumulatif')
+    const k = await open('/data/kabupaten/kota-palu?tampilan=kumulatif', CURVES)
     expect(k.wrapper.find('[data-testid="curves"]').findAll('[data-end-label]').map((e) => e.text())).toEqual(['Positif', 'Sembuh', 'Meninggal'])
   })
 
   it('the radio switches the view, writes ?tampilan with replace and keeps the window', async () => {
-    const { wrapper, router } = await open('/data/provinsi/sulawesi-tengah?dari=2024-01-01')
+    const { wrapper, router } = await open('/data/provinsi/sulawesi-tengah?dari=2024-01-01', CURVES)
     await wrapper.find('input[value="kumulatif"]').setValue()
     await flush()
     expect(router.currentRoute.value.query).toEqual({ dari: '2024-01-01', tampilan: 'kumulatif' })
@@ -92,7 +95,7 @@ describe('RtSection (W16)', () => {
   })
 
   it('national, 2023-07-01 to 2024-01-14: last value on 9 July 2023, and the gap note covers the rest', async () => {
-    const { wrapper } = await open('/data/indonesia?dari=2023-07-01')
+    const { wrapper } = await open('/data/indonesia?dari=2023-07-01', RT_CHART)
     const s = wrapper.find('[data-testid="rt-section"]')
     expect(s.find('[data-testid="rt-last"]').text()).toMatch(/^Rt [\d,]+ \([\d,]+ sampai [\d,]+\) pada 9 Juli 2023$/)
     expect(s.find('[data-testid="rt-gaps"]').text()).toContain('10 Juli 2023')
@@ -110,7 +113,7 @@ describe('RtSection (W16)', () => {
   })
 
   it('a window with Rt draws the chart with a text label for the threshold at 1', async () => {
-    const { wrapper } = await open('/data/provinsi/sulawesi-tengah?dari=2023-06-01&sampai=2023-06-30')
+    const { wrapper } = await open('/data/provinsi/sulawesi-tengah?dari=2023-06-01&sampai=2023-06-30', RT_CHART)
     const s = wrapper.find('[data-testid="rt-section"]')
     expect(s.find('svg[role="img"]').exists()).toBe(true)
     expect(s.text()).toMatch(/\b1\b/)
@@ -123,11 +126,12 @@ describe('SubAreaMap (W17)', () => {
       '/provinces': provincesLatest(fx<WireProvince[]>('provinces')),
       [KABUPATEN_SNAPSHOT_URL]: snapshot,
     })
-  const openMap = async (path: string) => {
+  // the map chunk is lazy: wait for its first area unless the page has no map
+  const openMap = async (path: string, map = true) => {
     seedLatest()
     const out = await mountApp(DataView, {}, path)
     await flush()
-    await flush()
+    if (map) await until(() => out.wrapper.find('[data-testid="submap"] g[role="link"]').exists())
     return out
   }
 
@@ -172,7 +176,7 @@ describe('SubAreaMap (W17)', () => {
   it('the country gets the 34 provinces; another province gets no section and no empty box', async () => {
     const nat = await openMap('/data/indonesia')
     expect(nat.wrapper.find('[data-testid="submap"]').findAll('tbody tr')).toHaveLength(34)
-    const aceh = await openMap('/data/provinsi/aceh')
+    const aceh = await openMap('/data/provinsi/aceh', false)
     expect(aceh.wrapper.find('[data-testid="submap"]').exists()).toBe(false)
     expect(aceh.wrapper.find('#peta').exists()).toBe(false)
   })
@@ -184,11 +188,11 @@ describe('GenderAge and TestsByType (W18)', () => {
       '/stats/gender/latest': genderSnapshot(fx('gender-latest')),
       'tests+types': { periods: testPeriods(fx('tests')), types: testTypes(fx('test-types')) },
     })
-  const openStats = async (path: string) => {
+  const openStats = async (path: string, charts = true) => {
     seedStats()
     const out = await mountApp(DataView, {}, path)
     await flush()
-    await flush()
+    if (charts) await until(() => out.wrapper.find('[data-testid="gender"] figure').exists() && out.wrapper.find('[data-testid="tests"] figure').exists())
     return out
   }
 
@@ -199,7 +203,7 @@ describe('GenderAge and TestsByType (W18)', () => {
       expect(wrapper.find('[data-testid="tests"]').exists(), p).toBe(true)
     }
     for (const p of ['/data/provinsi/aceh', '/data/indonesia', '/data/kabupaten/kota-palu']) {
-      const { wrapper } = await openStats(p)
+      const { wrapper } = await openStats(p, false)
       expect(wrapper.find('[data-testid="gender"]').exists(), p).toBe(false)
       expect(wrapper.find('[data-testid="tests"]').exists(), p).toBe(false)
     }
