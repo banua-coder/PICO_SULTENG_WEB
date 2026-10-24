@@ -9,6 +9,17 @@ test.describe('Vaksin', () => {
     expect(html).toContain('data-testid="locations"')
   })
 
+  test('legacy order: the sites first, then the situation and progress, then Informasi Vaksinasi COVID-19 (FAQ)', async ({ page }) => {
+    await visit(page, '/vaksin')
+    const y = async (id: string) => (await page.getByTestId(id).boundingBox())!.y
+    expect(await y('locations')).toBeLessThan(await y('vaccine-cards'))
+    expect(await y('vaccine-cards')).toBeLessThan(await y('vaccine-progress'))
+    expect(await y('vaccine-progress')).toBeLessThan(await y('vaccine-info'))
+    const info = page.getByTestId('vaccine-info')
+    for (const q of ['Rangkuman', 'Apa itu vaksinasi?', 'Apakah vaksin itu obat?', 'Apa yang dimaksud dengan kekebalan kelompok (herd immunity)?', 'Apakah ada efek samping dari vaksinasi?']) await expect(info.getByRole('heading', { name: q })).toBeVisible()
+    await expect(info.getByRole('link', { name: 'kipi.covid19.go.id' })).toHaveAttribute('href', 'https://kipi.covid19.go.id')
+  })
+
   test('Sulawesi Tengah: 85,55 % and 53,63 % on 25 Maret 2022, no console noise', async ({ page }) => {
     const log = watchConsole(page)
     await visit(page, '/vaksin')

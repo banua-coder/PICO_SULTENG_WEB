@@ -266,7 +266,7 @@
       "noActiveKab": "Under-treatment counts are not available for kabupaten/kota: the source does not report them. Choose another measure.",
       "provinces": "Provinces of Indonesia",
       "kabupaten": "Kabupaten/kota of Sulawesi Tengah",
-      "caption": "Each area is shown as of its own last day of reports ({range}); the date of every area is in the table and the tooltip. The map does not follow the date range above.",
+      "caption": "Each area is shown as of its own last day of reports ({range}); the date of every area is in the table and the tooltip, and can differ from the dates on the cards because each card uses the last day of its own area. The map does not follow the date range above.",
       "captionOne": "The map shows data as of {date}. It does not follow the date range above."
     },
     "gender": {
@@ -527,6 +527,13 @@
     "description": "Where the PICO numbers come from, how daily values and the reproduction number (Rt) are computed, what is missing, how to download the data, and whose work this builds on."
   },
   "vaksin": {
+    "info": {
+      "title": "COVID-19 vaccination information",
+      "source": "Source",
+      "items": [{"q": "Summary", "a": "COVID-19 vaccination started on 13 January 2021. The programme runs in stages, in 2 waves, until March 2022. A vaccine lets the body recognise the COVID-19 virus, so that it is better protected when exposed. If vaccination is high and even, it supports herd immunity, which helps us bring the pandemic to an end."}, {"q": "What is vaccination?", "a": "Vaccination is the process in which a person becomes immune or protected against a disease, so that when exposed to it later they do not fall ill or only have a mild illness, usually through a vaccine."}, {"q": "Is a vaccine a medicine?", "a": "A vaccine is not a medicine. It prompts the body to build specific immunity so you avoid infection or severe illness. While there is no definitive cure for COVID-19, a safe and effective vaccine and the 3M habits (wearing a mask, washing hands with soap, keeping distance) are the protection we can use."}, {"q": "What is herd immunity?", "a": "Herd immunity is a situation where most people are protected against a disease, which has an indirect effect: vulnerable people who are not a vaccination target are protected too. It only happens with high and even vaccination coverage."}, {"q": "Are there side effects?", "a": "In general side effects vary, are usually mild and short, are not always there and depend on the body. Mild effects such as fever, muscle pain or a rash at the injection site are normal but should be watched. Because of the full development and testing of vaccines, severe side effects are detected first and can be evaluated further. The benefit of a vaccine is far greater than the risk of illness from infection when not vaccinated. If an adverse event after immunisation (KIPI) happens, there is a National Committee for KIPI and a committee in every region to monitor and respond."}],
+      "kipiQ": "Where can I find the latest on KIPI / the effects of the COVID-19 vaccine?",
+      "kipiA": "You can find the latest on KIPI / the effects of the COVID-19 vaccine here:"
+    },
     "title": "COVID-19 vaccination",
     "progress": {
       "title": "COVID-19 vaccination progress",

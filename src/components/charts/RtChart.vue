@@ -192,10 +192,13 @@ const stripe = 'var(--pico-rt)'
     <p v-if="!asTable && model.clipped.length" class="num mt-1 text-sm text-ink-muted" data-testid="rt-clipped">{{ t('chart.rtClippedList', { items: model.clipped.map((c) => `${rt(c.value)} (${fmt.date(c.date, 'short')})`).join(', ') }) }}</p>
     <p v-if="asTable && zoom.zoomed.value" class="mt-2 text-sm text-ink-muted" data-testid="table-zoom-note">{{ t('chart.tableZoomed') }}</p>
     <ChartTable v-if="asTable" :caption="a11y.title" :columns="tableCols" :dates="model.dates" :values="tablePoints" :digits="2" />
-    <Button type="button" variant="outline" size="sm" class="mt-3 text-primary-strong" :aria-pressed="asTable" @click="asTable = !asTable">
-      <component :is="asTable ? LineChart : Table2" aria-hidden="true" />{{ asTable ? t('chart.graph') : t('chart.table') }}
-    </Button>
-    <Button type="button" variant="outline" size="sm" class="ml-2 mt-3 text-primary-strong" :aria-pressed="clipped" data-testid="rt-scale" @click="clipped = !clipped">{{ t('chart.rtScaleClip') }}</Button>
+    <!-- one wrapping row: at 360 px the second button drops under the first at the same left edge -->
+    <div class="mt-3 flex flex-wrap gap-2">
+      <Button type="button" variant="outline" size="sm" class="text-primary-strong" :aria-pressed="asTable" @click="asTable = !asTable">
+        <component :is="asTable ? LineChart : Table2" aria-hidden="true" />{{ asTable ? t('chart.graph') : t('chart.table') }}
+      </Button>
+      <Button type="button" variant="outline" size="sm" class="text-primary-strong" :aria-pressed="clipped" data-testid="rt-scale" @click="clipped = !clipped">{{ t('chart.rtScaleClip') }}</Button>
+    </div>
     <ZoomControls v-if="!asTable" :zoom="zoom" :range="zoom.range.value" :hints="false" />
   </figure>
 </template>

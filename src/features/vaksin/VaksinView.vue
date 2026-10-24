@@ -7,6 +7,7 @@ import { usePageHead } from '@/app/head'
 import OptionToggle from '@/components/OptionToggle.vue'
 import StatusView from '@/components/StatusView.vue'
 import VaccineLocations from './components/VaccineLocations.vue'
+import VaccineInfo from './components/VaccineInfo.vue'
 import VaksinBody from './components/VaksinBody.vue'
 import { parseScope } from './useVaksin'
 import type { Scope } from './useVaksin'
@@ -34,12 +35,14 @@ function setScope(s: Scope) {
 <template>
   <div class="px-4 py-6">
     <h1 class="text-xl md:text-2xl">{{ t('vaksin.heading') }}</h1>
-    <OptionToggle class="mt-4" :model-value="scope" :options="SCOPES.map((x) => ({ value: x.key, label: t(x.label) }))" :label="t('vaksin.scope')" @update:model-value="setScope" />
-    <div class="mt-8"><VaksinBody :key="scope" :scope="scope" /></div>
-    <div class="mt-8">
+    <!-- legacy order: the sites (with the announcements) first, then the situation and the progress, then the information -->
+    <div class="mt-6">
       <VaccineLocations v-if="locations.data.value" :items="locations.data.value" />
       <StatusView v-else-if="locations.status.value === 'error'" kind="error" compact @retry="locations.refresh" />
       <div v-else class="min-h-[12rem]"><StatusView kind="loading" compact /></div>
     </div>
+    <OptionToggle class="mt-10" :model-value="scope" :options="SCOPES.map((x) => ({ value: x.key, label: t(x.label) }))" :label="t('vaksin.scope')" @update:model-value="setScope" />
+    <div class="mt-8"><VaksinBody :key="scope" :scope="scope" /></div>
+    <div class="mt-12"><VaccineInfo /></div>
   </div>
 </template>

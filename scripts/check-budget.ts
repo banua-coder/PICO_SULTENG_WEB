@@ -15,7 +15,9 @@ const KB = 1024
 // two lazy map chunks (Sulawesi Tengah paths 12.4 KB gzip + Indonesia paths 23.1 KB) so the map is in the HTML and paints with the page;
 // the data limit moves from 160 to 170 KB for that. Zoom code (chart chunks, 3.3 + 4.6 KB) stays lazy and off the budget. The home page limit
 // moves from 100 to 105 KB for the case card, the underline tabs, the legacy home blocks (hotline, social, risk CTA, protect card, info rows, ODP/PDP cards) and the footer logo grid; the vaccine card and the Lottie player (47 KB) are their own lazy chunks.
-export const LIMITS = { beranda: 105 * KB, data: 170 * KB, other: 125 * KB, css: 30 * KB, fonts: 70 * KB, geo: 40 * KB, html: 60 * KB }
+// fix/container-smoke: the CI runner measures about 1.2 KB more than a laptop build for the same code (different zlib), and the last features (Vaksin
+// information block, per-kabupaten dates on the home list, last-real file) used the headroom: Beranda 105 -> 108, Data 170 -> 173, other 125 -> 127 KB.
+export const LIMITS = { beranda: 108 * KB, data: 173 * KB, other: 127 * KB, css: 30 * KB, fonts: 70 * KB, geo: 40 * KB, html: 60 * KB }
 export type Limits = typeof LIMITS
 
 /** Library chunks that must never be in the initial JS of a page. Named by manualChunks in vite.config.ts. */
