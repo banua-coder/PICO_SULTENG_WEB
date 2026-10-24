@@ -93,7 +93,7 @@ test.describe('Infografis', () => {
     await expect(card).toContainText('Infografis nomor 60')
     await expect(card.locator('[data-placeholder="plate"]')).toBeVisible()
     const h1 = (await card.boundingBox())!.height
-    await page.waitForTimeout(300)
+    await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))) // let a couple of frames pass
     expect((await card.boundingBox())!.height).toBe(h1)
     expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0)
     expect(log).toEqual([])
@@ -123,7 +123,8 @@ test.describe('Infografis', () => {
     await visit(page, '/infografis')
     await expect(page.getByTestId('infografis-grid').locator('> li')).toHaveCount(24)
     await page.mouse.wheel(0, 20000)
-    await page.waitForTimeout(500)
+    await expect.poll(() => seen.size).toBeGreaterThan(0) // the lazy images in view have been asked for
+    await page.waitForLoadState('networkidle')
     expect(seen.size).toBeLessThanOrEqual(24)
     expect([...seen].every((u) => /id(3[7-9]|[4-6]\d)\//.test(u))).toBe(true) // ids 37 to 60 are the newest 24
     await page.getByRole('button', { name: 'Muat lagi' }).click()

@@ -34,8 +34,7 @@ test('PicoImage: three missing-image cases keep the box, CLS is 0', async ({ pag
   const settled = await cls() // whatever the page did while loading is not the images' doing
   await boxes.first().scrollIntoViewIfNeeded() // images are lazy: bring them into view so the 404 and blocked-host errors happen
   const before = await boxes.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().height))
-  await page.waitForTimeout(800)
-  await expect(page.locator('[data-placeholder]')).toHaveCount(3)
+  await expect(page.locator('[data-placeholder]')).toHaveCount(3) // every blocked or missing image has fallen back
   const after = await boxes.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().height))
   expect(after).toEqual(before)
   expect(new Set(after).size).toBe(1) // all four boxes have the same size
