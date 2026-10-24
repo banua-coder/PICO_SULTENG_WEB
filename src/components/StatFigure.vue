@@ -36,7 +36,7 @@ const RULE: Record<DataState, string> = { positive: 'border-t-positive', recover
         <StateMark :state="state" :size="3" />
         <span>{{ label }}</span>
       </p>
-      <p class="num m-0 mt-1 font-display font-heading text-ink" :class="emphasis ? 'text-3xl' : 'text-2xl'">
+      <p class="num m-0 mt-1 font-display font-heading text-ink" :class="emphasis ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'">
         {{ fmt.nullable(value, (n: number) => fmt.num(n)) }}
       </p>
       <p v-if="deltaText" class="num m-0 mt-1 flex items-center gap-1 text-sm text-ink-muted">

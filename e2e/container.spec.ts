@@ -3,7 +3,7 @@ import { visit } from './support/visit'
 
 // Against the real nginx container, with its real Content-Security-Policy header: every page loads, hydrates, and the browser
 // reports no console error, no CSP violation (securitypolicyviolation) and no blocked script, style, font or connection.
-const PAGES = ['/', '/en/', '/data', '/data/provinsi/sulawesi-tengah', '/data/kabupaten/poso', '/tabel-data', '/vaksin', '/infografis', '/kontak', '/wiki', '/isoman', '/metodologi']
+const PAGES = ['/', '/en/', '/mulai', '/en/mulai', '/data', '/data/provinsi/sulawesi-tengah', '/data/kabupaten/poso', '/tabel-data', '/vaksin', '/infografis', '/kontak', '/wiki', '/isoman', '/metodologi']
 
 test('the CSP header is the real one', async ({ page }) => {
   const res = await page.request.get('/data')
@@ -26,3 +26,28 @@ for (const path of PAGES) {
     expect(problems).toEqual([])
   })
 }
+
+// The shadcn-vue controls (reka-ui) render their popups at run time: they must work under the real CSP (no inline <style> element, no eval).
+test('the Select, the calendar popover, the nav menu and the phone sheet open under the CSP without a violation', async ({ page }) => {
+  const problems: string[] = []
+  await page.addInitScript(() => {
+    document.addEventListener('securitypolicyviolation', (e) => ((window as unknown as { __csp: string[] }).__csp ??= []).push(`${e.violatedDirective} ${e.blockedURI}`))
+  })
+  page.on('console', (m) => ['error', 'warning'].includes(m.type()) && !/Failed to load resource/.test(m.text()) && problems.push(`${m.type()}: ${m.text().slice(0, 200)}`))
+  await visit(page, '/data')
+  await page.getByRole('combobox', { name: 'Wilayah' }).click()
+  await expect(page.getByRole('option', { name: 'Kota Palu', exact: true })).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(page.getByTestId('range-trigger')).toHaveAttribute('aria-haspopup', 'dialog') // the lazy calendar chunk has hydrated
+  await page.getByTestId('range-trigger').click()
+  await expect(page.getByRole('gridcell').first()).toBeVisible()
+  await page.keyboard.press('Escape')
+  await page.getByRole('navigation', { name: 'Navigasi utama' }).getByRole('button', { name: 'Lainnya' }).click()
+  await expect(page.getByRole('navigation', { name: 'Navigasi utama' }).getByRole('link', { name: 'Metodologi', exact: true })).toBeVisible()
+  await page.setViewportSize({ width: 360, height: 740 })
+  await page.getByRole('navigation', { name: 'Navigasi bawah' }).getByRole('button', { name: 'Lainnya' }).click()
+  await expect(page.getByRole('dialog', { name: 'Menu' })).toBeVisible()
+  const csp = await page.evaluate(() => (window as unknown as { __csp?: string[] }).__csp ?? [])
+  expect(csp).toEqual([])
+  expect(problems).toEqual([])
+})

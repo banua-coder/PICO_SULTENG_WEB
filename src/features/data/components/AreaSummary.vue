@@ -37,7 +37,7 @@ const pct = (n: number | null) => fmt.nullable(n, (v: number) => fmt.pct(v, 1))
 
 <template>
   <div>
-    <div v-if="row" data-testid="summary" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div v-if="row" data-testid="summary" class="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
       <StatFigure state="positive" :label="t('state.positive')" :value="row.cumulative.positive" :delta="d('positive')" :as-of="row.date" emphasis />
       <StatFigure v-if="showActive" state="active" :label="t('state.active')" :value="row.cumulative.active" :delta="d('active')" :as-of="row.date" />
       <StatFigure state="recovered" :label="t('state.recovered')" :value="row.cumulative.recovered" :delta="d('recovered')" :as-of="row.date" />
