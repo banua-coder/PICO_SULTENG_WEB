@@ -78,3 +78,37 @@ test('footer partners come from the API and the archive notice shows', async ({ 
   await expect(page.getByRole('link', { name: 'Detexi' })).toBeVisible()
   await expect(page.getByText('Arsip: catatan berhenti pada 14 Januari 2024')).toBeVisible()
 })
+
+// Client navigation by keyboard, on every page of the nav: focus lands on the new h1, a polite live region says its text.
+// The logic is in AppLayout (router.afterEach), which App.vue wraps around every route, so content pages are covered too.
+test('keyboard navigation to every page moves focus to its h1 and announces it', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 })
+  await page.goto('/')
+  await hydrated(page)
+  const paths = ['/data', '/tabel-data', '/vaksin', '/infografis', '/kontak', '/wiki', '/isoman', '/metodologi', '/']
+  for (const path of paths) {
+    await page.locator(`header nav a[href="${path}"]`).focus()
+    await page.keyboard.press('Enter')
+    await expect(page).toHaveURL(new RegExp(`${path === '/' ? '/$' : `${path}$`}`))
+    const h1 = page.locator('#konten h1')
+    await expect(h1).toBeFocused()
+    const text = (await h1.textContent())!.trim()
+    await expect(page.getByTestId('route-announcer')).toHaveText(text)
+    expect(await page.evaluate(() => document.activeElement?.tagName)).toBe('H1')
+  }
+  await expect(page.getByTestId('route-announcer').and(page.locator('[aria-live="polite"]'))).toHaveCount(1)
+})
+
+test('a query-only change (the pager) does not steal focus or re-announce', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 })
+  await page.goto('/tabel-data')
+  await hydrated(page)
+  await expect(page.locator('tbody tr').first()).toBeVisible()
+  const announced = await page.getByTestId('route-announcer').textContent()
+  const next = page.getByRole('button', { name: 'Berikutnya' })
+  await next.focus()
+  await page.keyboard.press('Enter')
+  await expect(page).toHaveURL(/hal=2/)
+  await expect(next).toBeFocused()
+  await expect(page.getByTestId('route-announcer')).toHaveText(announced ?? '')
+})
