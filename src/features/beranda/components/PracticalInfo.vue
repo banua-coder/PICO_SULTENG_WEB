@@ -4,7 +4,6 @@ import type { Component } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useLocale } from '@/app/useLocale'
-import ReviewTodo from '@/components/ReviewTodo.vue'
 
 const { t } = useI18n()
 const { localize } = useLocale()
@@ -17,7 +16,7 @@ onMounted(async () => (Tips.value = (await import('./HomeTips.vue')).default))
   <div class="grid gap-8">
     <section aria-labelledby="darurat" class="rounded-md border-2 border-indigo bg-tint p-5">
       <h3 id="darurat" class="text-lg">{{ t('beranda.callTitle') }}</h3>
-      <p class="m-0 mt-2 font-strong" data-testid="call-center">{{ t('beranda.callText') }} <a href="tel:119">119</a> <ReviewTodo id="beranda-119" note="owner to confirm the 119 wording; the old Dinkes hotline is not shown (O-5a)" /></p>
+      <p class="m-0 mt-2 font-strong" data-testid="call-center">{{ t('beranda.callText') }} <a href="tel:119">119</a></p>
       <p class="m-0 mt-2 text-sm text-ink-muted">{{ t('beranda.callArchive') }}</p>
     </section>
     <section aria-labelledby="gejala-home">

@@ -3,7 +3,6 @@ import { useI18n } from 'vue-i18n'
 import { KABUPATEN_AREAS, areaBySlug } from '@/app/areas'
 import { usePageHead } from '@/app/head'
 import ArchiveNotice from '@/components/ArchiveNotice.vue'
-import ReviewTodo from '@/components/ReviewTodo.vue'
 import StatusView from '@/components/StatusView.vue'
 import HospitalCard from './components/HospitalCard.vue'
 import TaskForceList from './components/TaskForceList.vue'
@@ -24,7 +23,7 @@ const retry = () => Promise.all([s.hospitals.refresh(), s.taskForces.refresh()])
     <h1 class="text-2xl">{{ t('kontak.title') }}</h1>
     <ArchiveNotice class="mt-5">
       <p class="m-0">{{ t('kontak.notice') }}</p>
-      <p class="m-0 font-strong">{{ t('kontak.emergency') }} <ReviewTodo id="kontak-119" note="owner to confirm the 119 wording; the old Dinkes Sulteng hotline is deliberately not shown (O-5a)" /></p>
+      <p class="m-0 font-strong">{{ t('kontak.emergency') }}</p>
     </ArchiveNotice>
     <div class="mt-6 flex flex-col gap-2">
       <label for="kontak-kabupaten" class="text-sm font-strong text-ink-muted">{{ t('kontak.filter') }}</label>

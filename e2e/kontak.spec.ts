@@ -8,7 +8,7 @@ test.describe('Kontak', () => {
     expect(html).toContain('arsip dari masa pandemi')
     expect(html).toContain('hubungi 119')
     expect(html).toContain('<article')
-    expect(html).toContain('data-todo="kontak-119"')
+    expect(html).not.toContain('data-todo="kontak-119"')
     const api = watchRequests(page)
     const log = watchConsole(page)
     await visit(page, '/kontak')

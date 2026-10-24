@@ -138,7 +138,7 @@ describe('BerandaView', () => {
     expect(wrapper.findAll('[data-testid="hospital-teaser"] li')).toHaveLength(3)
     expect(wrapper.find('[data-testid="call-center"]').text()).toContain('119')
     expect(wrapper.html()).not.toContain('0811404119')
-    expect(wrapper.find('[data-todo="beranda-119"]').exists()).toBe(true)
+    expect(wrapper.find('[data-todo="beranda-119"]').exists()).toBe(false)
   })
 
   it('one failed resource does not blank the page: its section shows an error and retry, the rest stay', async () => {
