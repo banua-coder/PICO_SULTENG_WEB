@@ -1,0 +1,198 @@
+name: Release
+
+# Tag vX.Y.Z (on a commit that is on master) -> build the image once (the build runs the real data steps against the live API and
+# FAILS while review markers remain), smoke-test that image, push THAT image, deploy over SSH, health-check the version,
+# roll back if it fails. Manual run (workflow_dispatch) is a dry run: build and smoke test only. It never pushes and never deploys,
+# whatever ref it runs on: publishing and deploying need `github.event_name == 'push'` on a `v*` tag.
+# Third-party actions are pinned by commit SHA (the version is in the comment). Secrets reach scripts through env, never through
+# the script text.
+
+on:
+  push:
+    tags: ['v*.*.*']
+  workflow_dispatch:
+    inputs:
+      allow_todo:
+        description: 'Dry run only: let the build pass with review markers (sets PICO_ALLOW_TODO=1). Refused on a tag ref.'
+        type: boolean
+        default: false
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  IMAGE: ghcr.io/banua-coder/pico-web
+  RELEASE_BRANCH: master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+      packages: write
+    env:
+      PUBLISH: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+      # 0. Refuse a bad tag name, a tag that is not on master, and a dry run that tries to skip the review markers on a tag.
+      - name: Validate the ref
+        env:
+          EVENT: ${{ github.event_name }}
+          REF: ${{ github.ref }}
+          REF_NAME: ${{ github.ref_name }}
+          ALLOW_TODO: ${{ inputs.allow_todo }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" = push ]; then
+            [[ "$REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::tag '$REF_NAME' is not vMAJOR.MINOR.PATCH"; exit 1; }
+            git fetch --no-tags origin "$RELEASE_BRANCH"
+            git merge-base --is-ancestor "$GITHUB_SHA" "origin/$RELEASE_BRANCH" || { echo "::error::$REF_NAME is not on $RELEASE_BRANCH; only commits on $RELEASE_BRANCH can be released"; exit 1; }
+          fi
+          if [ "$EVENT" = workflow_dispatch ] && [ "$ALLOW_TODO" = true ] && [[ "$REF" == refs/tags/* ]]; then
+            echo "::error::allow_todo is refused on a tag ref: a tag build must fail while review markers remain"; exit 1
+          fi
+      - name: Version
+        id: ver
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          if [ "$PUBLISH" = true ]; then echo "version=${REF_NAME#v}" >> "$GITHUB_OUTPUT"; else echo "version=dryrun" >> "$GITHUB_OUTPUT"; fi
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        if: env.PUBLISH == 'true'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest,enable=${{ env.PUBLISH }}
+            type=raw,value=dryrun,enable=${{ env.PUBLISH != 'true' }}
+      # 1. Build ONCE and load it locally. A tag build never sets PICO_ALLOW_TODO, so check:dist fails the build on any data-todo marker.
+      - name: Build image
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6 (6.19.2 at the time)
+        with:
+          context: .
+          load: true
+          tags: pico-web:ci
+          build-args: |
+            VITE_API_BASE_URL=https://pico-api.banuacoder.com/api/v1
+            VITE_SITE_URL=https://pico.banuacoder.com
+            APP_VERSION=${{ steps.ver.outputs.version }}
+            PICO_ALLOW_TODO=${{ github.event_name == 'workflow_dispatch' && inputs.allow_todo && '1' || '' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      # 2. Smoke test that exact image: routing, headers, gzip, the baked version, then the browser check of the real CSP.
+      - name: Smoke test (curl)
+        env:
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          docker run -d --name pico-web -p 8080:8080 pico-web:ci
+          for _ in $(seq 1 20); do curl -fsS http://127.0.0.1:8080/healthz && break; sleep 1; done
+          deploy/test-container.sh http://127.0.0.1:8080
+          got=$(curl -fsS http://127.0.0.1:8080/version.txt | tr -d '\r\n')
+          [ "$got" = "$VERSION" ] || { echo "::error::the image says version '$got', expected '$VERSION'"; exit 1; }
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.4.0 (pnpm 10.26.0 comes from package.json packageManager)
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Smoke test (browser, CSP violations and console errors against the container)
+        env:
+          CONTAINER_URL: http://127.0.0.1:8080
+        run: pnpm exec playwright test -c playwright.container.config.ts
+      # 3. Push (tag only) the image that was just tested: same local image, tagged and pushed, not rebuilt.
+      - name: Push the tested image
+        if: env.PUBLISH == 'true'
+        env:
+          TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          set -euo pipefail
+          for t in $TAGS; do docker tag pico-web:ci "$t"; docker push "$t"; done
+          docker image inspect pico-web:ci --format 'image id: {{.Id}}'
+          docker image inspect "$IMAGE:${{ steps.ver.outputs.version }}" --format 'pushed: {{index .RepoDigests 0}}'
+
+  deploy:
+    needs: build
+    # only a real tag push deploys: a manual run never does, on any ref
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    permissions:
+      contents: read
+    env:
+      VERSION: ${{ github.ref_name }}
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+      DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      HEALTH_CHECK_URL: ${{ secrets.HEALTH_CHECK_URL }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Check the tag name
+        run: |
+          [[ "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::bad tag"; exit 1; }
+          echo "VERSION=${VERSION#v}" >> "$GITHUB_ENV"
+      # The host key is pinned: it comes from the SSH_KNOWN_HOSTS secret (a `ssh-keyscan` line made once by the owner), never scanned at deploy time.
+      - name: Prepare SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+      - name: Deploy (compose pull + up)
+        id: deploy
+        run: |
+          set -euo pipefail
+          { printf 'VERSION=%q\nDEPLOY_PATH=%q\n' "$VERSION" "$DEPLOY_PATH"; cat deploy/remote-deploy.sh; } |
+            ssh -i ~/.ssh/deploy_key -p "$DEPLOY_PORT" -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -o BatchMode=yes \
+              -o UserKnownHostsFile="$HOME/.ssh/known_hosts" "$DEPLOY_USER@$DEPLOY_HOST" 'bash -s'
+      # The gate asks WHICH image answers (/version.txt, baked at build time), not only whether something answers.
+      - name: Health gate
+        id: health
+        run: |
+          base="${HEALTH_CHECK_URL%/healthz}"; got=""
+          sleep 10
+          for _ in 1 2 3 4 5 6; do
+            got=$(curl -fsS "$base/version.txt" 2>/dev/null | tr -d '\r\n' || true)
+            [ "$got" = "$VERSION" ] && break
+            sleep 5
+          done
+          [ "$got" = "$VERSION" ] || { echo "FAIL version: got '$got', want '$VERSION'"; exit 1; }
+          for url in "$base/healthz" "$base/data"; do
+            for _ in 1 2 3; do
+              code=$(curl -s -o /dev/null -w '%{http_code}' "$url" || true)
+              [ "$code" = 200 ] && { echo "ok $url"; continue 2; }
+              sleep 5
+            done
+            echo "FAIL $url ($code)"; exit 1
+          done
+      # Runs when the pull/up step OR the gate failed (a failed `docker compose pull` leaves a half-changed .env).
+      - name: Roll back to the previous version
+        if: failure() && (steps.deploy.outcome == 'failure' || steps.health.outcome == 'failure')
+        run: |
+          { printf 'DEPLOY_PATH=%q\n' "$DEPLOY_PATH"; cat deploy/remote-rollback.sh; } |
+            ssh -i ~/.ssh/deploy_key -p "$DEPLOY_PORT" -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -o BatchMode=yes \
+              -o UserKnownHostsFile="$HOME/.ssh/known_hosts" "$DEPLOY_USER@$DEPLOY_HOST" 'bash -s'
+          echo "::error::Deploy or health gate failed. Rolled back to the previous version (see docs/deploy.md)."
+          exit 1

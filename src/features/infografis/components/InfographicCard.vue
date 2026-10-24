@@ -1,0 +1,20 @@
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+import type { Infographic } from '@/api/types'
+import PicoImage from '@/components/PicoImage.vue'
+
+defineProps<{ item: Infographic }>()
+const emit = defineEmits<{ open: [] }>()
+const { t } = useI18n()
+</script>
+
+<template>
+  <button type="button" class="flex w-full flex-col gap-3 rounded-md border border-line bg-surface p-3 text-left" :data-id="item.id" @click="emit('open')">
+    <!-- decoration only: the button is named by the title below -->
+    <div aria-hidden="true">
+      <PicoImage :src="item.images[0] ?? null" :alt="item.title" ratio="4/5" />
+    </div>
+    <span class="font-strong text-ink">{{ item.title }}</span>
+    <span class="text-sm text-ink-muted">{{ item.images.length ? t('infografis.images', { n: item.images.length }) : t('infografis.cardNoImage') }}</span>
+  </button>
+</template>
