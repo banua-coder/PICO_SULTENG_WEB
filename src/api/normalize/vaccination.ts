@@ -18,13 +18,20 @@ export function vaccinationSeries(wire: WireVaccinationDay[]): VaccinationDay[] 
       total: { daily: doses(w.total.daily), cumulative: doses(w.total.cumulative), coverage: doses(w.total.coverage) },
       groups: GROUPS.flatMap((key) => {
         const g = w.groups[key]
-        return g ? [{ key, target: g.target, cumulative: doses(g.cumulative), coverage: doses(g.coverage) }] : []
+        return g ? [{ key, target: g.target, daily: doses(g.daily), cumulative: doses(g.cumulative), coverage: doses(g.coverage) }] : []
       }),
     })
   }
   const days = [...byDate.values()].sort((a, b) => (a.date < b.date ? -1 : 1))
   days.forEach((d, i) => {
-    if (i > 0) d.previousDaily = days[i - 1]!.total.daily
+    if (i > 0) {
+      const prev = days[i - 1]!
+      d.previousDaily = prev.total.daily
+      d.groups.forEach((g) => {
+        const p = prev.groups.find((x) => x.key === g.key)
+        if (p) g.previousDaily = p.daily
+      })
+    }
   })
   return days
 }

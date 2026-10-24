@@ -26,7 +26,9 @@ describe('CaseCard (the owner\'s CardCase)', () => {
   it('a missing number says so, never 0', async () => {
     const { wrapper } = await mountApp(CaseCard, { state: 'active', label: 'Dirawat', columns: [{ title: 'Kota Palu', value: null, delta: null, asOf: '2023-12-09' }] })
     expect(wrapper.find('[data-figure]').text()).toBe('tidak tersedia')
-    expect(wrapper.find('[data-delta]').text()).toContain('tidak tersedia')
+    expect(wrapper.find('[data-delta]').text()).toBe('') // the one 'tidak tersedia' says it; the change line stays an empty row of the same height
+    expect(wrapper.find('[data-figure]').classes()).toContain('text-sm') // small muted text, not the 24 px figure
+    expect(wrapper.find('[data-figure]').classes()).toContain('text-ink-muted')
   })
 })
 
@@ -36,11 +38,11 @@ const day: VaccinationDay = {
   total: { daily: { dose1: 110, dose2: 50 }, cumulative: { dose1: 855, dose2: 536 }, coverage: { dose1: 85.5, dose2: 53.6 } },
   previousDaily: { dose1: 100, dose2: 50 },
   groups: [
-    { key: 'health_worker', target: 100, cumulative: { dose1: 100, dose2: 90 }, coverage: { dose1: 100, dose2: 90 } },
-    { key: 'public_officer', target: 100, cumulative: { dose1: 70, dose2: 60 }, coverage: { dose1: 70, dose2: 60 } },
-    { key: 'elderly', target: 100, cumulative: { dose1: 50, dose2: 30 }, coverage: { dose1: 50, dose2: 30 } },
-    { key: 'public', target: 700, cumulative: { dose1: 600, dose2: 350 }, coverage: { dose1: 85, dose2: 50 } },
-    { key: 'teenager', target: 100, cumulative: { dose1: 35, dose2: 6 }, coverage: { dose1: 35, dose2: 6 } },
+    { key: 'health_worker', target: 100, daily: { dose1: 5, dose2: 2 }, cumulative: { dose1: 100, dose2: 90 }, coverage: { dose1: 100, dose2: 90 } },
+    { key: 'public_officer', target: 100, daily: { dose1: 5, dose2: 2 }, cumulative: { dose1: 70, dose2: 60 }, coverage: { dose1: 70, dose2: 60 } },
+    { key: 'elderly', target: 100, daily: { dose1: 5, dose2: 2 }, cumulative: { dose1: 50, dose2: 30 }, coverage: { dose1: 50, dose2: 30 } },
+    { key: 'public', target: 700, daily: { dose1: 5, dose2: 2 }, cumulative: { dose1: 600, dose2: 350 }, coverage: { dose1: 85, dose2: 50 } },
+    { key: 'teenager', target: 100, daily: { dose1: 5, dose2: 2 }, cumulative: { dose1: 35, dose2: 6 }, coverage: { dose1: 35, dose2: 6 } },
   ],
 }
 

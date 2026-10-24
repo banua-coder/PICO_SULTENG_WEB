@@ -80,6 +80,6 @@ export function legendClasses(values: (number | null)[]): RampRow[] {
 }
 
 /** From this step on a fill is dark enough for white text; before it the text is black. Both pass 4.5:1 (checked in quantile.test.ts against palette-ramps.css). */
-export const LIGHT_TEXT_FROM: Record<string, number> = { positive: 7, active: 9, recovered: RAMP_STEPS + 1, deceased: RAMP_STEPS + 1 }
+export const LIGHT_TEXT_FROM: Record<string, number> = { positive: 5, active: 9, recovered: RAMP_STEPS + 1, deceased: RAMP_STEPS + 1 }
 export const lightText = (role: string, step: number) => step >= (LIGHT_TEXT_FROM[role] ?? 7)
 export const rampVar = (role: string, step: number) => `var(--pico-ramp-${role in LIGHT_TEXT_FROM ? role : 'positive'}-${step})`

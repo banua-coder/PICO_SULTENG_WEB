@@ -65,7 +65,7 @@ describe('legend counts and ramp variables', () => {
     expect(rampVar('recovered', 3)).toBe('var(--pico-ramp-recovered-3)')
     expect(rampVar('rt', 2)).toBe('var(--pico-ramp-positive-2)')
     expect([1, 2, 3, 4, 5, 6, 7, 8, 9].map((s) => lightText('active', s))).toEqual([false, false, false, false, false, false, false, false, true])
-    expect([1, 2, 3, 4, 5, 6, 7, 8, 9].map((s) => lightText('positive', s))).toEqual([false, false, false, false, false, false, true, true, true])
+    expect([1, 2, 3, 4, 5, 6, 7, 8, 9].map((s) => lightText('positive', s))).toEqual([false, false, false, false, true, true, true, true, true])
     expect([1, 5, 9].map((s) => lightText('recovered', s))).toEqual([false, false, false]) // black text on the exact green and orange
   })
 })
@@ -105,7 +105,9 @@ describe('palette-ramps.css', () => {
   }
   const contrast = (a: string, b: string) => (Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05)
   it('ends on the exact legacy colours, and lightness only goes down', () => {
-    expect([hex('positive-9'), hex('active-9'), hex('recovered-9'), hex('deceased-9')]).toEqual(['#991b1b', '#2563eb', '#10b981', '#f97316'])
+    // Positif is the legacy orange-red to dark red ramp (it passes the ordinal checks); the other three end on the exact role colours
+    expect([hex('positive-1'), hex('positive-9')]).toEqual(['#e38e5d', '#900000'])
+    expect([hex('active-9'), hex('recovered-9'), hex('deceased-9')]).toEqual(['#2563eb', '#10b981', '#f97316'])
     for (const r of ['positive', 'active', 'recovered', 'deceased']) for (let i = 2; i <= 9; i++) expect(lum(hex(`${r}-${i}`))).toBeLessThan(lum(hex(`${r}-${i - 1}`)))
   })
   it('the label colour of every step (black or white) has at least 4.5:1', () => {

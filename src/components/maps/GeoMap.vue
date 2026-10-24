@@ -29,7 +29,7 @@ const props = withDefaults(
       stacked?: boolean
     }
   >(),
-  { selected: undefined, hrefFor: undefined, compactBelow: 0, stacked: false, mode: 'choropleth', areaName: undefined, date: undefined, pin: undefined },
+  { selected: undefined, hrefFor: undefined, compactBelow: 0, stacked: false, mode: 'choropleth', areaName: undefined, date: undefined, dateEnd: undefined, pin: undefined },
 )
 const emit = defineEmits<{ select: [code: string] }>()
 
@@ -248,6 +248,7 @@ const title = computed(() => (props.areaName ? t('map.title', { metric: props.me
 
           <div v-if="tip && tipItem" class="pointer-events-none absolute z-20 rounded-sm border border-line-strong bg-surface p-2 text-xs text-ink shadow-card" :style="tipStyle" aria-hidden="true" data-tooltip>
             <p class="m-0 font-strong">{{ tipItem.name }}</p>
+            <p v-if="tipItem.date" class="m-0 text-ink-muted" data-tip-date>{{ t('map.asOf', { date: fmt.date(tipItem.date) }) }}</p>
             <table v-if="tipItem.detail" class="num mt-1 border-collapse">
               <tbody>
                 <tr v-for="c in CASES" :key="c.key">
@@ -262,7 +263,7 @@ const title = computed(() => (props.areaName ? t('map.title', { metric: props.me
       </div>
       <p v-if="zoom > 1" class="m-0 mt-1 text-xs text-ink-muted">{{ t('map.zoomHint') }}</p>
       <p role="status" aria-live="polite" class="m-0 mt-1 text-xs text-ink-muted" data-testid="wheel-hint" :data-armed="armed">{{ armed ? t('map.wheelOn') : t('map.wheelHint') }}</p>
-      <MapLegend class="mt-3" :items="items" :metric="metric" :mode="mode" :date="date" />
+      <MapLegend class="mt-3" :items="items" :metric="metric" :mode="mode" :date="date" :date-end="dateEnd" />
     </figure>
     <AreaTable :items="items" :metric="metric" :selected="selected" :pin="pin" :href-for="hrefFor" @select="emit('select', $event)" />
   </div>

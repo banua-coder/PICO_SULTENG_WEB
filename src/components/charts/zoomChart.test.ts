@@ -76,9 +76,11 @@ describe('plain wheel zoom needs a click or focus first', () => {
       await flush()
       const plot = wrapper.get('[role="group"][tabindex="0"]')
       const status = () => wrapper.get('[data-testid="zoom-status"]').text()
+      // the Rt chart prints the zoom hint inside its one key paragraph, so its live status is empty until zoomed
+      const rest = /^Seret|^$/
       expect(wrapper.get('[data-testid="wheel-hint"]').text()).toContain('Klik grafik')
       await plot.trigger('wheel', { deltaY: -300, clientX: 300 })
-      expect(status()).toMatch(/^Seret/)
+      expect(status()).toMatch(rest)
       await plot.trigger('pointerdown', { pointerId: 1, pointerType: 'mouse', button: 0, clientX: 100 })
       await plot.trigger('pointerup', { pointerId: 1, pointerType: 'mouse', clientX: 100 })
       expect(wrapper.get('[data-testid="wheel-hint"]').text()).toContain('Zoom roda aktif')
@@ -88,29 +90,35 @@ describe('plain wheel zoom needs a click or focus first', () => {
       await plot.trigger('focusin')
       await plot.trigger('keydown', { key: 'Escape' })
       await plot.trigger('wheel', { deltaY: -300, clientX: 300 })
-      expect(status()).toMatch(/^Seret/)
+      expect(status()).toMatch(rest)
       await plot.trigger('focusin')
       await plot.trigger('focusout')
       await plot.trigger('wheel', { deltaY: -300, clientX: 300 })
-      expect(status()).toMatch(/^Seret/)
+      expect(status()).toMatch(rest)
     })
   }
 })
 
 describe('RtChart bounds and scale', () => {
-  it('draws both bounds, lists the clipped value, and Skala penuh removes the clipping', async () => {
+  it('full scale by default; Skala dipotong clips at 4, lists the clipped value and says so', async () => {
     const { wrapper } = await mountApp(RtChart, { points: band, a11y }, '/')
     await flush()
     expect(wrapper.find('[data-rt-upper]').exists()).toBe(true)
     expect(wrapper.find('[data-rt-lower]').attributes('stroke-dasharray')).toBeDefined()
     expect(wrapper.find('[data-testid="rt-legend"]').text()).toContain('Batas atas (95 %)')
     expect(wrapper.find('[data-testid="rt-legend"]').text()).toContain('Batas bawah (95 %)')
-    expect(wrapper.find('[data-testid="rt-clipped"]').text()).toContain('9,00')
-    expect(wrapper.find('[data-testid="rt-key"]').text()).toContain('Sumbu dipotong di 4')
-    await wrapper.findAll('button').find((b) => b.text() === 'Skala penuh')!.trigger('click')
-    await flush()
     expect(wrapper.find('[data-testid="rt-clipped"]').exists()).toBe(false)
-    expect(wrapper.find('[data-testid="rt-key"]').text()).toContain('Skala penuh')
+    expect(wrapper.find('[data-testid="rt-key"]').text()).toContain('Skala penuh: sumbu naik sampai')
+    const btn = () => wrapper.findAll('button').find((b) => b.text() === 'Skala dipotong')!
+    expect(btn().attributes('aria-pressed')).toBe('false')
+    await btn().trigger('click')
+    await flush()
+    expect(btn().attributes('aria-pressed')).toBe('true')
+    expect(wrapper.find('[data-testid="rt-clipped"]').text()).toContain('9,00')
+    expect(wrapper.find('[data-testid="rt-key"]').text()).toContain('Skala dipotong di 4')
+    // one hint paragraph: key, scale note and the zoom hints
+    expect(wrapper.find('[data-testid="rt-key"]').text()).toContain('Seret pada grafik')
+    expect(wrapper.findAll('[data-testid="wheel-hint"]')).toHaveLength(1)
   })
 
   it('the tooltip names the three values', async () => {

@@ -24,7 +24,7 @@
     "lint:tokens": "tsx scripts/lint-src.ts",
     "check:i18n": "tsx scripts/check-i18n.ts",
     "build:geo": "tsx scripts/build-geo.ts",
-    "build:data": "tsx scripts/snapshot-kabupaten.ts && tsx scripts/snapshot-home.ts && tsx scripts/build-downloads.ts",
+    "build:data": "tsx scripts/snapshot-kabupaten.ts && tsx scripts/snapshot-home.ts && tsx scripts/snapshot-lastreal.ts && tsx scripts/build-downloads.ts",
     "check:dist": "tsx scripts/check-dist.ts",
     "check:budget": "tsx scripts/check-budget.ts"
   },

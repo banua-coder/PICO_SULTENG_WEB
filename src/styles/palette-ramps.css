@@ -1,17 +1,21 @@
-/* Sequential ramps of the map (Sebaran mode): one hue per case category, 9 steps from a light tint to the EXACT colour of the legacy site
-   (red-800 #991b1b, blue-600 #2563eb, green-500 #10b981, orange-500 #f97316), linear in sRGB so lightness only goes down.
+/* Sequential ramps of the map (Sebaran mode), 9 steps, lightness only goes down.
+   Positif: the owner's legacy ramp (Map.vue positiveColor, orange-red #e38e5d to dark red #900000; 9 of its 11 colours, entries 4 and 8 dropped).
+   It passes the ordinal checks that matter (lightness monotone, hue spread 27 degrees, light end 2.53:1 on white).
+   Dirawat, Sembuh, Meninggal: the legacy ramps FAIL them (Dirawat runs green to red and is not monotone, hue spread 118; Sembuh runs green to navy,
+   hue spread 121, light end 1.23:1; Meninggal light end 1.12:1), so these stay single-hue from a light tint to the EXACT colour of the legacy
+   cards (blue-600 #2563eb, green-500 #10b981, orange-500 #f97316), linear in sRGB. Numbers in docs/port-plan.md, section "Map ramps".
    The same in light and dark: fills carry their own label colour, black or white, whichever has >= 4.5:1 (see components/maps/quantile.ts,
    LIGHT_TEXT_FROM, and the test in maps/quantile.test.ts that reads this file). */
 :root {
-  --pico-ramp-positive-1: #fee2e2;
-  --pico-ramp-positive-2: #f1c9c9;
-  --pico-ramp-positive-3: #e5b0b0;
-  --pico-ramp-positive-4: #d89797;
-  --pico-ramp-positive-5: #cc7f7f;
-  --pico-ramp-positive-6: #bf6666;
-  --pico-ramp-positive-7: #b24d4d;
-  --pico-ramp-positive-8: #a63434;
-  --pico-ramp-positive-9: #991b1b;
+  --pico-ramp-positive-1: #e38e5d;
+  --pico-ramp-positive-2: #da8266;
+  --pico-ramp-positive-3: #d17567;
+  --pico-ramp-positive-4: #c15d5a;
+  --pico-ramp-positive-5: #ba5150;
+  --pico-ramp-positive-6: #b24443;
+  --pico-ramp-positive-7: #a12a26;
+  --pico-ramp-positive-8: #991915;
+  --pico-ramp-positive-9: #900000;
   --pico-ramp-active-1: #dbeafe;
   --pico-ramp-active-2: #c4d9fc;
   --pico-ramp-active-3: #aec8f9;

@@ -3,7 +3,7 @@ import { expectNoA11yViolations } from './support/a11y'
 import { horizontalOverflow, visit, watchConsole, watchRequests } from './support/visit'
 
 test.describe('Beranda', () => {
-  test('the prerendered HTML has both groups of figures as text, the archive line, 119 and no old hotline', async ({ page }) => {
+  test('the prerendered HTML has both groups of figures as text, the archive line, 119 and the hotline with its note', async ({ page }) => {
     const html = await (await page.request.get('/')).text()
     expect(html).toContain('data-testid="headline"')
     expect(html).toMatch(/data-testid="headline"[\s\S]{0,3000}63\.614/)
@@ -11,7 +11,8 @@ test.describe('Beranda', () => {
     expect(html).toContain('Arsip catatan COVID-19 dari 2 Maret 2020 sampai 14 Januari 2024')
     expect(html).toContain('data-testid="province-list"')
     expect(html).toContain('tel:119')
-    expect(html).not.toContain('0811404119')
+    expect(html).toContain('tel:+62811404119')
+    expect(html).toContain('mungkin sudah tidak aktif')
   })
 
   test('no API request at all on load (everything is in the initial state), and no console noise', async ({ page }) => {

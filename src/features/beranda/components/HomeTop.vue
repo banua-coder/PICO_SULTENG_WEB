@@ -39,14 +39,14 @@ const card = 'flex h-full min-h-touch flex-col items-center justify-center gap-1
         </a>
       </Card>
       <Card class="py-0" data-testid="hotline">
-        <div :class="card">
+        <a href="tel:+62811404119" :class="card">
           <PhoneCall class="size-6 text-active" aria-hidden="true" />
           <span class="leading-tight sm:flex-1">
             <span class="block text-sm font-bold sm:text-lg">{{ t('beranda.hotline') }}</span>
             <span class="block text-xs text-ink-muted sm:text-sm">{{ t('beranda.hotlineNote') }}</span>
           </span>
           <span class="num text-sm font-bold text-ink sm:text-lg">+62811-404-119</span>
-        </div>
+        </a>
       </Card>
       <Card class="py-0">
         <RouterLink :to="`${localize('/mulai')}#api`" :class="card">

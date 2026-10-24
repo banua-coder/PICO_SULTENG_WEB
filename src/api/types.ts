@@ -50,7 +50,7 @@ export type VaccinationDay = {
   date: IsoDate
   target: number
   total: { daily: Doses; cumulative: Doses; coverage: Doses }
-  groups: { key: VaccinationGroupKey; target: number; cumulative: Doses; coverage: Doses }[]
+  groups: { key: VaccinationGroupKey; target: number; daily: Doses; cumulative: Doses; coverage: Doses; /** this group's injections of the day before (for the change rate of its progress card) */ previousDaily?: Doses }[]
   /** the injections of the day before in the series (for the daily change rate of the vaccine card); absent on the first day */
   previousDaily?: Doses
 }

@@ -12,10 +12,11 @@ test.describe('Vaksin', () => {
   test('Sulawesi Tengah: 85,55 % and 53,63 % on 25 Maret 2022, no console noise', async ({ page }) => {
     const log = watchConsole(page)
     await visit(page, '/vaksin')
-    const now = page.getByTestId('coverage-now')
+    const now = page.getByTestId('vaccine-progress')
+    await expect(now.getByTestId('vaccine-progress-card')).toHaveCount(12)
     await expect(now.getByTestId('progress-text').first()).toContainText('85,55%')
-    await expect(now.getByTestId('progress-text').nth(1)).toContainText('53,63%')
-    await expect(now.getByTestId('vaccine-asof')).toHaveText('Data vaksinasi berhenti diperbarui pada 25 Maret 2022.')
+    await expect(now.locator('[data-dose="dose2"] [data-group="total"]').getByTestId('progress-text')).toContainText('53,63%')
+    await expect(page.getByTestId('vaccine-cards')).toContainText('Data vaksinasi berhenti diperbarui pada 25 Maret 2022.')
     expect(log).toEqual([])
   })
 
@@ -31,7 +32,7 @@ test.describe('Vaksin', () => {
 
   test('health workers over 100 %: a note, and doses are told apart by form, mark and label', async ({ page }) => {
     await visit(page, '/vaksin')
-    await expect(page.getByTestId('over-notes')).toContainText('Tenaga kesehatan: Dosis 1 melebihi target')
+    await expect(page.getByTestId('vaccine-progress').locator('[data-dose="dose1"] [data-group="health_worker"]').getByTestId('progress-text')).toContainText('111,2')
     const c = page.getByTestId('doses-over-time')
     await expect(c.locator('path[data-line]')).toHaveCount(2)
     await expect(c.locator('[data-end-label]')).toHaveText(['Dosis 1', 'Dosis 2'])
@@ -55,12 +56,16 @@ test.describe('Vaksin', () => {
     expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0)
   })
 
-  for (const [locale, theme] of [['id', 'dark'], ['en', 'light']] as const) {
-    test(`axe: no violations (${locale}, ${theme})`, async ({ page }) => {
-      await visit(page, '/vaksin', { locale, theme })
-      await expect(page.getByTestId('doses-over-time').locator('figure')).toBeVisible()
-      await expect(page.getByTestId('coverage-groups').locator('figure').first()).toBeVisible()
-      await expectNoA11yViolations(page)
-    })
+  for (const width of [1280, 360]) {
+    for (const [locale, theme] of [['id', 'dark'], ['en', 'light'], ['id', 'light']] as const) {
+      test(`axe: no violations (${locale}, ${theme}, ${width} px)`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 800 })
+        await visit(page, '/vaksin', { locale, theme })
+        await expect(page.getByTestId('doses-over-time').locator('figure')).toBeVisible()
+        await expect(page.getByTestId('vaccine-progress-card').first()).toBeVisible()
+        await expectNoA11yViolations(page)
+        expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0)
+      })
+    }
   }
 })

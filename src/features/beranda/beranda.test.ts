@@ -177,11 +177,11 @@ describe('BerandaView', () => {
     expect(info[0]!.attributes('href')).toMatch(/^\/infografis\?id=\d+$/)
     expect(wrapper.findAll('[data-testid="hospital-teaser"] li')).toHaveLength(3)
     expect(wrapper.find('[data-testid="call-center"]').text()).toContain('119')
-    // the old Hotline (Dinkes Sulteng) is back as the legacy card, marked as a pandemic number and not a link
+    // the old Hotline (Dinkes Sulteng) is back as the legacy card, a tel: link marked as a pandemic number that may not answer
     const hot = wrapper.find('[data-testid="hotline"]')
     expect(hot.text()).toContain('+62811-404-119')
     expect(hot.text()).toContain('mungkin sudah tidak aktif')
-    expect(hot.find('a').exists()).toBe(false)
+    expect(hot.find('a').attributes('href')).toBe('tel:+62811404119')
     expect(wrapper.find('[data-todo="beranda-119"]').exists()).toBe(false)
   })
 

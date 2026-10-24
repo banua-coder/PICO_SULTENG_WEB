@@ -40,7 +40,14 @@ licence or have no determined licence.
      The logos are trademarks of their owners and are shown only to name the partners and data sources.
    - Banner and donation pictures in public/media/{banners,donations}/ (webp, resized) from the owner's old
      Hostinger storage (storage/banners, storage/donations). They were uploaded by the owner and by the donation
-     organisers for the old site. Not MIT.
+     organisers for the old site. Not MIT. Every picture was looked at before it was kept (personal data review):
+       - the 4 banners show organisation names and logos and illustrations only: kept;
+       - of the 8 donation posters, 7 were removed because they show phone numbers, bank account numbers or
+         names of private persons (or a person's face): Naga/PSMTI posko, "Informasi" (Seh'at), Posko Jaga Palu,
+         SIGI Mosijagai, Isoman Care, bakubantu, Join the fight. Kept: "Kongsi Gambar Serrupa" (an illustration,
+         no personal data). The donation cards that had a removed poster show the title only.
+     The Isoman page still shows the bank account numbers the API gives for each donation, as text (the owner's
+     decision, not changed here); those are the donors' public appeals from 2021.
    - Map boundary files (item 1) were also found in the old Hostinger storage (storage/geojson), same status.
 
 6. Libraries of the old site that are not used

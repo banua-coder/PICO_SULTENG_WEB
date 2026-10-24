@@ -33,10 +33,11 @@ const width = useChartSize(box)
 const markPx = useMarkSize(3)
 const asTable = ref(false)
 
-const fullScale = ref(false)
+// The legacy axis ran to 12 and showed the whole 7.5 peak: the default is the full scale; the cut at yMax is the opt-in 'Skala dipotong'
+const clipped = ref(false)
 const full = computed(() => props.range ?? extentOf(props.points.map((p) => p.x)))
 const zoom = useZoom({ full, surface, marginLeft: () => model.value.margin.left, plotW: () => model.value.plotW, xInvert: (px) => model.value.xInvert(px) })
-const yMaxNow = computed(() => (fullScale.value ? fullYMax(props.points, zoom.range.value) : props.yMax))
+const yMaxNow = computed(() => (clipped.value ? props.yMax : fullYMax(props.points, zoom.range.value)))
 const model = computed(() => buildRtModel({ points: props.points, range: zoom.range.value, width: width.value, height: props.height, yMax: yMaxNow.value }))
 // end labels of the estimate and the two bounds, pushed apart so they never overlap
 const endLabels = computed(() => {
@@ -183,14 +184,18 @@ const stripe = 'var(--pico-rt)'
       <li class="flex items-center gap-2"><svg width="22" height="12" aria-hidden="true"><rect width="22" height="12" :style="{ fill: 'var(--pico-rt)' }" fill-opacity="0.2" /><line x1="0" x2="22" y1="11" y2="11" stroke-dasharray="4 3" :style="{ stroke: 'var(--pico-rt)' }" /></svg>{{ t('chart.rtLow') }} (95 %)</li>
       <li class="flex items-center gap-2"><svg width="22" height="12" aria-hidden="true"><line x1="0" x2="22" y1="6" y2="6" stroke-dasharray="6 4" stroke-width="1.5" :style="{ stroke: 'var(--pico-ink)' }" /></svg>{{ t('chart.rtThreshold') }}</li>
     </ul>
-    <p v-if="!asTable && model.hasAny" class="mt-2 text-sm text-ink-muted" data-testid="rt-key">{{ fullScale ? t('chart.rtKeyFull', { max: fmt.num(yMaxNow) }) : t('chart.rtKey', { max: fmt.num(yMaxNow) }) }}</p>
+    <!-- one hint paragraph: what the lines are, which scale, and how to zoom -->
+    <p v-if="!asTable && model.hasAny" class="mt-2 text-sm text-ink-muted" data-testid="rt-key">
+      {{ t('chart.rtKey') }} {{ clipped ? t('chart.rtNoteCut', { max: fmt.num(yMaxNow) }) : t('chart.rtNoteFull', { max: fmt.num(yMaxNow) }) }}
+      {{ t('chart.zoomAll') }} <span data-testid="wheel-hint" :data-armed="zoom.armed.value">{{ zoom.armed.value ? t('chart.wheelOn') : t('chart.wheelHint') }}</span>
+    </p>
     <p v-if="!asTable && model.clipped.length" class="num mt-1 text-sm text-ink-muted" data-testid="rt-clipped">{{ t('chart.rtClippedList', { items: model.clipped.map((c) => `${rt(c.value)} (${fmt.date(c.date, 'short')})`).join(', ') }) }}</p>
     <p v-if="asTable && zoom.zoomed.value" class="mt-2 text-sm text-ink-muted" data-testid="table-zoom-note">{{ t('chart.tableZoomed') }}</p>
     <ChartTable v-if="asTable" :caption="a11y.title" :columns="tableCols" :dates="model.dates" :values="tablePoints" :digits="2" />
     <Button type="button" variant="outline" size="sm" class="mt-3 text-primary-strong" :aria-pressed="asTable" @click="asTable = !asTable">
       <component :is="asTable ? LineChart : Table2" aria-hidden="true" />{{ asTable ? t('chart.graph') : t('chart.table') }}
     </Button>
-    <Button type="button" variant="outline" size="sm" class="ml-2 mt-3 text-primary-strong" :aria-pressed="fullScale" @click="fullScale = !fullScale">{{ fullScale ? t('chart.rtScaleCut', { max: props.yMax }) : t('chart.rtScaleFull') }}</Button>
-    <ZoomControls v-if="!asTable" :zoom="zoom" :range="zoom.range.value" />
+    <Button type="button" variant="outline" size="sm" class="ml-2 mt-3 text-primary-strong" :aria-pressed="clipped" data-testid="rt-scale" @click="clipped = !clipped">{{ t('chart.rtScaleClip') }}</Button>
+    <ZoomControls v-if="!asTable" :zoom="zoom" :range="zoom.range.value" :hints="false" />
   </figure>
 </template>

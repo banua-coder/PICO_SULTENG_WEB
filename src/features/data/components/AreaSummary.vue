@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useHomeLatest, useKabupatenLatest, useNationalLatest, useProvincesLatest } from '@/api/useSeries'
+import { useHomeLatest, useLastReal, useKabupatenLatest, useNationalLatest, useProvincesLatest } from '@/api/useSeries'
 import type { LatestByArea } from '@/api/types'
 import { SULTENG } from '@/app/areas'
 import { useFormat } from '@/app/useFormat'
@@ -23,6 +23,7 @@ const area = state.area.value // DataView keys the page by area, so it never cha
 const latestList: { data: { value: LatestByArea | LatestByArea[] | undefined } } =
   area.level === 'indonesia' ? useNationalLatest() : area.level === 'provinsi' ? useProvincesLatest() : useKabupatenLatest()
 const home = useHomeLatest()
+const lastRealDates = useLastReal()
 const latest = computed(() => {
   const d = latestList.data.value
   return Array.isArray(d) ? d.find((x) => x.area.code === area.code) : d
@@ -45,7 +46,8 @@ const cards = computed<CaseCardData[]>(() => {
       title: area.name,
       value: key === 'active' && area.level === 'kabupaten' ? null : r.cumulative[key],
       delta: key === 'active' && area.level === 'kabupaten' ? null : d(key),
-      asOf: r.date,
+      // before the series arrives the row is the padded end of the record: its totals equal those of the last real day, so say that day
+      asOf: (!sel.value?.dailyKnown && (area.level === 'provinsi' ? lastRealDates.data.value?.provinsi[area.code] : area.level === 'kabupaten' ? lastRealDates.data.value?.kabupaten[area.code] : undefined)) || r.date,
     }
     const n = nationalRow.value
     const nat: CaseColumn[] = area.level !== 'indonesia' && n ? [{ title: t('beranda.indonesia'), value: n.cumulative[key], delta: n.daily[key], asOf: n.date }] : []

@@ -6,13 +6,13 @@ import StateMark from '../StateMark.vue'
 import { legendClasses, legendRamp, rampVar } from './quantile'
 import type { MapItem, MapMetric, MapMode } from './types'
 
-const props = withDefaults(defineProps<{ items: MapItem[]; metric: MapMetric; mode?: MapMode; date?: string }>(), { mode: 'choropleth', date: undefined })
+const props = withDefaults(defineProps<{ items: MapItem[]; metric: MapMetric; mode?: MapMode; date?: string; dateEnd?: string }>(), { mode: 'choropleth', date: undefined, dateEnd: undefined })
 const { t } = useI18n()
 const fmt = useFormat()
 const rows = computed(() => (props.mode === 'points' ? legendRamp : legendClasses)(props.items.map((i) => i.value)))
 const hasNull = computed(() => props.items.some((i) => i.value === null))
 const text = (min: number, max: number) => (min === max ? fmt.num(min) : t('map.range', { min: fmt.num(min), max: fmt.num(max) }))
-const title = computed(() => (props.mode === 'points' ? t('map.legend') : t('map.legendFill', { metric: props.metric.label })) + (props.date ? ` (${fmt.date(props.date)})` : ''))
+const title = computed(() => (props.mode === 'points' ? t('map.legend') : t('map.legendFill', { metric: props.metric.label })) + (props.date ? ` (${props.dateEnd && props.dateEnd !== props.date ? fmt.range(props.date, props.dateEnd) : fmt.date(props.date)})` : ''))
 </script>
 
 <template>

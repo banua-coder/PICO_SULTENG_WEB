@@ -64,8 +64,10 @@ describe('RtChart', () => {
     expect(none.wrapper.find('[data-testid="rt-key"]').exists()).toBe(false)
   })
 
-  it('a value above 4 shows a clipped marker with its number', async () => {
+  it('a value above 4 shows a clipped marker with its number once the scale is cut (the default is the full scale)', async () => {
     const { wrapper } = await chart(rt([1.1, 5.25, 1.0]))
+    expect(wrapper.find('[data-clipped]').exists()).toBe(false)
+    await wrapper.find('[data-testid="rt-scale"]').trigger('click')
     const c = wrapper.find('[data-clipped]')
     expect(c.exists()).toBe(true)
     expect(c.find('[data-mark="rt"]').exists()).toBe(true)

@@ -17,6 +17,7 @@ const emit = defineEmits<{ select: [code: string] }>()
 
 const { t } = useI18n()
 const fmt = useFormat()
+const showDate = computed(() => props.items.some((i) => i.date))
 // the pinned area first, then biggest first, areas without a number last, then by name
 const rows = computed(() =>
   [...props.items].sort(
@@ -33,6 +34,7 @@ const rows = computed(() =>
         <tr>
           <th scope="col" class="border-b border-line-strong p-2 text-left font-strong">{{ t('map.name') }}</th>
           <th scope="col" class="border-b border-line-strong p-2 text-right font-strong">{{ metric.label }}</th>
+          <th v-if="showDate" scope="col" class="border-b border-line-strong p-2 text-right font-strong">{{ t('map.asOfColumn') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -46,6 +48,7 @@ const rows = computed(() =>
             </button>
           </th>
           <td class="num border-b border-line p-2 text-right" :data-code="r.code">{{ fmt.nullable(r.value, (n: number) => fmt.num(n)) }}</td>
+          <td v-if="showDate" class="num whitespace-nowrap border-b border-line p-2 text-right" :data-date="r.code"><time v-if="r.date" :datetime="r.date">{{ fmt.date(r.date) }}</time></td>
         </tr>
       </tbody>
     </table>

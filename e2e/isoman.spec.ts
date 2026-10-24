@@ -11,6 +11,8 @@ test.describe('Isoman', () => {
     const html = await (await page.request.get('/isoman')).text()
     expect(html).toContain('Jangan mengirim uang')
     expect(html).toContain('Tanda bahaya')
+    expect(html).toContain('data-testid="isoman-ctas"')
+    expect(html).toContain('Layanan ini tidak aktif lagi')
     expect(html).toContain('data-testid="telemedicine-grid"')
     expect(html).toContain('data-testid="donation-grid"')
     await noRemoteImages(page)

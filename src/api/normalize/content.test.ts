@@ -45,7 +45,8 @@ describe('content normalisers on live fixtures', () => {
   it('donations: relative image is null, account numbers stay text, contacts are built', () => {
     const list = donations(fx<W.WireDonation[]>('donations'))
     expect(list.length).toBe(8)
-    expect(list.find((d) => d.id === 2)?.image).toBe('/media/donations/eihpXTSucqIThKxLYGeT.webp')
+    expect(list.find((d) => d.id === 2)?.image).toBeNull() // that poster shows private phone numbers and accounts: not kept
+    expect(list.filter((d) => d.image !== null).map((d) => d.image)).toEqual(['/media/donations/scScOVbu9VH0Zx09DOad.webp'])
     const acc = list.flatMap((d) => d.accounts)[0]!
     expect(typeof acc.number).toBe('string')
     expect(list.find((d) => d.id === 2)?.contacts.map((c) => c.kind)).toContain('whatsapp')

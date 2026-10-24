@@ -13,7 +13,8 @@ const id = useId()
 
 <template>
   <article :aria-labelledby="id" class="flex flex-col gap-3 rounded-lg border bg-card text-card-foreground shadow-card p-4">
-    <PicoImage :src="donation.image" :alt="donation.title" ratio="16/9" fallback="initials" />
+    <!-- most pictures were removed (private numbers, faces): no picture, no box. The few that stay load eagerly (a full-page capture showed lazy boxes blank) -->
+    <PicoImage v-if="donation.image" :src="donation.image" :alt="donation.title" ratio="16/9" fallback="initials" loading="eager" />
     <h3 :id="id" class="text-lg">{{ donation.title }}</h3>
     <p class="m-0 text-sm text-ink-muted">
       {{ t('isoman.initiator') }}:

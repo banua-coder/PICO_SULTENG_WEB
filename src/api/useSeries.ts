@@ -1,6 +1,7 @@
 import { toValue } from 'vue'
 import type { MaybeRefOrGetter } from 'vue'
 import { INDONESIA } from '@/app/areas'
+import type { LastRealDates } from '@/app/homeLatest'
 import { fetchJson, fetchStatic } from './client'
 import { ENDPOINTS } from './endpoints'
 import { isArrayOf, isRecord, isWireNationalCase, isWireProvince, isWireProvinceCase, isWireRegency, isWireRegencyCase } from './guards'
@@ -67,6 +68,13 @@ export const HOME_LATEST_URL = `${import.meta.env?.BASE_URL ?? '/'}data/home-lat
 /** The build-time cut for the home page (last Rt, last vaccination day, newest infographics). Seeded into the prerender. */
 export function useHomeLatest(): Resource<HomeLatest> {
   return useResource(HOME_LATEST_URL, (signal) => fetchStatic<HomeLatest>(HOME_LATEST_URL, { signal, guard: isRecord as (v: unknown) => v is HomeLatest }))
+}
+
+export const LAST_REAL_URL = `${import.meta.env?.BASE_URL ?? '/'}data/last-real.json`
+
+/** Last real day of each province and kabupaten (build-time file, public/data/last-real.json), for the map dates. Seeded into the prerender. */
+export function useLastReal(): Resource<LastRealDates> {
+  return useResource(LAST_REAL_URL, (signal) => fetchStatic<LastRealDates>(LAST_REAL_URL, { signal, guard: isRecord as (v: unknown) => v is LastRealDates }))
 }
 
 export type DownloadSizes = Record<string, { csv: number; xlsx: number }>

@@ -4,13 +4,13 @@ import { provincesLatest } from '@/api/normalize/areas'
 import { genderSnapshot, testPeriods, testTypes } from '@/api/normalize/stats'
 import { nationalSeries, provinceSeries, regencySeries } from '@/api/normalize/series'
 import type { LatestByArea } from '@/api/types'
-import { KABUPATEN_SNAPSHOT_URL } from '@/api/useSeries'
+import { KABUPATEN_SNAPSHOT_URL, LAST_REAL_URL } from '@/api/useSeries'
 import { areaByCode, INDONESIA, SULTENG } from '@/app/areas'
 import snapshot from '../../../test/fixtures/kabupaten-latest.snapshot.json'
 import { fx, type WireNationalCase, type WireProvince, type WireProvinceCase, type WireRegencyCase } from '../../../test/fixtures/load'
 import { flush, mountApp, until } from '../../../test/support/mount'
 import DataView from './DataView.vue'
-import { mapDate, mapKinds, metricsFor, selectedCode, useSubAreaItems } from './useSubAreaItems'
+import { mapDateRange, mapKinds, metricsFor, selectedCode, useSubAreaItems } from './useSubAreaItems'
 
 beforeEach(() => {
   vi.spyOn(window, 'matchMedia').mockImplementation((q) => ({ matches: q.includes('reduce'), media: q, addEventListener: () => undefined, removeEventListener: () => undefined }) as unknown as MediaQueryList)
@@ -148,6 +148,8 @@ describe('SubAreaMap (W17)', () => {
     cache.seed({
       '/provinces': provincesLatest(fx<WireProvince[]>('provinces')),
       [KABUPATEN_SNAPSHOT_URL]: snapshot,
+      // the build file of the map date rule: each area's own last real day (the record is padded with zero rows to 2024-01-14)
+      [LAST_REAL_URL]: { provinsi: Object.fromEntries(provincesLatest(fx<WireProvince[]>('provinces')).map((p) => [p.area.code, p.area.code === '72' ? '2023-12-09' : '2023-07-03'])), kabupaten: { '7204': '2023-04-19', '7271': '2023-12-16' } },
     })
   // the map chunk is lazy: wait for its first area unless the page has no map
   const openMap = async (path: string, map = true) => {
@@ -171,7 +173,13 @@ describe('SubAreaMap (W17)', () => {
     expect(selectedCode(areaByCode('kabupaten', '7204')!, 'kabupaten')).toBe('7204')
     expect(selectedCode(SULTENG, 'kabupaten')).toBeUndefined()
     expect(selectedCode(SULTENG, 'provinces')).toBe('72')
-    expect(mapDate(k)).toBe('2024-01-14')
+    // map date rule: each item carries its own last real day, the caption range goes from the oldest to the newest
+    const dated = useSubAreaItems(k, 'positive', { '7204': '2023-04-19', '7271': '2023-12-16' })
+    expect(dated.find((i) => i.code === '7204')!.date).toBe('2023-04-19')
+    expect(dated.find((i) => i.code === '7201')!.date).toBe('2024-01-14') // no build entry: the row's own date
+    expect(mapDateRange(dated)).toEqual({ from: '2023-04-19', to: '2024-01-14' })
+    expect(mapDateRange(dated.filter((i) => i.code === '7271'))).toEqual({ from: '2023-12-16', to: '2023-12-16' })
+    expect(mapDateRange([])).toBeUndefined()
   })
 
   it('/data/kabupaten/poso: Poso is selected on the map and in the table, values match the snapshot, the caption says the map ignores the window', async () => {
@@ -181,8 +189,10 @@ describe('SubAreaMap (W17)', () => {
     const k = (snapshot as LatestByArea[]).find((x) => x.area.code === '7204')!
     expect(s.find('td[data-code="7204"]').text()).toBe(k.latest.cumulative.positive.toLocaleString('id-ID'))
     expect(s.findAll('tbody tr')).toHaveLength(13)
-    expect(s.find('[data-testid="map-caption"]').text()).toContain('14 Januari 2024')
+    // the kabupaten without a build entry keep the padded end of the record; the two with one show their own day, in the table and in the caption range
+    expect(s.find('[data-testid="map-caption"]').text()).toContain('19 April 2023 sampai 14 Januari 2024')
     expect(s.find('[data-testid="map-caption"]').text()).toContain('tidak mengikuti rentang tanggal')
+    expect(s.find('td[data-date="7271"]').text()).toBe('16 Desember 2023')
   })
 
   it('a click on the map and a link in the table keep ?dari and ?sampai', async () => {

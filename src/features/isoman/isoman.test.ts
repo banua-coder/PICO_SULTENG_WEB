@@ -50,6 +50,22 @@ describe('useScheduleFilter', () => {
   })
 })
 
+describe('IsomanView, legacy order', () => {
+  it('four cards (the survey one says it is inactive), four care boxes, the guide sections, then donations, then doctors', async () => {
+    seed()
+    const { wrapper } = await mountApp(IsomanView, {}, '/isoman')
+    await flush()
+    const ctas = wrapper.findAll('[data-cta]')
+    expect(ctas.map((c) => c.attributes('data-cta'))).toEqual(['tele', 'survey', 'faq', 'donasi'])
+    expect(wrapper.find('[data-cta="survey"] [data-inactive]').text()).toContain('tidak aktif lagi')
+    expect(wrapper.find('[data-cta="survey"] a').exists()).toBe(false)
+    expect(wrapper.findAll('[data-category]').map((c) => c.attributes('data-category'))).toEqual(['Tanpa Gejala', 'Ringan', 'Sedang', 'Berat-Kritis'])
+    const ids = wrapper.findAll('section[data-testid^="isoman-"]').map((s) => s.attributes('data-testid'))
+    expect(ids).toEqual(['isoman-perawatan', 'isoman-rumah', 'isoman-kontak-erat', 'isoman-bebas', 'isoman-pcr-ulang', 'isoman-donasi', 'isoman-telemedicine'])
+    expect(wrapper.text()).toContain('Panduan masa pandemi')
+  })
+})
+
 describe('IsomanView', () => {
   it('the archive notice is the first content after the h1, and the danger signs lead the guide', async () => {
     seed()
@@ -85,7 +101,7 @@ describe('IsomanView', () => {
     await flush()
     const cards = wrapper.findAll('[data-testid="donation-grid"] article')
     expect(cards).toHaveLength(8)
-    for (const c of cards) expect(c.find('[data-placeholder]').exists()).toBe(true)
+    for (const c of cards) expect(c.find('[data-placeholder]').exists()).toBe(false) // no picture, no empty box
     expect(wrapper.find('[data-testid="donation-grid"]').findAll('img')).toHaveLength(0)
     expect(wrapper.find('[data-testid="donation-grid"]').text()).toContain(d[0]!.accounts[0]!.bank)
     expect(wrapper.text().toLowerCase()).not.toContain('null')

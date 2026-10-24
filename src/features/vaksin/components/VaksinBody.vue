@@ -4,9 +4,8 @@ import { useVaccination } from '@/api/useStats'
 import StatusView from '@/components/StatusView.vue'
 import type { Scope } from '../useVaksin'
 import { lastDay } from '../useVaksin'
-import CoverageByGroup from './CoverageByGroup.vue'
-import CoverageNow from './CoverageNow.vue'
 import VaccineCards from './VaccineCards.vue'
+import VaccineProgress from './VaccineProgress.vue'
 import DosesOverTime from './DosesOverTime.vue'
 
 // The three sections that depend on the scope. The series is client-side only (it is big), so the shell shows a loading state first.
@@ -19,8 +18,7 @@ const day = computed(() => (series.data.value ? lastDay(series.data.value) : und
 <template>
   <div v-if="series.data.value && day" class="flex flex-col gap-12">
     <VaccineCards :day="day" />
-    <CoverageNow :day="day" />
-    <CoverageByGroup :day="day" />
+    <VaccineProgress :day="day" />
     <DosesOverTime :days="series.data.value" />
   </div>
   <StatusView v-else-if="series.status.value === 'error'" kind="error" compact @retry="series.refresh" />

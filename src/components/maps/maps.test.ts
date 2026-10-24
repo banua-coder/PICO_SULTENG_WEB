@@ -95,6 +95,11 @@ describe('KabupatenMap', () => {
     expect(wrapper.find('figure').text()).toContain('14 Januari 2024')
   })
 
+  it('the legend title says "from to" when the areas have different last real days (map date rule)', async () => {
+    const { wrapper } = await kab({ date: '2023-04-19', dateEnd: '2024-01-14' })
+    expect(wrapper.find('figure').text()).toContain('19 April 2023 sampai 14 Januari 2024')
+  })
+
   it('the title names the metric and the area', async () => {
     const { wrapper } = await kab({ areaName: 'Sulawesi Tengah' })
     expect(wrapper.find('figcaption').text()).toBe('Peta sebaran positif kumulatif COVID-19 di Sulawesi Tengah')
