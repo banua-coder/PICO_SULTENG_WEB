@@ -552,7 +552,9 @@
     "aboutText": "COVID-19 adalah penyakit menular yang disebabkan virus SARS-CoV-2. Penularan terjadi lewat percikan napas dan sentuhan pada permukaan yang tercemar.",
     "symFever": "Demam",
     "symCough": "Batuk",
-    "symHeadache": "Sakit kepala"
+    "symHeadache": "Sakit kepala",
+    "startApiShort": "API dan data",
+    "startAppShort": "Aplikasi"
   },
   "mulai": {
     "title": "Mulai",

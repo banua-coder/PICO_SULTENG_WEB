@@ -11,8 +11,8 @@ const { t } = useI18n()
 
 <template>
   <!-- a row to swipe on a phone (it keeps the first screen for the figures), two columns from sm -->
-  <ul class="relative m-0 flex snap-x list-none gap-3 overflow-x-auto p-0 pb-1 sm:grid sm:grid-cols-2 sm:overflow-visible" data-testid="banners" :aria-label="t('beranda.bannersTitle')" tabindex="0">
-    <li v-for="b in banners.slice(0, 2)" :key="b.id" class="flex w-4/5 shrink-0 snap-start sm:w-auto">
+  <ul class="relative m-0 flex snap-x items-start list-none gap-3 overflow-x-auto p-0 pb-1 sm:grid sm:grid-cols-2 sm:overflow-visible" data-testid="banners" :aria-label="t('beranda.bannersTitle')" tabindex="0">
+    <li v-for="b in banners.slice(0, 2)" :key="b.id" class="flex w-4/5 shrink-0 snap-start sm:w-auto sm:self-stretch">
       <Card class="w-full gap-2 p-3">
         <!-- the pandemic banners' images were on a server that is gone: with no picture the card is just its title (the missing-image state) -->
         <div v-if="b.image" class="hidden sm:block"><PicoImage :src="b.image" :alt="b.title" ratio="16/9" /></div>

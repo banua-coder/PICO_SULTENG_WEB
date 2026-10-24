@@ -552,7 +552,9 @@
     "aboutText": "COVID-19 is an infectious disease caused by the SARS-CoV-2 virus. It spreads through breath droplets and touching contaminated surfaces.",
     "symFever": "Fever",
     "symCough": "Cough",
-    "symHeadache": "Headache"
+    "symHeadache": "Headache",
+    "startApiShort": "API and data",
+    "startAppShort": "App"
   },
   "mulai": {
     "title": "Start",

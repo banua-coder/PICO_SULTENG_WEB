@@ -6,7 +6,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <component :is="`h${level}`" :id="id" class="group flex scroll-mt-6 items-center gap-2" :class="level === 2 ? 'text-xl' : 'text-lg'">
+  <component :is="`h${level}`" :id="id" class="group flex scroll-mt-6 items-center gap-2" :class="level === 2 ? 'text-lg md:text-xl' : 'text-md md:text-lg'">
     <slot />
     <a
       :href="`#${id}`"

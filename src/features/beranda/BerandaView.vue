@@ -32,9 +32,9 @@ usePageHead({ title: () => t('beranda.title'), description: () => t('beranda.des
 </script>
 
 <template>
-  <div class="flex flex-col gap-8 px-4 py-6">
+  <div class="flex flex-col gap-6 px-4 py-5 md:gap-8 md:py-6">
     <header>
-      <h1 class="text-xl md:text-2xl">{{ t('beranda.heroTitle') }}</h1>
+      <h1 class="text-lg md:text-2xl">{{ t('beranda.heroTitle') }}</h1>
       <p class="m-0 mt-1 max-w-prose text-ink-muted" data-testid="archive-line">{{ t('beranda.archive', { range: f.range(FACTS.recordFirst, FACTS.recordLast) }) }}</p>
     </header>
 

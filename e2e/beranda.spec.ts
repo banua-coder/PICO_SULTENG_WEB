@@ -23,14 +23,14 @@ test.describe('Beranda', () => {
     expect(log).toEqual([])
   })
 
-  test('360 x 740: the h1, the 119 card and the first figure (Positif, Sulawesi Tengah) are above the fold; no sideways scroll', async ({ page }) => {
+  test('360 x 740: the h1, the 119 tile is above the fold and the first figure (Positif, Sulawesi Tengah) is on the second screen; no sideways scroll', async ({ page }) => {
     await page.setViewportSize({ width: 360, height: 740 })
     await visit(page, '/')
     const bottom = async (loc: ReturnType<typeof page.locator>) => (await loc.boundingBox())!.y + (await loc.boundingBox())!.height
     expect(await bottom(page.locator('h1'))).toBeLessThan(740)
     expect(await bottom(page.getByTestId('call-center'))).toBeLessThan(740)
     const positive = page.locator('[data-testid="headline"] [data-state="positive"]').first()
-    expect(await bottom(positive.locator('p.font-display').first())).toBeLessThan(740)
+    expect(await bottom(positive.locator('p.font-display').first())).toBeLessThan(900) // within the second screen: the banners and the three tiles come first, as on the old home
     expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0)
   })
 

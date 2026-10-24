@@ -125,7 +125,7 @@ describe('BerandaView', () => {
     const { wrapper } = await open()
     const b = wrapper.find('[data-testid="banners"]')
     expect(b.findAll('li')).toHaveLength(2) // the first two on the home page
-    expect(b.findAll('[data-placeholder]')).toHaveLength(2) // images are on the expired server: resolved to null
+    expect(b.findAll('img')).toHaveLength(0) // the pictures were on a server that is gone: the card is its title
     const a = b.find('a')
     expect(a.attributes('target')).toBe('_blank')
     expect(a.attributes('rel')).toContain('noopener')

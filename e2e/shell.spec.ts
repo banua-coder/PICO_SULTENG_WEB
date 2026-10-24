@@ -1,5 +1,6 @@
 import { expect, test } from './support/test'
 import { hydrated } from './support/a11y'
+import { synthProvinceSeries } from './support/synth'
 
 test.use({ viewport: { width: 360, height: 740 } })
 
@@ -111,6 +112,7 @@ test('keyboard navigation to every page moves focus to its h1 and announces it',
 })
 
 test('a query-only change (the pager) does not steal focus or re-announce', async ({ page }) => {
+  await page.route('**/api/v1/provinces/72/cases**', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: synthProvinceSeries() })) // a full-length series, so there is a next page
   await page.setViewportSize({ width: 1280, height: 800 })
   await page.goto('/tabel-data')
   await hydrated(page)
