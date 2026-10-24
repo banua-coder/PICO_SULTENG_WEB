@@ -67,6 +67,21 @@ export const telemedicines = (wire: WireTelemedicine[]): Telemedicine[] =>
     contacts: nestedContacts(t.contacts),
   }))
 
-/** `href` is dropped to '' if it is not https. Partner logos are never loaded: the footer shows the name as text. */
+// The API gives a file name that lived on the old banuacoders.com host (gone). The logos are copies in public/partners, from the owner's
+// old site and pico-api-docs (see NOTICE); a partner without a copy shows its name as text.
+const LOGOS: Record<string, string> = {
+  'detexi.png': 'detexi',
+  'kawalcovid.png': 'kawalcovid',
+  'ehi.png': 'kawalcorona',
+  'inacovid.png': 'inacovid',
+  'vue.svg': 'vuejs',
+  'dinkes.png': 'dinkes',
+  'sultenglawancovid.png': 'sultenglawancovid',
+  'banuacoders.png': 'banuacoders',
+  'pikobar.png': 'pikobar',
+}
+const logoOf = (image: string): string | null => (LOGOS[image] ? `/partners/${LOGOS[image]}.webp` : null)
+
+/** `href` is dropped to '' if it is not https. `logo` is the local copy of the partner's logo, or null. */
 export const partners = (wire: WirePartner[]): Partner[] =>
-  wire.map((p) => ({ id: p.id, name: p.name, href: resolveLink(p.link) ?? '', inFooter: p.in_footer }))
+  wire.map((p) => ({ id: p.id, name: p.name, href: resolveLink(p.link) ?? '', inFooter: p.in_footer, logo: logoOf(p.image) }))

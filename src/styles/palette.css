@@ -1,4 +1,6 @@
-/* The old PICO palette (Laravel dashboard: gray page, white cards, blue accent, red / blue / green / orange case colours),
+/* The old PICO palette (the four case colours are the exact hex of the legacy site: red-800 #991b1b, blue-600 #2563eb, green-500 #10b981, orange-500 #f97316;
+   the -ink variants are the same hue one step darker, used only where the colour is text on a white card;
+   dark mode moves green and orange to the 600 steps so the dataviz lightness band passes) (Laravel dashboard: gray page, white cards, blue accent, red / blue / green / orange case colours),
    with the text and mark colours moved to the contrast steps that pass WCAG AA and the dataviz palette check
    (node dataviz/scripts/validate_palette.js, light on #ffffff and dark on #1f2937, see docs/redesign-plan.md).
    It overrides the colour tokens of assets/brand/pico-tokens.css, which stays a byte-exact copy of the PICO brand repo.
@@ -23,8 +25,12 @@
   --pico-on-primary: #ffffff;
   --pico-positive: #991b1b;
   --pico-active: #2563eb;
-  --pico-recovered: #15803d;
-  --pico-deceased: #c2410c;
+  --pico-recovered: #10b981;
+  --pico-deceased: #f97316;
+  --pico-positive-ink: #991b1b;
+  --pico-active-ink: #2563eb;
+  --pico-recovered-ink: #047857;
+  --pico-deceased-ink: #c2410c;
   --pico-rt: #1d4ed8;
   --pico-band: #9ca3af;
   --pico-scrim: rgb(17 24 39 / 0.6);
@@ -53,8 +59,12 @@
   --pico-on-primary: #ffffff;
   --pico-positive: #ef4444;
   --pico-active: #3b82f6;
-  --pico-recovered: #16a34a;
+  --pico-recovered: #059669;
   --pico-deceased: #ea580c;
+  --pico-positive-ink: #f87171;
+  --pico-active-ink: #60a5fa;
+  --pico-recovered-ink: #34d399;
+  --pico-deceased-ink: #fb923c;
   --pico-rt: #93c5fd;
   --pico-band: #6b7280;
   --pico-scrim: rgb(17 24 39 / 0.6);
@@ -84,8 +94,12 @@
     --pico-on-primary: #ffffff;
     --pico-positive: #ef4444;
     --pico-active: #3b82f6;
-    --pico-recovered: #16a34a;
+    --pico-recovered: #059669;
     --pico-deceased: #ea580c;
+    --pico-positive-ink: #f87171;
+    --pico-active-ink: #60a5fa;
+    --pico-recovered-ink: #34d399;
+    --pico-deceased-ink: #fb923c;
     --pico-rt: #93c5fd;
     --pico-band: #6b7280;
   --pico-scrim: rgb(17 24 39 / 0.6);

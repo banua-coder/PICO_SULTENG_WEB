@@ -100,7 +100,7 @@ describe('StatusView', () => {
     const { wrapper } = await mountApp(StatusView, { kind })
     await flush()
     expect(wrapper.text()).toContain(title)
-    await until(() => wrapper.find('svg').exists()) // the illustration arrives through a lazy chunk
+    expect(wrapper.find('.pico-ill img').exists()).toBe(true) // the brand v2 picture (a file, not a chunk); compact states keep the small icon
   })
 
   it('English titles', async () => {

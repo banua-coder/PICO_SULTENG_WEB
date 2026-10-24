@@ -5,7 +5,7 @@ import { toggle, visit } from './support/visit'
 // map selection (map.spec). The infographic viewer and the table pager join this file with their pages (part B).
 test('Data toolbar: Tab reaches the area select, the time frames, the year select and the calendar button, in order, and keys operate them', async ({ page }) => {
   await visit(page, '/data/provinsi/sulawesi-tengah')
-  await page.getByRole('combobox', { name: 'Wilayah' }).focus()
+  await page.getByRole('combobox', { name: 'Pilih provinsi (34)' }).focus()
   const order: string[] = []
   for (let i = 0; i < 4; i++) {
     order.push(await page.evaluate(() => { const e = document.activeElement as HTMLElement; return e.getAttribute('role') === 'combobox' ? `combobox:${(e.getAttribute('aria-label') ?? e.id).slice(0, 4)}` : e.getAttribute('data-testid') ?? (e.textContent ?? '').trim() }))
@@ -26,7 +26,9 @@ test('Data toolbar: Tab reaches the area select, the time frames, the year selec
 
 test('Data toolbar: the area select changes the page with the keyboard and keeps the window', async ({ page }) => {
   await visit(page, '/data/indonesia?dari=2021-01-01')
-  const select = page.getByRole('combobox', { name: 'Wilayah' })
+  await toggle(page, 'Provinsi', 'Tingkat').click() // the level switch: Nasional, Provinsi, Kabupaten/Kota
+  await expect(page).toHaveURL(/\/data\/provinsi\/sulawesi-tengah\?dari=2021-01-01/)
+  const select = page.getByRole('combobox', { name: 'Pilih provinsi (34)' })
   await select.focus()
   await page.keyboard.press('Enter')
   await page.getByRole('option', { name: 'Bali', exact: true }).focus()

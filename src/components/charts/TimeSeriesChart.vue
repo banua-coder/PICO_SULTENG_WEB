@@ -3,6 +3,7 @@ import { computed, ref, useId } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { IsoDate } from '@/api/types'
 import { useFormat } from '@/app/useFormat'
+import Illustration from '../Illustration.vue'
 import StateMark from '../StateMark.vue'
 import Axis from './Axis.vue'
 import ChartTable from './ChartTable.vue'
@@ -10,6 +11,8 @@ import { buildModel } from './core/model'
 import { lineForm, roleFill } from './core/roles'
 import { useChartSize, useMarkSize } from './core/useChartSize'
 import { useChartFocus } from './core/useFocus'
+import { extentOf, useZoom } from './core/useZoom'
+import ZoomControls from './ZoomControls.vue'
 import RoleMark from './RoleMark.vue'
 import { Button } from '@/components/ui/button'
 import { LineChart, Table2 } from '@lucide/vue'
@@ -41,7 +44,10 @@ const width = useChartSize(box)
 const markPx = useMarkSize(3)
 const asTable = ref(false)
 
-const model = computed(() => buildModel({ series: props.series, kind: props.kind, overlay: props.overlay, range: props.range, width: width.value, height: props.height }))
+// the page's range (presets, calendar) is the full view; zoom works inside it and resets when it changes
+const full = computed(() => props.range ?? extentOf(props.series.flatMap((s) => s.points.map((p) => p.x))))
+const zoom = useZoom({ full, surface, marginLeft: () => model.value.margin.left, plotW: () => model.value.plotW, xInvert: (px) => model.value.xInvert(px) })
+const model = computed(() => buildModel({ series: props.series, kind: props.kind, overlay: props.overlay, range: zoom.range.value, width: width.value, height: props.height }))
 const drawn = computed(() => width.value > 0)
 const empty = computed(() => model.value.dates.length === 0)
 
@@ -61,7 +67,12 @@ const focus = useChartFocus({
   onChange: (d) => emit('focus-date', d),
 })
 const focusDate = focus.date
-const { onKey, onFocus, onBlur, onPointer, onLeave } = focus
+const { onFocus, onBlur, onPointer, onLeave } = focus
+const onKey = (e: KeyboardEvent) => (zoom.onKey(e) ? undefined : focus.onKey(e))
+const onMove = (e: PointerEvent) => {
+  onPointer(e)
+  zoom.onMove(e)
+}
 
 const focusValues = computed(() => (focusDate.value ? model.value.valuesAt(focusDate.value) : []))
 const liveText = computed(() => {
@@ -93,7 +104,7 @@ const legend = computed(() => [...props.series, ...(props.overlay ? [props.overl
 
     <div ref="box" :style="{ height: `${height}px` }" class="relative w-full" :data-kind="kind">
       <template v-if="!asTable && drawn">
-        <p v-if="empty" class="absolute inset-0 flex items-center justify-center text-ink-muted">{{ t('chart.noData') }}</p>
+        <p v-if="empty" class="absolute inset-0 flex flex-col items-center justify-center gap-2 text-ink-muted"><Illustration name="state-periode-kosong" :width="96" />{{ t('chart.noData') }}</p>
         <div
           v-else
           ref="surface"
@@ -101,12 +112,18 @@ const legend = computed(() => [...props.series, ...(props.overlay ? [props.overl
           tabindex="0"
           :aria-label="`${a11y.title}. ${t('chart.plot')}`"
           :aria-describedby="hintId"
-          class="relative h-full w-full touch-pan-y rounded-sm"
+          class="relative h-full w-full touch-pan-y select-none rounded-sm"
           @keydown="onKey"
           @focus="onFocus"
           @blur="onBlur"
-          @pointermove="onPointer"
+          @pointerdown="zoom.onDown"
+          @pointermove="onMove"
+          @pointerup="zoom.onUp"
+          @pointercancel="zoom.onUp"
           @pointerleave="onLeave"
+          @wheel="zoom.onWheel"
+          @focusin="zoom.arm"
+          @focusout="zoom.disarm"
         >
           <svg :width="model.width" :height="model.height" role="img" :aria-label="a11y.summary" class="block">
             <g :transform="`translate(${model.margin.left} ${model.margin.top})`">
@@ -155,6 +172,8 @@ const legend = computed(() => [...props.series, ...(props.overlay ? [props.overl
                 <text :x="model.plotW + 14 + markPx" :y="s.end!.labelY" dominant-baseline="central" :style="{ fill: 'var(--pico-ink)', fontSize: 'var(--pico-text-xs)' }">{{ s.label }}</text>
               </g>
 
+              <rect v-if="zoom.brushRect.value" :x="zoom.brushRect.value.x" y="0" :width="zoom.brushRect.value.w" :height="model.plotH" :style="{ fill: 'var(--pico-primary)' }" fill-opacity="0.18" aria-hidden="true" data-brush />
+
               <!-- crosshair and the mark of every series at the focused date -->
               <g v-if="focusDate" aria-hidden="true" data-crosshair>
                 <line :x1="focusX" :x2="focusX" :y1="0" :y2="model.plotH" :style="{ stroke: 'var(--pico-ink)' }" stroke-width="1" stroke-dasharray="2 3" />
@@ -184,10 +203,12 @@ const legend = computed(() => [...props.series, ...(props.overlay ? [props.overl
       </template>
     </div>
 
+    <p v-if="asTable && zoom.zoomed.value" class="mt-2 text-sm text-ink-muted" data-testid="table-zoom-note">{{ t('chart.tableZoomed') }}</p>
     <ChartTable v-if="asTable" :caption="a11y.title" :columns="tableCols" :dates="model.dates" :values="tablePoints" />
 
     <Button type="button" variant="outline" size="sm" class="mt-3 text-primary-strong" :aria-pressed="asTable" @click="asTable = !asTable">
       <component :is="asTable ? LineChart : Table2" aria-hidden="true" />{{ asTable ? t('chart.graph') : t('chart.table') }}
     </Button>
+    <ZoomControls v-if="!asTable" :zoom="zoom" :range="zoom.range.value" />
   </figure>
 </template>

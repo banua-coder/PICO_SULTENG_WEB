@@ -1,0 +1,48 @@
+/* Sequential ramps of the map (Sebaran mode), 9 steps, lightness only goes down.
+   Positif: the owner's legacy ramp (Map.vue positiveColor, orange-red #e38e5d to dark red #900000; 9 of its 11 colours, entries 4 and 8 dropped).
+   It passes the ordinal checks that matter (lightness monotone, hue spread 27 degrees, light end 2.53:1 on white).
+   Dirawat, Sembuh, Meninggal: the legacy ramps FAIL them (Dirawat runs green to red and is not monotone, hue spread 118; Sembuh runs green to navy,
+   hue spread 121, light end 1.23:1; Meninggal light end 1.12:1), so these stay single-hue from a light tint to the EXACT colour of the legacy
+   cards (blue-600 #2563eb, green-500 #10b981, orange-500 #f97316), linear in sRGB. Numbers in docs/port-plan.md, section "Map ramps".
+   The same in light and dark: fills carry their own label colour, black or white, whichever has >= 4.5:1 (see components/maps/quantile.ts,
+   LIGHT_TEXT_FROM, and the test in maps/quantile.test.ts that reads this file). */
+:root {
+  --pico-ramp-positive-1: #e38e5d;
+  --pico-ramp-positive-2: #da8266;
+  --pico-ramp-positive-3: #d17567;
+  --pico-ramp-positive-4: #c15d5a;
+  --pico-ramp-positive-5: #ba5150;
+  --pico-ramp-positive-6: #b24443;
+  --pico-ramp-positive-7: #a12a26;
+  --pico-ramp-positive-8: #991915;
+  --pico-ramp-positive-9: #900000;
+  --pico-ramp-active-1: #dbeafe;
+  --pico-ramp-active-2: #c4d9fc;
+  --pico-ramp-active-3: #aec8f9;
+  --pico-ramp-active-4: #97b7f7;
+  --pico-ramp-active-5: #80a7f5;
+  --pico-ramp-active-6: #6996f2;
+  --pico-ramp-active-7: #5385f0;
+  --pico-ramp-active-8: #3c74ed;
+  --pico-ramp-active-9: #2563eb;
+  --pico-ramp-recovered-1: #d1fae5;
+  --pico-ramp-recovered-2: #b9f2d9;
+  --pico-ramp-recovered-3: #a1eacc;
+  --pico-ramp-recovered-4: #89e2c0;
+  --pico-ramp-recovered-5: #71dab3;
+  --pico-ramp-recovered-6: #58d1a7;
+  --pico-ramp-recovered-7: #40c99a;
+  --pico-ramp-recovered-8: #28c18e;
+  --pico-ramp-recovered-9: #10b981;
+  --pico-ramp-deceased-1: #ffedd5;
+  --pico-ramp-deceased-2: #fedebd;
+  --pico-ramp-deceased-3: #fecfa5;
+  --pico-ramp-deceased-4: #fdbf8d;
+  --pico-ramp-deceased-5: #fcb076;
+  --pico-ramp-deceased-6: #fba15e;
+  --pico-ramp-deceased-7: #fb9246;
+  --pico-ramp-deceased-8: #fa822e;
+  --pico-ramp-deceased-9: #f97316;
+  --pico-ramp-ink: #000000;
+  --pico-ramp-paper: #ffffff;
+}

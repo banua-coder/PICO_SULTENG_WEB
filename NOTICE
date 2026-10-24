@@ -28,6 +28,40 @@ licence or have no determined licence.
      public/apple-touch-icon-180.png, public/og-image-1200x630.png).
    - Small illustrations of the old PICO dashboard (src/assets/images/: wash hands, wear mask, fever, cough,
      headache), from the owner's legacy-assets. Owner's own work, not MIT.
-   - Font Nunito (src/assets/fonts/Nunito-latin.woff2): SIL OFL 1.1. The OFL text is not yet bundled in this
-     repository.
+   - Font Nunito (src/assets/fonts/Nunito-latin.woff2): Copyright 2014 The Nunito Project Authors
+     (https://github.com/googlefonts/nunito), SIL Open Font License 1.1. The licence text sits next to the font
+     (src/assets/fonts/OFL.txt) and is served with the site at /licenses/Nunito-OFL.txt.
    - Components in src/components/ui/ come from shadcn-vue (MIT) and reka-ui (MIT).
+
+5. Files copied from the owner's old site (provenance: "from the owner's old site")
+   - Partner logos in public/partners/ (webp, resized): detexi, dinkes, kawalcorona (Ethical Hacker Indonesia),
+     inacovid, sultenglawancovid, banuacoders from the pico-api-docs repository (MIT, banua-coder/pico-api-docs,
+     public/*.webp); kawalcovid, pikobar, vuejs from the owner's old Hostinger storage (storage/images/partner).
+     The logos are trademarks of their owners and are shown only to name the partners and data sources.
+   - Banner and donation pictures in public/media/{banners,donations}/ (webp, resized) from the owner's old
+     Hostinger storage (storage/banners, storage/donations). They were uploaded by the owner and by the donation
+     organisers for the old site. Not MIT. Every picture was looked at before it was kept (personal data review):
+       - the 4 banners show organisation names and logos and illustrations only: kept;
+       - of the 8 donation posters, 7 were removed because they show phone numbers, bank account numbers or
+         names of private persons (or a person's face): Naga/PSMTI posko, "Informasi" (Seh'at), Posko Jaga Palu,
+         SIGI Mosijagai, Isoman Care, bakubantu, Join the fight. Kept: "Kongsi Gambar Serrupa" (an illustration,
+         no personal data). The donation cards that had a removed poster show the title only.
+     The Isoman page still shows the bank account numbers the API gives for each donation, as text (the owner's
+     decision, not changed here); those are the donors' public appeals from 2021.
+   - Map boundary files (item 1) were also found in the old Hostinger storage (storage/geojson), same status.
+
+6. Libraries of the old site that are not used
+   The old site drew its maps with AnyChart 8 (commercial licence, watermark in the free build) and its charts
+   with Chart.js 3 and chartjs-plugin-zoom. None of their code is in this repository. The maps and charts are
+   rebuilt on d3-geo (build time) and d3-scale/d3-shape (client), both ISC licence. Unovis was evaluated and not
+   adopted (docs/adr/0001-chart-library.md).
+
+7. Brand v2 illustrations (written for PICO, MIT)
+   public/illustrations/{light,dark}/: cuci-tangan, pakai-masker, jaga-jarak, vaksinasi, gejala-demam, gejala-batuk,
+   gejala-sakit-kepala, gejala-sesak-napas, gejala-hilang-penciuman, isolasi-mandiri, telekonsultasi, bantuan-antar, rumah-sakit,
+   state-kosong, state-galat, state-luring, state-memuat, state-periode-kosong, state-pemeliharaan, telepon-119. Source: the PICO brand
+   repository, brand/v2/flat (scripts/copy-illustrations.sh copies them). Used on the home page, Wiki, Kontak and Isoman, and in the
+   empty, error, offline, loading and no-data-for-period states (page size 200 px, in a card or chart 96 px).
+   Lottie: public/lottie/{loading,success,offline,empty,handwash-loop,logo-reveal,logo-reveal-dark}.json and posters/*.svg from the same
+   source (written for PICO, MIT). Player: lottie-web (MIT, Copyright Airbnb), light SVG build, loaded as its own chunk only when a moment
+   is in view and motion is not reduced. No Lottie file comes from LottieFiles or another third party.

@@ -19,6 +19,7 @@ const props = withDefaults(
   { fallback: 'plate', loading: 'lazy', retryable: false, fit: 'cover' },
 )
 
+const emit = defineEmits<{ failed: [] }>()
 const { t } = useI18n()
 const failed = ref(false)
 const attempt = ref(0)
@@ -38,6 +39,7 @@ const initials = computed(() =>
 )
 
 watch(() => props.src, () => (failed.value = false))
+watch(failed, (f) => f && emit('failed'))
 // the error event can fire before hydration attaches the listener, so check once after mount
 onMounted(() => {
   const el = img.value

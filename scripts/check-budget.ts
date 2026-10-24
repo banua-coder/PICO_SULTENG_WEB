@@ -11,7 +11,11 @@ import { fileForPath, read, walkHtml } from './site'
 const KB = 1024
 // The shadcn-vue redesign (reka-ui primitives, Select, Tabs, Dialog) added about 9 KB to the home page and 13 KB to the pages with a Select;
 // the limits moved by that much (was 90 / 110). Calendar, sheet, d3 and xlsx stay out of the first load.
-export const LIMITS = { beranda: 100 * KB, data: 160 * KB, other: 125 * KB, css: 30 * KB, fonts: 70 * KB, geo: 40 * KB, html: 60 * KB }
+// Port of the owner's components (fix/port-legacy-components): the Data pages are prerendered with their maps, and the prerender preloads the
+// two lazy map chunks (Sulawesi Tengah paths 12.4 KB gzip + Indonesia paths 23.1 KB) so the map is in the HTML and paints with the page;
+// the data limit moves from 160 to 170 KB for that. Zoom code (chart chunks, 3.3 + 4.6 KB) stays lazy and off the budget. The home page limit
+// moves from 100 to 105 KB for the case card, the underline tabs, the legacy home blocks (hotline, social, risk CTA, protect card, info rows, ODP/PDP cards) and the footer logo grid; the vaccine card and the Lottie player (47 KB) are their own lazy chunks.
+export const LIMITS = { beranda: 105 * KB, data: 170 * KB, other: 125 * KB, css: 30 * KB, fonts: 70 * KB, geo: 40 * KB, html: 60 * KB }
 export type Limits = typeof LIMITS
 
 /** Library chunks that must never be in the initial JS of a page. Named by manualChunks in vite.config.ts. */

@@ -9,7 +9,7 @@ import { HOME_LATEST_URL, KABUPATEN_SNAPSHOT_URL } from '@/api/useSeries'
 import { INDONESIA, SULTENG } from '@/app/areas'
 import { buildHomeLatest } from '@/app/homeLatest'
 import { fx, type WireHospital, type WireInfographic, type WireNationalCase, type WireProvince, type WireProvinceCase } from '../../../test/fixtures/load'
-import { flush, mountApp } from '../../../test/support/mount'
+import { flush, mountApp, until } from '../../../test/support/mount'
 import snapshot from '../../../test/fixtures/kabupaten-latest.snapshot.json'
 import BerandaView from './BerandaView.vue'
 import { dailyPick, jakartaDay, provinceRows } from './useBeranda'
@@ -115,9 +115,14 @@ describe('BerandaView', () => {
     const { wrapper } = await open()
     await wrapper.findAll('[role="tab"]').find((t) => t.text() === 'Vaksinasi')!.trigger('mousedown', { button: 0, ctrlKey: false })
     await flush()
+    await until(() => wrapper.find('[data-testid="vaccine-card"]').exists()) // the card is its own chunk
     const v = wrapper.find('[data-testid="vaccine-summary"]')
-    expect(v.findAll('[role="progressbar"]')).toHaveLength(4)
-    expect(v.text()).toContain('25 Maret 2022')
+    // Sulawesi Tengah first: the two dose cards (the owner's CardVaccineHome), each with its five coloured segments and five group lines
+    const cards = v.findAll('[data-testid="vaccine-card"]')
+    expect(cards.map((c) => c.attributes('data-dose'))).toEqual(['dose1', 'dose2'])
+    expect(cards[0]!.findAll('[data-segment]')).toHaveLength(5)
+    expect(cards[0]!.findAll('li[data-group]').map((l) => l.attributes('data-group'))).toEqual(['elderly', 'public_officer', 'health_worker', 'public', 'teenager'])
+    expect(wrapper.text()).toContain('25 Maret 2022')
     expect(wrapper.find('a[href="/vaksin"]').exists()).toBe(true)
   })
 
@@ -125,11 +130,36 @@ describe('BerandaView', () => {
     const { wrapper } = await open()
     const b = wrapper.find('[data-testid="banners"]')
     expect(b.findAll('li')).toHaveLength(2) // the first two on the home page
-    expect(b.findAll('img')).toHaveLength(0) // the pictures were on a server that is gone: the card is its title
+    // the pictures were on a server that is gone: they are served from the backup of its storage
+    expect(b.findAll('img').every((i) => i.attributes('src')?.startsWith('/media/banners/'))).toBe(true)
     const a = b.find('a')
     expect(a.attributes('target')).toBe('_blank')
     expect(a.attributes('rel')).toContain('noopener')
     expect(a.text()).toContain('Tautan luar')
+  })
+
+  it('the legacy blocks: social card, risk CTA to /isoman, protect checklist with brand pictures, ODP/PDP cards', async () => {
+    const { wrapper } = await open()
+    const links = wrapper.findAll('[data-testid="social-card"] a').map((a) => a.attributes('href'))
+    expect(links).toEqual(['https://instagram.com/sultenglawancovid', 'https://x.com/SultengVsCovid'])
+    expect(wrapper.find('[data-testid="risk-cta"] a').attributes('href')).toBe('/isoman')
+    expect(wrapper.find('[data-testid="risk-cta"]').text()).toContain('Periksa sekarang')
+    const protect = wrapper.find('[data-testid="protect-card"]')
+    expect(protect.findAll('li')).toHaveLength(8)
+    expect(protect.findAll('.pico-ill')).toHaveLength(2)
+    // ODP/PDP: the last real figures with their date, never NaN
+    const cards = wrapper.findAll('[data-testid="suspect-card"]')
+    expect(cards.map((c) => c.attributes('data-kind'))).toEqual(['pdp', 'odp'])
+    expect(wrapper.find('[data-testid="suspect-cards"]').text()).toContain('8 Mei 2022')
+    expect(wrapper.find('[data-testid="suspect-cards"]').text()).not.toContain('NaN')
+  })
+
+  it('Info praktikal: a row per infographic with Lihat and Bagikan', async () => {
+    const { wrapper } = await open()
+    const rows = wrapper.findAll('[data-testid="latest-infographics"] li')
+    expect(rows).toHaveLength(5)
+    expect(rows[0]!.find('button').text()).toContain('Bagikan')
+    expect(rows[0]!.find('a').text()).toContain('Lihat')
   })
 
   it('banners are hidden with none', async () => {
@@ -147,7 +177,11 @@ describe('BerandaView', () => {
     expect(info[0]!.attributes('href')).toMatch(/^\/infografis\?id=\d+$/)
     expect(wrapper.findAll('[data-testid="hospital-teaser"] li')).toHaveLength(3)
     expect(wrapper.find('[data-testid="call-center"]').text()).toContain('119')
-    expect(wrapper.html()).not.toContain('0811404119')
+    // the old Hotline (Dinkes Sulteng) is back as the legacy card, a tel: link marked as a pandemic number that may not answer
+    const hot = wrapper.find('[data-testid="hotline"]')
+    expect(hot.text()).toContain('+62811-404-119')
+    expect(hot.text()).toContain('mungkin sudah tidak aktif')
+    expect(hot.find('a').attributes('href')).toBe('tel:+62811404119')
     expect(wrapper.find('[data-todo="beranda-119"]').exists()).toBe(false)
   })
 

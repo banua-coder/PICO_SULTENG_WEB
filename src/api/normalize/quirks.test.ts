@@ -158,10 +158,15 @@ describe('Q7: image resolver', () => {
   })
   it('a banner on the expired banuacoders.com is null', () => {
     expect(resolveImage('https://banuacoders.com/corona/assets/banners/July2021/x.png')).toBeNull()
+    // ... unless the owner's backup of that storage has the file
+    expect(resolveImage('https://banuacoders.com/corona/assets/banners/July2021/yjQD3jF6u7NWfKiq0lvS.png')).toBe('/media/banners/yjQD3jF6u7NWfKiq0lvS.webp')
     expect(resolveImage('https://www.banuacoders.com/a.png')).toBeNull()
   })
   it('a relative donation image and a bare partner file name are null', () => {
+    expect(resolveImage('donations/August2021/scScOVbu9VH0Zx09DOad.jpg')).toBe('/media/donations/scScOVbu9VH0Zx09DOad.webp')
+    // posters with a private person's phone number, account or face were not kept
     expect(resolveImage('donations/July2021/eihpXTSucqIThKxLYGeT.jpg')).toBeNull()
+    expect(resolveImage('donations/July2021/unknown.jpg')).toBeNull()
     expect(resolveImage('detexi.png')).toBeNull()
     expect(resolveImage('/storage/x.png')).toBeNull()
   })

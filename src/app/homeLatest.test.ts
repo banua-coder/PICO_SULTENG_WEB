@@ -26,6 +26,10 @@ describe('buildHomeLatest', () => {
     expect(home.vaccination.indonesia?.date).toBe('2022-03-25')
     expect(home.vaccination['sulawesi-tengah']?.total.coverage.dose1).toBe(85.55)
   })
+  it('the last ODP/PDP day of Sulawesi Tengah is 2022-05-08 (the source stopped), with its figures', () => {
+    expect(home.observation?.date).toBe('2022-05-08')
+    expect(home.observation?.odp?.total).toBeGreaterThan(0)
+  })
   it('the 5 newest infographics, newest first', () => {
     expect(home.infographics).toHaveLength(5)
     const ids = home.infographics.map((i) => i.id)

@@ -29,29 +29,30 @@ const open = async (path = '/vaksin') => {
   const out = await mountApp(VaksinView, {}, path)
   await flush()
   // the charts arrive through lazy chunks
-  await until(() => ['doses-over-time', 'coverage-groups'].every((id) => out.wrapper.find(`[data-testid="${id}"] figure`).exists()))
+  await until(() => ['doses-over-time'].every((id) => out.wrapper.find(`[data-testid="${id}"] figure`).exists()))
   return out
 }
 
 describe('VaksinView', () => {
-  it('Sulawesi Tengah: dose 1 85,55 % and dose 2 53,63 % with the date 25 Maret 2022', async () => {
+  it('Sulawesi Tengah: the progress block, Dosis 1 and Dosis 2 columns of six cards, 85,55 % and 53,63 %, the date 25 Maret 2022', async () => {
     const { wrapper } = await open()
     expect(wrapper.find('h1').text()).toBe('Vaksinasi COVID-19')
-    const now = wrapper.find('[data-testid="coverage-now"]')
-    const texts = now.findAll('[data-testid="progress-text"]').map((e) => e.text())
-    expect(texts[0]).toContain('85,55%')
-    expect(texts[1]).toContain('53,63%')
-    expect(now.find('[data-testid="vaccine-asof"]').text()).toBe('Data vaksinasi berhenti diperbarui pada 25 Maret 2022.')
-    const bars = now.findAll('[role="progressbar"]').map((e) => e.attributes('aria-valuetext'))
-    expect(bars[0]).toContain('Dosis 1')
+    const p = wrapper.find('[data-testid="vaccine-progress"]')
+    expect(p.find('h2').text()).toContain('Progress Vaksinasi COVID-19')
+    const cols = p.findAll('[data-dose]')
+    expect(cols.map((c) => c.attributes('data-dose'))).toEqual(['dose1', 'dose2'])
+    expect(cols[0]!.findAll('[data-testid="vaccine-progress-card"]').map((c) => c.attributes('data-group'))).toEqual(['total', 'elderly', 'public_officer', 'health_worker', 'public', 'teenager'])
+    expect(cols[0]!.find('[data-group="total"] [data-testid="progress-text"]').text()).toContain('85,55%')
+    expect(cols[1]!.find('[data-group="total"] [data-testid="progress-text"]').text()).toContain('53,63%')
+    expect(wrapper.find('[data-testid="vaccine-cards"]').text()).toContain('Data vaksinasi berhenti diperbarui pada 25 Maret 2022.')
+    expect(cols[0]!.find('[data-group="total"] [role="progressbar"]').attributes('aria-valuetext')).toContain('Semua Vaksinasi')
   })
 
-  it('health workers above 100 %: the over-target note and a normal bar', async () => {
+  it('health workers above 100 %: the real percent in the text, the bar stops at 100', async () => {
     const { wrapper } = await open()
-    const g = wrapper.find('[data-testid="coverage-groups"]')
-    expect(g.find('[data-testid="over-notes"]').text()).toContain('Tenaga kesehatan: Dosis 1 melebihi target (111,2%)')
-    expect(g.findAll('figure')).toHaveLength(2)
-    expect(g.text()).toContain('Tenaga kesehatan (111,2%)')
+    const card = wrapper.find('[data-testid="vaccine-progress"] [data-dose="dose1"] [data-testid="vaccine-progress-card"][data-group="health_worker"]')
+    expect(card.find('[data-testid="progress-text"]').text()).toContain('111,2')
+    expect(card.find('[data-fill]').attributes('style')).toContain('width: 100%')
   })
 
   it('doses are told apart by line form, mark and label, not colour only', async () => {
@@ -97,6 +98,6 @@ describe('VaksinView', () => {
   it('English page and title', async () => {
     const { wrapper } = await open('/en/vaksin')
     expect(wrapper.find('h1').text()).toBe('COVID-19 vaccination')
-    expect(wrapper.find('[data-testid="vaccine-asof"]').text()).toBe('Vaccination data stopped being updated on 25 March 2022.')
+    expect(wrapper.find('[data-testid="vaccine-cards"]').text()).toContain('Vaccination data stopped being updated on 25 March 2022.')
   })
 })

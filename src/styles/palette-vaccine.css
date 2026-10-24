@@ -1,0 +1,51 @@
+/* The vaccination card colours of the legacy site (CardVaccineHome / CardVaccineTarget): blue-500, purple-500, orange-500, pink-600,
+   pink-400 for the five groups, green for the total. --pico-vg-* are the exact legacy fills (bar segments, swatches); --pico-vg-*-ink are the
+   same hue one step darker (dark mode: lighter) so the text keeps WCAG AA. */
+:root,
+[data-theme='light'] {
+  --pico-vg-total: #10b981;
+  --pico-vg-total-ink: #047857;
+  --pico-vg-elderly: #3b82f6;
+  --pico-vg-elderly-ink: #1d4ed8;
+  --pico-vg-public_officer: #8b5cf6;
+  --pico-vg-public_officer-ink: #6d28d9;
+  --pico-vg-health_worker: #f97316;
+  --pico-vg-health_worker-ink: #c2410c;
+  --pico-vg-public: #db2777;
+  --pico-vg-public-ink: #9d174d;
+  --pico-vg-teenager: #f472b6;
+  --pico-vg-teenager-ink: #be185d;
+  --pico-track: #e5e7eb;
+  /* partner logos are drawn for a white ground in both themes */
+  --pico-logo-ground: #ffffff;
+}
+[data-theme='dark'] {
+  --pico-vg-total-ink: #34d399;
+  --pico-vg-elderly-ink: #93c5fd;
+  --pico-vg-public_officer-ink: #c4b5fd;
+  --pico-vg-health_worker-ink: #fdba74;
+  --pico-vg-public-ink: #f9a8d4;
+  --pico-vg-teenager-ink: #f472b6;
+  --pico-track: #374151;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --pico-vg-total-ink: #34d399;
+    --pico-vg-elderly-ink: #93c5fd;
+    --pico-vg-public_officer-ink: #c4b5fd;
+    --pico-vg-health_worker-ink: #fdba74;
+    --pico-vg-public-ink: #f9a8d4;
+    --pico-vg-teenager-ink: #f472b6;
+    --pico-track: #374151;
+  }
+}
+
+/* The legacy PCR and RDT blocks of the data page: exact fills #18ad5b and rgb(33 123 196); white on them is 2.93 and 4.47 to 1, so the
+   panel uses a darker step of the same hue (white 5.5 and 5.3 to 1) and the exact legacy hex is the left rule and the chip. */
+:root {
+  --pico-test-pcr: #18ad5b;
+  --pico-test-pcr-ground: #11793f;
+  --pico-test-rdt: #217bc4;
+  --pico-test-rdt-ground: #1a6fb0;
+  --pico-on-test: #ffffff;
+}

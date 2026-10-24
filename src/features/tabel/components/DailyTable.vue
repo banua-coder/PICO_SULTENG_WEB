@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import type { DailyRow } from '@/api/types'
 import { useFormat } from '@/app/useFormat'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import Illustration from '@/components/Illustration.vue'
 import StateMark from '@/components/StateMark.vue'
 import { groupSpans, numberFor } from '../columns'
 import type { Column } from '../columns'
@@ -52,7 +53,7 @@ const groupLabel = (g: string) => t(g === 'daily' ? 'tabel.groupDaily' : g === '
             <template v-else>{{ f.nullable(numberFor(c, r), (n) => f.num(n)) }}</template>
           </TableCell>
         </TableRow>
-        <TableRow v-if="rows.length === 0"><TableCell :colspan="columns.length + 1" class="p-4 text-center text-ink-muted">{{ t('tabel.noRows') }}</TableCell></TableRow>
+        <TableRow v-if="rows.length === 0"><TableCell :colspan="columns.length + 1" class="p-4 text-center text-ink-muted"><Illustration name="state-periode-kosong" :width="96" class="mb-2" /><br>{{ t('tabel.noRows') }}</TableCell></TableRow>
       </TableBody>
     </Table>
   </div>

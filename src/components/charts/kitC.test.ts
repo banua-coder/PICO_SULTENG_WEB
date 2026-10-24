@@ -39,7 +39,7 @@ describe('RtChart', () => {
 
   it('draws a solid thread, a gray 95 % band, and a dashed Rt = 1 line with a text label', async () => {
     const { wrapper } = await chart(rt([1.2, 1.1, 0.95, 0.9]))
-    expect(wrapper.find('[data-rt-band]').attributes('fill')).toBe('var(--pico-band)')
+    expect(wrapper.find('[data-rt-band]').attributes('fill')).toBe('var(--pico-rt)')
     const thread = wrapper.find('[data-line]')
     expect(thread.attributes('style')).not.toContain('dasharray') // solid
     const th = wrapper.find('[data-threshold]')
@@ -51,7 +51,7 @@ describe('RtChart', () => {
     const { wrapper } = await chart(rt([1.2, 1.1]))
     expect(wrapper.find('[data-end-label] [data-mark="rt"]').exists()).toBe(true)
     expect(wrapper.find('[data-end-label] text').text()).toBe('Rt')
-    expect(wrapper.find('[data-testid="rt-key"]').text()).toContain('Pita arsir')
+    expect(wrapper.find('[data-testid="rt-key"]').text()).toContain('batas atas dan batas bawah')
     expect(wrapper.find('[data-testid="rt-key"]').text()).toContain('Rt = 1')
   })
 
@@ -64,8 +64,10 @@ describe('RtChart', () => {
     expect(none.wrapper.find('[data-testid="rt-key"]').exists()).toBe(false)
   })
 
-  it('a value above 4 shows a clipped marker with its number', async () => {
+  it('a value above 4 shows a clipped marker with its number once the scale is cut (the default is the full scale)', async () => {
     const { wrapper } = await chart(rt([1.1, 5.25, 1.0]))
+    expect(wrapper.find('[data-clipped]').exists()).toBe(false)
+    await wrapper.find('[data-testid="rt-scale"]').trigger('click')
     const c = wrapper.find('[data-clipped]')
     expect(c.exists()).toBe(true)
     expect(c.find('[data-mark="rt"]').exists()).toBe(true)

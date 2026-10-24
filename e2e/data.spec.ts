@@ -69,7 +69,8 @@ test('/data/kabupaten/kota-palu?dari=2021-07-01&sampai=2021-07-31 shows Kota Pal
   await hydrated(page)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Data Kota Palu')
   await expect(page.getByTestId('summary')).toContainText('31 Juli 2021')
-  await expect(page.getByTestId('summary').locator('svg[data-state]')).toHaveCount(3) // no "dirawat" for a kabupaten
+  await expect(page.getByTestId('summary').locator('[data-state]')).toHaveCount(4)
+  await expect(page.getByTestId('summary').locator('[data-state="active"] [data-figure]').first()).toHaveText('tidak tersedia') // no "dirawat" for a kabupaten: said, not 0
 })
 
 test('?dari=1999-01-01 clamps and ?dari=abc falls back, with no error', async ({ page }) => {
@@ -86,7 +87,11 @@ test('changing the area keeps dari, sampai and tampilan', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
   await page.goto('/data/provinsi/aceh?dari=2021-07-01&sampai=2021-07-31&tampilan=kumulatif')
   await hydrated(page)
-  await chooseOption(page, page.getByRole('combobox', { name: 'Wilayah' }), 'Kota Palu')
+  await chooseOption(page, page.getByRole('combobox', { name: 'Pilih provinsi (34)' }), /^Sulawesi Tengah$/)
+  await expect(page).toHaveURL(/\/data\/provinsi\/sulawesi-tengah\?(?=.*dari=2021-07-01)(?=.*sampai=2021-07-31)(?=.*tampilan=kumulatif)/)
+  await toggle(page, 'Kabupaten/Kota', 'Tingkat').click()
+  await expect(page.getByRole('combobox', { name: /Pilih kabupaten/ })).toBeVisible()
+  await chooseOption(page, page.getByRole('combobox', { name: /Pilih kabupaten/ }), 'Kota Palu')
   await expect(page).toHaveURL(/\/data\/kabupaten\/kota-palu\?(?=.*dari=2021-07-01)(?=.*sampai=2021-07-31)(?=.*tampilan=kumulatif)/)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Data Kota Palu')
 })

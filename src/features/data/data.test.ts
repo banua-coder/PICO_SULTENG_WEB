@@ -51,20 +51,21 @@ describe('DataView routes', () => {
     }
   })
 
-  it('kabupaten: three figures, no "dirawat" (C2: active is null)', async () => {
+  it('kabupaten: the Dirawat card says it is not available (C2: active is null), never 0', async () => {
     seedLatest()
     const { wrapper } = await mountApp(DataView, {}, '/data/kabupaten/kota-palu')
     await flush()
     const s = wrapper.find('[data-testid="summary"]')
-    expect(s.findAll('svg[data-state]').map((e) => e.attributes('data-state'))).toEqual(['positive', 'recovered', 'deceased'])
-    expect(s.text()).not.toContain('Dirawat')
+    expect(s.findAll('[data-state]').map((e) => e.attributes('data-state'))).toEqual(['positive', 'active', 'recovered', 'deceased'])
+    const active = s.find('[data-state="active"]')
+    expect(active.find('[data-figure]').text()).toBe('tidak tersedia')
   })
 
   it('province and country: four figures including dirawat', async () => {
     seedLatest()
     const nat = await mountApp(DataView, {}, '/data/indonesia')
     await flush()
-    expect(nat.wrapper.find('[data-testid="summary"]').findAll('svg[data-state]')).toHaveLength(4)
+    expect(nat.wrapper.find('[data-testid="summary"]').findAll('[data-state]')).toHaveLength(4)
     expect(nat.wrapper.find('h1').text()).toBe('Data Indonesia')
   })
 
@@ -133,8 +134,11 @@ describe('OdpPdpNote', () => {
     )
     const t = wrapper.find('[data-testid="odp-note"]').text()
     expect(t).toContain('8 Mei 2022')
-    expect(t).toContain('Data ODP/PDP tidak tersedia setelah 8 Mei 2022, karena sumber berhenti melaporkannya.')
-    expect(t).toMatch(/ODP.*total/)
+    expect(t).toContain('Sumber berhenti melaporkan ODP dan PDP setelah 8 Mei 2022')
+    // the two legacy cards, PDP first, with their three figures; never NaN
+    expect(wrapper.findAll('[data-testid="suspect-card"]').map((c) => c.attributes('data-kind'))).toEqual(['pdp', 'odp'])
+    expect(t).toContain('Orang Dalam Pemantauan (ODP)')
+    expect(t).not.toContain('NaN')
   })
 
   it('the country has no note, and neither does a series without ODP numbers', async () => {

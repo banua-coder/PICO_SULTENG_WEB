@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import TipFigure from '@/components/TipFigure.vue'
-import wash from '@/assets/images/wash_hands.png'
-import mask from '@/assets/images/wear_mask.png'
+import Illustration from '@/components/Illustration.vue'
 import PicoIcon from '@/components/PicoIcon.vue'
 import WikiLayout from './WikiLayout.vue'
 
@@ -44,6 +43,7 @@ const myths: [string, string][] = [
     <section aria-labelledby="gejala">
       <h2 id="gejala" class="flex items-center gap-2"><PicoIcon name="symptoms" :size="24" class="text-indigo" /> Gejala</h2>
       <p>Gejala yang paling umum adalah demam, batuk, lelah, dan hilangnya penciuman atau pengecapan. Gejala lain antara lain sakit tenggorokan, sakit kepala, dan nyeri otot. Tanda yang serius adalah sulit bernapas atau sesak napas. Sebagian orang terinfeksi tanpa gejala.</p>
+      <ul class="m-0 mb-3 flex list-none flex-wrap gap-4 p-0"><li class="flex flex-col items-center text-center text-sm"><Illustration name="gejala-demam" :width="96" />Demam</li><li class="flex flex-col items-center text-center text-sm"><Illustration name="gejala-batuk" :width="96" />Batuk</li><li class="flex flex-col items-center text-center text-sm"><Illustration name="gejala-sakit-kepala" :width="96" />Sakit kepala</li><li class="flex flex-col items-center text-center text-sm"><Illustration name="gejala-sesak-napas" :width="96" />Sesak napas</li><li class="flex flex-col items-center text-center text-sm"><Illustration name="gejala-hilang-penciuman" :width="96" />Hilang penciuman</li></ul>
       <p>Bila Anda bergejala, baca bagian <a href="#jika-terinfeksi">Jika terinfeksi</a>.</p>
     </section>
 
@@ -59,10 +59,10 @@ const myths: [string, string][] = [
         <li>Di dalam ruangan, buka jendela agar udara luar masuk.</li>
       </ol>
       <div class="mt-4 grid grid-cols-2 gap-4">
-        <TipFigure :src="wash" caption="Cuci tangan dengan air dan sabun." />
-        <TipFigure :src="mask" caption="Pakai masker bila tidak bisa menjaga jarak." />
-        <TipFigure icon="prevention.distancing" caption="Jaga jarak sekitar satu meter." />
-        <TipFigure icon="vaccine" caption="Tanyakan soal vaksinasi ke fasilitas kesehatan." />
+        <TipFigure lottie="handwash-loop" illustration="cuci-tangan" caption="Cuci tangan dengan air dan sabun." />
+        <TipFigure illustration="pakai-masker" caption="Pakai masker bila tidak bisa menjaga jarak." />
+        <TipFigure illustration="jaga-jarak" caption="Jaga jarak sekitar satu meter." />
+        <TipFigure illustration="vaksinasi" caption="Tanyakan soal vaksinasi ke fasilitas kesehatan." />
       </div>
     </section>
 

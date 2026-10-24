@@ -3,6 +3,7 @@
    Raw colour classes (bg-red-500) still do not exist: colours come from the tokens below. */
 @import '../assets/brand/pico-tokens.css';
 @import './palette.css';
+@import './palette-vaccine.css';
 
 @theme inline {
   --color-*: initial;
@@ -28,6 +29,10 @@
   --color-recovered: var(--pico-recovered);
   --color-deceased: var(--pico-deceased);
   --color-active: var(--pico-active);
+  --color-positive-ink: var(--pico-positive-ink);
+  --color-active-ink: var(--pico-active-ink);
+  --color-recovered-ink: var(--pico-recovered-ink);
+  --color-deceased-ink: var(--pico-deceased-ink);
   --color-rt: var(--pico-rt);
   --color-scrim: var(--pico-scrim);
   --color-bar: var(--pico-bar);

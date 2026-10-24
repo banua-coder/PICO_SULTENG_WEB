@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useHomeLatest, useKabupatenLatest, useNationalLatest, useProvincesLatest } from '@/api/useSeries'
+import { useHomeLatest, useLastReal, useKabupatenLatest, useNationalLatest, useProvincesLatest } from '@/api/useSeries'
 import type { LatestByArea } from '@/api/types'
 import { SULTENG } from '@/app/areas'
 import { useFormat } from '@/app/useFormat'
 import DataFreshness from '@/components/DataFreshness.vue'
-import StatFigure from '@/components/StatFigure.vue'
+import CaseCardGroup from '@/components/CaseCardGroup.vue'
+import type { CaseCardData } from '@/components/CaseCardGroup.vue'
+import type { CaseColumn } from '@/components/CaseCard.vue'
 import StatusView from '@/components/StatusView.vue'
 import { rate, summaryRow } from '../summary'
 import { DataPageKey } from '../useDataPage'
@@ -21,6 +23,7 @@ const area = state.area.value // DataView keys the page by area, so it never cha
 const latestList: { data: { value: LatestByArea | LatestByArea[] | undefined } } =
   area.level === 'indonesia' ? useNationalLatest() : area.level === 'provinsi' ? useProvincesLatest() : useKabupatenLatest()
 const home = useHomeLatest()
+const lastRealDates = useLastReal()
 const latest = computed(() => {
   const d = latestList.data.value
   return Array.isArray(d) ? d.find((x) => x.area.code === area.code) : d
@@ -31,18 +34,32 @@ const sel = computed(() => summaryRow({ latest: latest.value, series: state.seri
 const row = computed(() => sel.value?.row)
 const d = <K extends 'positive' | 'recovered' | 'deceased' | 'active'>(k: K) => (sel.value?.dailyKnown ? row.value!.daily[k] : null)
 const waiting = computed(() => !row.value && state.series.status.value !== 'error')
-const showActive = area.level !== 'kabupaten' // kabupaten rows carry no "active" (C2 invariant 4)
+// The legacy dashboard: four cards (Positif, Dirawat, Sembuh, Meninggal), the chosen area on the left and Indonesia on the right (one
+// column when the area is Indonesia). A kabupaten has no "Dirawat" (C2 invariant 4): its card says so instead of showing 0.
+const nationalRow = computed(() => home.data.value?.lastReal.indonesia ?? null)
+const KEYS = ['positive', 'active', 'recovered', 'deceased'] as const
+const cards = computed<CaseCardData[]>(() => {
+  const r = row.value
+  if (!r) return []
+  return KEYS.map((key) => {
+    const own: CaseColumn = {
+      title: area.name,
+      value: key === 'active' && area.level === 'kabupaten' ? null : r.cumulative[key],
+      delta: key === 'active' && area.level === 'kabupaten' ? null : d(key),
+      // before the series arrives the row is the padded end of the record: its totals equal those of the last real day, so say that day
+      asOf: (!sel.value?.dailyKnown && (area.level === 'provinsi' ? lastRealDates.data.value?.provinsi[area.code] : area.level === 'kabupaten' ? lastRealDates.data.value?.kabupaten[area.code] : undefined)) || r.date,
+    }
+    const n = nationalRow.value
+    const nat: CaseColumn[] = area.level !== 'indonesia' && n ? [{ title: t('beranda.indonesia'), value: n.cumulative[key], delta: n.daily[key], asOf: n.date }] : []
+    return { key, label: t(`state.${key}`), columns: [own, ...nat] }
+  })
+})
 const pct = (n: number | null) => fmt.nullable(n, (v: number) => fmt.pct(v, 1))
 </script>
 
 <template>
   <div>
-    <div v-if="row" data-testid="summary" class="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
-      <StatFigure state="positive" :label="t('state.positive')" :value="row.cumulative.positive" :delta="d('positive')" :as-of="row.date" emphasis />
-      <StatFigure v-if="showActive" state="active" :label="t('state.active')" :value="row.cumulative.active" :delta="d('active')" :as-of="row.date" />
-      <StatFigure state="recovered" :label="t('state.recovered')" :value="row.cumulative.recovered" :delta="d('recovered')" :as-of="row.date" />
-      <StatFigure state="deceased" :label="t('state.deceased')" :value="row.cumulative.deceased" :delta="d('deceased')" :as-of="row.date" />
-    </div>
+    <div v-if="row" data-testid="summary"><CaseCardGroup :cards="cards" /></div>
     <div v-else-if="waiting" class="min-h-[12rem]"><StatusView kind="loading" compact :title="t('data.loadingSummary')" /></div>
     <StatusView v-else kind="error" compact @retry="state.series.refresh" />
 

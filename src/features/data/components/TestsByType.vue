@@ -7,7 +7,8 @@ import { useFormat } from '@/app/useFormat'
 import SectionHeading from '@/components/SectionHeading.vue'
 import { Card, CardContent } from '@/components/ui/card'
 import StatusView from '@/components/StatusView.vue'
-import { typeInfo, useTestSeries } from '../useGenderTests'
+import { testTotals, typeInfo, useTestSeries } from '../useGenderTests'
+import TestBlock from './TestBlock.vue'
 
 // Spec 45, Sulawesi Tengah only. PCR and RDT are the only types with rows. The data ends on 28 September 2020 and says so.
 const TimeSeriesChart = defineAsyncComponent(() => import('@/components/charts/TimeSeriesChart.vue'))
@@ -24,7 +25,7 @@ const blocks = computed(() => {
     if (!s.last || !s.first) return []
     const info = typeInfo(d.types, type)
     const name = info ? `${type.toUpperCase()} (${info.name})` : type.toUpperCase()
-    return [{ type, name, info, ...s, summary: t('data.tests.summary', { type: type.toUpperCase(), first: f.date(s.first.from), last: f.date(s.last.from), positive: f.num(s.last.positive), negative: f.num(s.last.negative) }) }]
+    return [{ type, name, info, totals: testTotals(d.periods, type), ...s, summary: t('data.tests.summary', { type: type.toUpperCase(), first: f.date(s.first.from), last: f.date(s.last.from), positive: f.num(s.last.positive), negative: f.num(s.last.negative) }) }]
   })
 })
 const n = (v: number) => f.num(v)
@@ -35,8 +36,10 @@ const noteDate = computed(() => blocks.value.map((b) => b.last!.from).sort().at(
   <section aria-labelledby="tes" data-testid="tests">
     <SectionHeading id="tes" :level="2">{{ t('data.tests.title') }}</SectionHeading>
     <p class="mt-2 text-sm text-ink-muted" data-testid="tests-note">{{ t('data.tests.note', { date: f.date(noteDate) }) }}</p>
-    <div v-if="tests.data.value" class="mt-4 grid gap-4 lg:grid-cols-2">
-      <Card v-for="b in blocks" :key="b.type" :data-type="b.type">
+    <div v-if="tests.data.value" class="mt-4 grid gap-5 lg:grid-cols-2">
+      <div v-for="b in blocks" :key="b.type" class="flex flex-col gap-3" :data-type="b.type">
+      <TestBlock :type="b.type" :name="b.name" :description="t(b.type === 'pcr' ? 'data.tests.descPcr' : 'data.tests.descRdt')" :updated="b.last!.from" :totals="b.totals" />
+      <Card>
 <CardContent>
         <TimeSeriesChart kind="line" :series="b.series" :a11y="{ title: t('data.tests.chart', { type: b.name }), summary: b.summary }" />
         <h3 class="mt-3 text-md">{{ t('data.tests.last', { date: f.date(b.last!.from) }) }}</h3>
@@ -49,6 +52,7 @@ const noteDate = computed(() => blocks.value.map((b) => b.last!.from).sort().at(
         <p v-if="b.info" class="mt-2 text-sm text-ink-muted">{{ t('data.tests.sample') }}: {{ b.info.sample }}. {{ t('data.tests.duration') }}: {{ b.info.duration }}.</p>
       </CardContent>
 </Card>
+      </div>
     </div>
     <StatusView v-else-if="tests.status.value === 'error'" class="mt-4" kind="error" compact @retry="tests.refresh" />
     <div v-else class="mt-4 min-h-[12rem]"><StatusView kind="loading" compact /></div>

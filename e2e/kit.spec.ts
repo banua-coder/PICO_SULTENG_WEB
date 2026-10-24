@@ -42,14 +42,14 @@ test('PicoImage: three missing-image cases keep the box, CLS is 0', async ({ pag
   expect(await cls()).toBeLessThan(0.01) // and the whole page stays far under the "good" limit
 })
 
-test('the kit and the home page never load an animation library or a weave illustration', async ({ page }) => {
+test('the kit and the home page never load the animation library, an animation file or a weave illustration (posters only)', async ({ page }) => {
   const requested: string[] = []
   page.on('request', (r) => requested.push(r.url()))
   await page.goto('/_kit')
   await page.waitForLoadState('networkidle')
   await page.goto('/')
   await page.waitForLoadState('networkidle')
-  expect(requested.filter((u) => /lottie|weave|tenun|pico-hero/i.test(u))).toEqual([])
+  expect(requested.filter((u) => /lottie_light|lottie\/[a-z-]+\.json|weave|tenun|pico-hero/i.test(u))).toEqual([])
 })
 
 test('the hero illustration is never loaded by the kit', async ({ page }) => {

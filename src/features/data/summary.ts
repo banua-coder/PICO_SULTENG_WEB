@@ -38,13 +38,4 @@ export function summaryRow(opts: { latest: LatestByArea | undefined; series: Ser
 /** Share of cumulative positive, in percent. Null when nothing is positive yet (never 0 for "unknown"). */
 export const rate = (part: number, positive: number): number | null => (positive > 0 ? (part / positive) * 100 : null)
 
-const reported = (o: DailyRow['odp']) => o !== null && [o.active, o.finished, o.total].some((n) => n !== null && n > 0)
-
-/**
- * The newest row that still carries ODP or PDP numbers, for the early-pandemic note. A row of zeros is not a report
- * (C1 Q5: zero means unknown), so an area that never had a non-zero figure gets no note.
- */
-export function lastObservationRow(rows: DailyRow[]): DailyRow | undefined {
-  for (let i = rows.length - 1; i >= 0; i--) if (reported(rows[i]!.odp) || reported(rows[i]!.pdp)) return rows[i]
-  return undefined
-}
+export { lastObservationRow } from '@/app/homeLatest'

@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import type { AreaRef } from '@/api/types'
 import { useLocale } from '@/app/useLocale'
-import AreaPicker from '@/components/AreaPicker.vue'
+import LevelSwitch from './LevelSwitch.vue'
 import DateRange from '@/components/DateRange.vue'
 import { areaPath, DataPageKey } from '../useDataPage'
 
@@ -20,7 +20,7 @@ const goTo = (a: AreaRef) => void router.push({ path: localize(areaPath(a)), que
 
 <template>
   <form class="flex flex-col gap-4 rounded-lg border bg-card text-card-foreground shadow-card p-4" :aria-label="t('data.toolbar')" @submit.prevent>
-    <AreaPicker :model-value="state.area.value" :levels="['indonesia', 'provinsi', 'kabupaten']" @update:model-value="goTo" />
+    <LevelSwitch :area="state.area.value" @select="goTo" />
     <DateRange :model-value="state.window.value" :min="state.bounds.value.from" :max="state.bounds.value.to" @update:model-value="state.setWindow" />
   </form>
 </template>

@@ -4,38 +4,42 @@ import { useI18n } from 'vue-i18n'
 import { ChevronsDown, ChevronsUp } from '@lucide/vue'
 import type { IsoDate } from '@/api/types'
 import { useFormat } from '@/app/useFormat'
-import { Card } from '@/components/ui/card'
-import StateMark from './StateMark.vue'
 import type { DataState } from './StateMark.vue'
 
-// The old PICO case card: the role name on top, then Sulawesi Tengah and Indonesia side by side, each with its total and its change.
+// The owner's CardCase (legacy Vue 2 `components/CardCase.vue`), ported: a white rounded card with a big shadow, the category name in
+// capitals in the category colour, two halves side by side (area name, cumulative figure, a round coloured chip with a double chevron and
+// the day's change). Same markup shape and type sizes (text-2xl title and figure, text-sm area name). Additions: each half carries its own
+// date (a half can be older than the other), the chevron has a text alternative, and a missing number says so instead of showing 0.
 export type CaseColumn = { title: string; value: number | null; delta: number | null; asOf: IsoDate }
 const props = defineProps<{ state: DataState; label: string; columns: CaseColumn[] }>()
 const { t } = useI18n()
 const fmt = useFormat()
-const signed = (n: number) => `${n > 0 ? '+' : n < 0 ? '−' : ''}${fmt.num(Math.abs(n))}`
-const RULE: Record<DataState, string> = { positive: 'border-t-positive', recovered: 'border-t-recovered', deceased: 'border-t-deceased', active: 'border-t-active', rt: 'border-t-rt' }
 const cols = computed(() => props.columns)
+// legacy: icon(value) is the up chevron for >= 0 and the down chevron below 0
+const down = (n: number) => n < 0
+const sign = (n: number) => (n > 0 ? '+' : n < 0 ? '−' : '')
 </script>
 
 <template>
-  <Card class="gap-3 border-t-4 py-4" :class="RULE[state]" :data-state="state">
-    <h4 class="m-0 flex items-center gap-2 px-4 text-xl uppercase" :style="{ color: `var(--pico-${state})` }">
-      <StateMark :state="state" :size="3" /><span>{{ label }}</span>
-    </h4>
-    <div class="grid grid-cols-2 gap-3 px-4">
-      <div v-for="c in cols" :key="c.title" class="min-w-0">
-        <p class="m-0 text-sm font-semibold text-ink-muted">{{ c.title }}</p>
-        <p class="num m-0 font-display text-xl font-heading text-ink sm:text-2xl">{{ fmt.nullable(c.value, (n: number) => fmt.num(n)) }}</p>
-        <p class="num m-0 flex items-center gap-1 text-sm text-ink-muted">
+  <div class="w-full rounded-lg bg-card p-4 shadow-lg" :data-state="state" :style="{ color: `var(--pico-${state}-ink)` }">
+    <h4 class="m-0 text-center [color:inherit] text-[1.5rem] leading-8 font-bold uppercase">{{ label }}</h4>
+    <div class="mt-3 flex flex-row text-center font-bold">
+      <div v-for="c in cols" :key="c.title" class="min-w-0 flex-1 px-1" data-column>
+        <b class="text-sm font-semibold text-ink">{{ c.title }}</b>
+        <!-- a missing number is small muted text on the same 2rem line as the figure, so the cards of a row stay equally tall -->
+        <div v-if="c.value === null" class="flex h-8 items-center justify-center text-sm font-normal text-ink-muted" data-figure>{{ t('format.notAvailable') }}</div>
+        <div v-else class="num text-[1.5rem] leading-8" data-figure>{{ fmt.num(c.value) }}</div>
+        <div class="num min-h-6" data-delta :class="c.delta === null ? 'text-sm font-normal text-ink-muted' : ''">
           <template v-if="c.delta !== null">
-            <component :is="c.delta < 0 ? ChevronsDown : ChevronsUp" v-if="c.delta !== 0" class="size-4" aria-hidden="true" />
-            <span class="sr-only">{{ t('beranda.daily') }}:</span>{{ signed(c.delta) }}
+            <span class="mr-1 inline-flex items-center rounded-full px-2 py-0.5 align-middle" :style="{ backgroundColor: `var(--pico-${state})` }" aria-hidden="true">
+              <component :is="down(c.delta) ? ChevronsDown : ChevronsUp" class="size-3 text-white" />
+            </span>
+            <span class="sr-only">{{ t('beranda.daily') }}:</span>{{ sign(c.delta) }}{{ fmt.num(Math.abs(c.delta)) }}
           </template>
-          <template v-else>{{ t('stat.deltaNone') }}</template>
-        </p>
-        <p class="m-0 text-xs text-ink-muted"><time :datetime="c.asOf">{{ fmt.date(c.asOf) }}</time></p>
+          <template v-else-if="c.value !== null">{{ t('stat.deltaNone') }}</template>
+        </div>
+        <div class="text-xs font-normal text-ink-muted"><time :datetime="c.asOf">{{ fmt.date(c.asOf) }}</time></div>
       </div>
     </div>
-  </Card>
+  </div>
 </template>

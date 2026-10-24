@@ -13,6 +13,7 @@ import CaseCurves from './components/CaseCurves.vue'
 import RtSection from './components/RtSection.vue'
 import GenderAge from './components/GenderAge.vue'
 import SubAreaMap from './components/SubAreaMap.vue'
+import NewCases from './components/NewCases.vue'
 import TestsByType from './components/TestsByType.vue'
 import AreaSummary from './components/AreaSummary.vue'
 import DataToolbar from './components/DataToolbar.vue'
@@ -53,6 +54,7 @@ usePageHead({
     <SubAreaMap />
     <CaseCurves />
     <RtSection />
+    <NewCases />
     <OdpPdpNote />
     <template v-if="isSulteng"><GenderAge /></template>
     <section aria-labelledby="akses-data">

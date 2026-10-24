@@ -2,6 +2,7 @@
 import { computed, defineAsyncComponent, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useFormat } from '@/app/useFormat'
+import Illustration from '@/components/Illustration.vue'
 import OptionToggle from '@/components/OptionToggle.vue'
 import SectionHeading from '@/components/SectionHeading.vue'
 import StatusView from '@/components/StatusView.vue'
@@ -30,10 +31,14 @@ const curves = computed(() => {
   })
 })
 const nf = (n: number) => f.num(n)
-const type = computed<CaseType>(() => state.caseType.value)
-const single = computed(() => (type.value === 'all' ? null : curves.value?.byType[type.value]))
+const hasActive = computed(() => state.area.value.level !== 'kabupaten') // a kabupaten has no "dirawat" (C2 invariant 4)
+const type = computed<CaseType>(() => (state.caseType.value === 'active' && !hasActive.value ? 'positive' : state.caseType.value))
+// Dirawat is the number of patients in care on a day, not a count of new cases: no bars, one cumulative line (both tabs)
+const isActive = computed(() => type.value === 'active')
+const single = computed(() => (type.value === 'all' || type.value === 'active' ? null : curves.value?.byType[type.value]))
+const activeLine = computed(() => curves.value?.cumulative.find((s) => s.id === 'active'))
 const typeLabel = (c: CaseType) => (c === 'all' ? t('data.curves.all') : t(`state.${c}`))
-const typeOptions = computed(() => CASE_TYPES.map((c) => ({ value: c, label: typeLabel(c) })))
+const typeOptions = computed(() => CASE_TYPES.filter((c) => c !== 'active' || hasActive.value).map((c) => ({ value: c, label: typeLabel(c) })))
 const dailySummary = computed(() => {
   const c = curves.value
   const p = single.value
@@ -42,6 +47,10 @@ const dailySummary = computed(() => {
   return p.peak
     ? t('data.curves.summaryDaily', { type: typeLabel(type.value).toLocaleLowerCase(), peak: nf(p.peak.value), peakDate: f.date(p.peak.date), last: nf(c.last.daily), lastDate: f.date(c.last.date) })
     : t('data.curves.summaryDailyNoPeak', { type: typeLabel(type.value).toLocaleLowerCase(), last: nf(c.last.daily), lastDate: f.date(c.last.date) })
+})
+const activeSummary = computed(() => {
+  const r = curves.value?.rows.at(-1)
+  return r ? t('data.curves.summaryActive', { value: nf(r.cumulative.active ?? 0), date: f.date(r.date) }) : ''
 })
 const cumulativeSummary = computed(() => (curves.value?.last ? t('data.curves.summaryCumulative', { value: nf(curves.value.last.cumulative), date: f.date(curves.value.last.date) }) : ''))
 const range = computed<[string, string]>(() => [state.window.value.from, state.window.value.to])
@@ -60,7 +69,8 @@ const dailyTitle = computed(() => (single.value ? t('data.curves.dailyOf', { typ
     </Tabs>
     <OptionToggle class="mt-4" :model-value="type" :options="typeOptions" :label="t('data.curves.type')" @update:model-value="state.setCaseType" />
 
-    <div v-if="curves && curves.rows.length === 0" class="mt-4 text-ink-muted">{{ t('data.curves.noRows') }}</div>
+    <p v-if="isActive && state.view.value === 'harian'" class="mt-2 text-sm text-ink-muted" data-testid="active-note">{{ t('data.curves.activeNote') }}</p>
+    <div v-if="curves && curves.rows.length === 0" class="mt-4 flex flex-col items-center gap-2 text-ink-muted"><Illustration name="state-periode-kosong" :width="96" />{{ t('data.curves.noRows') }}</div>
     <Card v-else-if="curves" class="mt-4">
       <CardContent class="flex flex-col gap-8">
         <template v-if="state.view.value === 'harian'">
@@ -73,12 +83,13 @@ const dailyTitle = computed(() => (single.value ? t('data.curves.dailyOf', { typ
             :range="range"
             :a11y="{ title: dailyTitle, summary: dailySummary }"
           />
+          <TimeSeriesChart v-else-if="isActive && activeLine" kind="line" :series="[activeLine]" :range="range" :a11y="{ title: t('data.curves.activeTitle'), summary: activeSummary }" />
           <TimeSeriesChart v-else kind="line" :series="[curves.byType.positive.daily, ...curves.dailyLines]" :range="range" :a11y="{ title: dailyTitle, summary: dailySummary }" />
         </template>
         <TimeSeriesChart
           v-else
           kind="line"
-          :series="single ? [single.cumulative] : curves.cumulative"
+          :series="single ? [single.cumulative] : isActive && activeLine ? [activeLine] : curves.cumulative"
           :range="range"
           :a11y="{ title: t('data.curves.cumulative'), summary: cumulativeSummary }"
         />

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { genderSnapshot, testPeriods, testTypes } from '@/api/normalize/stats'
 import { fx } from '../../../test/fixtures/load'
-import { ageMax, typeInfo, useGenderBars, useTestSeries } from './useGenderTests'
+import { ageMax, testTotals, typeInfo, useGenderBars, useTestSeries } from './useGenderTests'
 
 const snap = genderSnapshot(fx('gender-latest'))
 const pct = (n: number) => `${n.toFixed(1)}%`
@@ -54,5 +54,21 @@ describe('useTestSeries', () => {
     const types = testTypes(fx('test-types'))
     expect(typeInfo(types, 'pcr')?.sample).toContain('Spesimen saluran pernapasan')
     expect(typeInfo([], 'rdt')).toBeUndefined()
+  })
+})
+
+describe('testTotals (the legacy PCR/RDT block)', () => {
+  const periods = [
+    { from: '2020-03-03', type: 'pcr', process: 10, invalid: 0, positive: 5, negative: 85 },
+    { from: '2020-03-10', type: 'pcr', process: 0, invalid: 5, positive: 5, negative: 90 },
+    { from: '2020-03-03', type: 'rdt', process: 0, invalid: 0, positive: 1, negative: 3 },
+  ] as never[]
+  it('sums one type over all periods and gives each result its share of the total', () => {
+    const t = testTotals(periods, 'pcr')
+    expect(t).toMatchObject({ total: 200, positive: 10, negative: 175, invalid: 5, process: 10 })
+    expect(t.share.positive).toBe(5)
+  })
+  it('no tests: shares are null, never NaN', () => {
+    expect(testTotals([], 'rdt').share.positive).toBeNull()
   })
 })
