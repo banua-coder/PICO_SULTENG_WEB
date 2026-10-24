@@ -16,6 +16,9 @@ export default defineConfig({
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)), // the shadcn-vue components import `cn` from the package of that name: it is this small file
       cn: fileURLToPath(new URL('./src/lib/cn.ts', import.meta.url)) } },
   build: {
+    // A lazy chunk lists the entry chunk (app-*.js) among its dependencies. The entry is already loaded, and WebKit warns that the extra preload link
+    // "was not used". Leave it out of the preload list: everything else is still preloaded.
+    modulePreload: { resolveDependencies: (_file, deps) => deps.filter((d) => !/(^|\/)app-[\w-]+\.js$/.test(d)) },
     rollupOptions: {
       output: {
         // Named chunks, so check-budget can see a heavy library in a page's initial JS: d3 (charts, Data and Vaksin only)
