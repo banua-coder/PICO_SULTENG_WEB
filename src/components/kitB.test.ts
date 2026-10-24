@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { INDONESIA, SULTENG } from '@/app/areas'
-import { flush, mountApp } from '../../test/support/mount'
+import { flush, mountApp, until } from '../../test/support/mount'
 import AreaPicker from './AreaPicker.vue'
 import DateRange from './DateRange.vue'
 import LottiePlayer from './LottiePlayer.vue'
@@ -101,7 +101,7 @@ describe('StatusView', () => {
     const { wrapper } = await mountApp(StatusView, { kind })
     await flush()
     expect(wrapper.text()).toContain(title)
-    expect(wrapper.find('svg').exists()).toBe(true)
+    await until(() => wrapper.find('svg').exists()) // the illustration arrives through a lazy chunk
   })
 
   it('English titles', async () => {
