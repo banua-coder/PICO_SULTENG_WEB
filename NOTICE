@@ -1,0 +1,23 @@
+PICO Sulteng web
+
+The code in this repository is MIT licensed (see LICENSE). The files below are NOT covered by that
+licence or have no determined licence.
+
+1. Map boundary files, licence undetermined
+   - scripts/geo-src/sulteng.json
+   - scripts/geo-src/indonesia.json
+   They come from the old PICO project and have been in the repository since 23 May 2020. The original
+   author and licence were not recorded. They are used for visualisation only. The simplified paths built
+   from them (src/components/maps/geo/) are derived works with the same status. The maps may be replaced
+   by BPS boundaries later.
+
+2. Weave (Tenun) motifs and illustrations in brand/ and the site, not MIT
+   Interpretations drawn from written descriptions, not from photographs of real cloth. They have not been
+   reviewed by Dinas Kebudayaan Sulawesi Tengah or Dekranasda. The Kaili motifs are communal heritage and not
+   owned by PICO. Not for commercial use of the motif.
+
+3. Data (COVID-19 series), not MIT
+   Derived from m.andrafarm.com, which allows copy-paste with credit and names no licence. See the
+   Metodologi page.
+
+4. PICO logo: the owner's legacy logo. Fonts Archivo and Source Sans 3: SIL OFL.

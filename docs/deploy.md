@@ -112,4 +112,4 @@ curl -sI https://pico.banuacoder.com/data/                                 # 301
 
 ## Not done here (W30)
 
-Secrets, repo and package permissions, removing review markers, cultural review `pico-jlc.8`, the placeholder replacement (O-1), Lighthouse and screen reader pass, sitemap submission. See the W30 bead.
+Secrets, repo and package permissions, removing review markers, the placeholder replacement (O-1), Lighthouse and screen reader pass, sitemap submission. See the W30 bead.

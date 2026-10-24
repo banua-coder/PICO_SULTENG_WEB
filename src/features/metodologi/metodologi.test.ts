@@ -20,7 +20,7 @@ describe('MetodologiView', () => {
     expect(text).toContain('2 Maret 2020')
     expect(text).toContain('14 Januari 2024')
     expect(text).toContain('8 Mei 2022')
-    expect(text).toContain('Asal dan lisensinya tidak tercatat')
+    expect(text).toContain('Pembuat asli dan lisensinya tidak tercatat')
     expect(text).toContain('cantumkan PICO Sulteng, m.andrafarm.com, dan sumber aslinya')
   })
 
@@ -30,7 +30,7 @@ describe('MetodologiView', () => {
     expect(wrapper.findAll('article h2').map((h) => h.attributes('id'))).toEqual(IDS)
     const rt = wrapper.find('#rt').element.parentElement!.textContent!
     for (const s of ['EpiEstim', 'mean 7.5 days', 'standard deviation 3.4 days', 'Window: 7 days', 'fewer than 12', '95% credible interval', '9 July 2023', '24 June 2023']) expect(rt, s).toContain(s)
-    expect(wrapper.text()).toContain('Their origin and licence are not recorded')
+    expect(wrapper.text()).toContain('The original author and licence were not recorded')
   })
 
   it('the download table lists every column of the files, in order, in both languages', async () => {
@@ -42,7 +42,7 @@ describe('MetodologiView', () => {
     }
   })
 
-  it('carries the cultural note, says the review is pending, makes no usage claim, and marks what is unreviewed', async () => {
+  it('carries the cultural note, says the review is not done (accepted caveat), makes no usage claim, and has no review marker', async () => {
     const { wrapper } = await mountApp(MetodologiView, {}, '/en/metodologi')
     await flush()
     const t = wrapper.text()
@@ -52,6 +52,8 @@ describe('MetodologiView', () => {
     expect(t).toContain('have not been reviewed by Dinas Kebudayaan')
     expect(t).toContain('m.andrafarm.com')
     expect(t.toLowerCase()).not.toMatch(/\b(users|visitors|downloads per)\b/)
-    expect(wrapper.findAll('[data-todo]').map((e) => e.attributes('data-todo')).sort()).toEqual(['metodologi-budaya', 'metodologi-peta'])
+    expect(wrapper.findAll('[data-todo]')).toHaveLength(0)
+    expect(t).toContain('not for commercial use')
+    expect(t).toContain('may be replaced by BPS boundaries')
   })
 })
