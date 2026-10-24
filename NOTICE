@@ -11,7 +11,10 @@ licence or have no determined licence.
    from them (src/components/maps/geo/) are derived works with the same status. The maps may be replaced
    by BPS boundaries later.
 
-2. Weave (Tenun) motifs and illustrations in brand/ and the site, not MIT
+2. Weave (Tenun) motifs and illustrations, not MIT
+   - src/assets/brand/patterns/ (band-*.svg, pico-weave-*.svg)
+   - src/assets/brand/illustrations/, src/assets/brand/lottie/ (where they use the weave motifs)
+   - src/components/WeaveDefs.vue
    Interpretations drawn from written descriptions, not from photographs of real cloth. They have not been
    reviewed by Dinas Kebudayaan Sulawesi Tengah or Dekranasda. The Kaili motifs are communal heritage and not
    owned by PICO. Not for commercial use of the motif.
@@ -20,4 +23,8 @@ licence or have no determined licence.
    Derived from m.andrafarm.com, which allows copy-paste with credit and names no licence. See the
    Metodologi page.
 
-4. PICO logo: the owner's legacy logo. Fonts Archivo and Source Sans 3: SIL OFL.
+4. Logo and fonts
+   - PICO logo: the owner's legacy logo (src/assets/brand/logo/, public/favicon.*, public/icon-*.png,
+     public/apple-touch-icon-180.png, public/og-image-1200x630.png).
+   - Fonts Archivo and Source Sans 3: SIL OFL 1.1 (src/assets/fonts/). The OFL text is not yet bundled in
+     this repository.
