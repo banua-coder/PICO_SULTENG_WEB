@@ -22,11 +22,14 @@ const items = ['beranda', 'data', 'tabel'].map((k, i) => ({ key: k as 'beranda',
 describe('AppNav', () => {
   it('lists the primary pages as links and keeps the rest under a "Lainnya" button with aria-expanded', async () => {
     const { wrapper } = await mountApp(AppNav, { items })
-    expect(wrapper.findAll('a').map((a) => a.text())).toEqual(['beranda', 'data'])
+    expect(wrapper.findAll('a').map((a) => a.text())).toEqual(['beranda', 'data', 'tabel']) // the third is in the menu: in the HTML, hidden until opened
+    expect(wrapper.find('ul ul').attributes('style')).toContain('display: none')
     const btn = wrapper.find('button')
     expect(btn.text()).toBe('Lainnya')
     expect(btn.attributes('aria-expanded')).toBe('false')
-    expect(btn.attributes('aria-haspopup')).toBe('dialog')
+    expect(btn.attributes('aria-haspopup')).toBe('true')
+    await btn.trigger('click')
+    expect(btn.attributes('aria-expanded')).toBe('true')
   })
 
   it('marks exactly the active page with aria-current', async () => {
@@ -89,7 +92,7 @@ describe('app shell', () => {
     expect(el.querySelectorAll('h1')).toHaveLength(1)
     expect(el.querySelectorAll('header nav')).toHaveLength(2) // the top bar and the phone's bottom bar
     expect(el.querySelector('footer')).not.toBeNull()
-    expect(el.querySelectorAll('header nav')[0]!.querySelectorAll('li')).toHaveLength(8) // 7 pages and "Lainnya"
+    expect(el.querySelectorAll('header nav')[0]!.querySelectorAll('li')).toHaveLength(11) // 7 pages, "Lainnya" and its 3 pages
     expect(el.querySelectorAll('header nav')[0]!.querySelectorAll('a[aria-current="page"]')).toHaveLength(1) // Vaksin is on the top bar only
   })
 

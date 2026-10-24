@@ -9,7 +9,9 @@ import { gzipSync } from 'node:zlib'
 import { fileForPath, read, walkHtml } from './site'
 
 const KB = 1024
-export const LIMITS = { beranda: 90 * KB, data: 160 * KB, other: 110 * KB, css: 30 * KB, fonts: 70 * KB, geo: 40 * KB, html: 60 * KB }
+// The shadcn-vue redesign (reka-ui primitives, Select, Tabs, Dialog) added about 9 KB to the home page and 13 KB to the pages with a Select;
+// the limits moved by that much (was 90 / 110). Calendar, sheet, d3 and xlsx stay out of the first load.
+export const LIMITS = { beranda: 100 * KB, data: 160 * KB, other: 125 * KB, css: 30 * KB, fonts: 70 * KB, geo: 40 * KB, html: 60 * KB }
 export type Limits = typeof LIMITS
 
 /** Library chunks that must never be in the initial JS of a page. Named by manualChunks in vite.config.ts. */

@@ -7,7 +7,7 @@ import { provinceSeries } from '@/api/normalize/series'
 import { INDONESIA, SULTENG } from '@/app/areas'
 import snapshot from '../../../test/fixtures/kabupaten-latest.snapshot.json'
 import { fx, type WireNationalCase, type WireProvince, type WireProvinceCase } from '../../../test/fixtures/load'
-import { flush, mountApp } from '../../../test/support/mount'
+import { flush, mountApp, until } from '../../../test/support/mount'
 import DataView from './DataView.vue'
 import OdpPdpNote from './components/OdpPdpNote.vue'
 import { DataPageKey } from './useDataPage'
@@ -115,7 +115,7 @@ describe('DataView routes', () => {
     expect(wrapper.find('[data-testid="share"] button').exists()).toBe(true)
     expect(wrapper.findAll('button[role="combobox"]').map((b) => b.text())).toEqual(['Aceh', 'Tahun'])
     expect(wrapper.findAll('[data-slot="toggle-group-item"]').map((b) => b.text())).toEqual(expect.arrayContaining(['30 hari', '90 hari', '180 hari', 'Semua']))
-    expect(wrapper.find('[data-testid="range-trigger"]').exists()).toBe(true)
+    await until(() => wrapper.find('[data-testid="range-trigger"]').exists())
   })
 })
 

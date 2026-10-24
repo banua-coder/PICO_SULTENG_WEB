@@ -107,7 +107,7 @@ const avoided = [
     <section aria-labelledby="lisensi">
       <h2 id="lisensi">Penggunaan data dan lisensi</h2>
       <p>Data asalnya bukan buatan PICO. m.andrafarm.com mengizinkan salin-tempel informasinya asal sumber utamanya dicantumkan, dan tidak menyebut lisensi. PICO tidak memberi lisensi atas data ini. Bila Anda memakainya, mohon cantumkan PICO Sulteng, m.andrafarm.com, dan sumber aslinya (Kementerian Kesehatan).</p>
-      <p>Kode situs ini terbuka di <a :href="REPO_URL" rel="noopener">GitHub</a> dengan lisensi MIT. Lisensi ini hanya berlaku untuk kode. Logo PICO, ilustrasi, pola tenun dan data tidak otomatis termasuk di dalamnya.</p>
+      <p>Kode situs ini terbuka di <a :href="REPO_URL" rel="noopener">GitHub</a> dengan lisensi MIT. Lisensi ini hanya berlaku untuk kode. Logo PICO, gambar, pola tenun dan data tidak otomatis termasuk di dalamnya.</p>
       <p>Data peta: berkas batas wilayah (sulteng.json dan indonesia.json) berasal dari proyek PICO lama dan ada di repositori sejak 23 Mei 2020. Pembuat asli dan lisensinya tidak tercatat. Berkas ini hanya dipakai untuk visualisasi. Peta mungkin diganti dengan batas wilayah dari BPS di kemudian hari.</p>
     </section>
 
@@ -118,8 +118,9 @@ const avoided = [
         <li v-for="p in partners.data.value" :key="p.id"><a v-if="p.href" :href="p.href" rel="noopener">{{ p.name }}</a><template v-else>{{ p.name }}</template></li>
       </ul>
       <h3>Merek dan huruf</h3>
-      <p>Logo PICO adalah logo lama milik pemilik, tidak diubah. Ilustrasi dan ikon digambar untuk situs ini. Huruf: Archivo dan Source Sans 3 (lisensi OFL).</p>
+      <p>Logo PICO adalah logo lama milik pemilik, tidak diubah. Gambar kecil di beranda dan Wiki (cuci tangan, masker, gejala) berasal dari dasbor PICO lama. Ikon digambar untuk PICO. Huruf: Nunito (lisensi OFL).</p>
       <h3>Catatan budaya</h3>
+      <p>Situs ini tidak lagi menampilkan motif tenun. Catatan di bawah tetap ada karena berkas motif masih ada di riwayat repositori dan di repositori merek PICO.</p>
       <p>Motif tenun Kaili adalah warisan bersama masyarakat Kaili. Motif itu bukan milik PICO. Setiap pola kabupaten adalah tafsiran dari deskripsi tertulis. Tidak ada yang merupakan reproduksi asli, dan tidak ada foto kain asli yang dipakai.</p>
       <ul class="list-disc">
         <li>Motif bersumber (tafsiran): Donggala, yaitu Buya Subi (bidang belah ketupat dan sulur berbunga) dan kotak Buya Bomba; Kota Palu, yaitu bomba sulur dan bunga sederhana dari Batik Bomba; Poso, yaitu tumpal kain kulit kayu dan belah ketupat dalam cokelat dan krem alami.</li>

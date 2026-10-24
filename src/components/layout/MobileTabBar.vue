@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { computed, ref, watch, type Component } from 'vue'
+import { computed, defineAsyncComponent, ref, watch, type Component } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { BarChart3, Ellipsis, Home, Phone, Smartphone } from '@lucide/vue'
+import { BarChart3, Ellipsis, Home, Phone } from '@lucide/vue'
 import type { NavItem, NavKey } from '@/app/nav'
-import { useLocale } from '@/app/useLocale'
-import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 
 // The old PICO phone layout: a dark bar at the bottom with Beranda, Data, Kontak and "Lainnya". "Lainnya" opens the other pages in a sheet.
 const props = defineProps<{ items: NavItem[] }>()
 const { t } = useI18n()
 const route = useRoute()
-const { localize } = useLocale()
+// the sheet (dialog code) loads when "Lainnya" is first pressed, so the phone's first load does not carry it
+const MoreSheet = defineAsyncComponent(() => import('./MoreSheet.vue'))
 const open = ref(false)
+const loaded = ref(false)
 const ICON: Partial<Record<NavKey, Component>> = { beranda: Home, data: BarChart3, kontak: Phone }
 const tabs = computed(() => props.items.filter((i) => i.tab))
 const rest = computed(() => props.items.filter((i) => !i.tab))
@@ -30,28 +29,11 @@ const tab = 'flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 b
         </RouterLink>
       </li>
       <li class="flex flex-1">
-        <button type="button" :class="[tab, 'border-transparent bg-transparent text-on-bar']" :aria-expanded="open" aria-haspopup="dialog" @click="open = true">
+        <button type="button" :class="[tab, 'border-transparent bg-transparent text-on-bar']" :aria-expanded="open" aria-haspopup="dialog" @click="(loaded = true), (open = true)">
           <Ellipsis class="size-5" aria-hidden="true" />{{ t('nav.more') }}
         </button>
       </li>
     </ul>
-    <Sheet v-model:open="open">
-      <SheetContent side="bottom" class="max-h-[85dvh] overflow-y-auto rounded-t-xl">
-        <SheetHeader>
-          <SheetTitle>{{ t('nav.menu') }}</SheetTitle>
-          <SheetDescription class="sr-only">{{ t('nav.label') }}</SheetDescription>
-        </SheetHeader>
-        <ul class="m-0 flex list-none flex-col px-4 pb-4">
-          <li v-for="item in rest" :key="item.key" class="border-b border-line last:border-0">
-            <RouterLink :to="item.to" :aria-current="item.active ? 'page' : undefined" class="flex min-h-touch items-center px-1 font-semibold text-ink no-underline" :class="item.active ? 'text-primary-strong' : ''">{{ item.label }}</RouterLink>
-          </li>
-        </ul>
-        <div class="px-4 pb-6">
-          <Button as-child class="w-full">
-            <RouterLink :to="`${localize('/mulai')}#aplikasi`" class="text-on-primary no-underline"><Smartphone aria-hidden="true" />{{ t('nav.download') }}</RouterLink>
-          </Button>
-        </div>
-      </SheetContent>
-    </Sheet>
+    <MoreSheet v-if="loaded" v-model:open="open" :items="rest" />
   </nav>
 </template>

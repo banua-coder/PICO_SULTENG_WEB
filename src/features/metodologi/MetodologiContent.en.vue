@@ -107,7 +107,7 @@ const avoided = [
     <section aria-labelledby="lisensi">
       <h2 id="lisensi">Data use and licence</h2>
       <p>PICO did not create the original data. m.andrafarm.com allows its information to be copied and pasted as long as the main source is credited, and it names no licence. PICO grants no licence for this data. If you use it, please credit PICO Sulteng, m.andrafarm.com and the original source (the Ministry of Health).</p>
-      <p>The code of this site is open on <a :href="REPO_URL" rel="noopener">GitHub</a> under the MIT licence. The licence covers the code only. The PICO logo, the illustrations, the weave patterns and the data are not automatically part of it.</p>
+      <p>The code of this site is open on <a :href="REPO_URL" rel="noopener">GitHub</a> under the MIT licence. The licence covers the code only. The PICO logo, the pictures, the weave patterns and the data are not automatically part of it.</p>
       <p>Map data: the boundary files (sulteng.json and indonesia.json) come from the old PICO project and have been in the repository since 23 May 2020. The original author and licence were not recorded. They are used for visualisation only. The maps may be replaced by BPS boundaries later.</p>
     </section>
 
@@ -118,8 +118,9 @@ const avoided = [
         <li v-for="p in partners.data.value" :key="p.id"><a v-if="p.href" :href="p.href" rel="noopener">{{ p.name }}</a><template v-else>{{ p.name }}</template></li>
       </ul>
       <h3>Brand and type</h3>
-      <p>The PICO logo is the owner's legacy logo, unchanged. The illustrations and icons were drawn for this site. Type: Archivo and Source Sans 3 (OFL licence).</p>
+      <p>The PICO logo is the owner's legacy logo, unchanged. The small pictures on the home page and the Wiki (hand washing, mask, symptoms) come from the old PICO dashboard. The icons were drawn for PICO. Type: Nunito (OFL licence).</p>
       <h3>Cultural note</h3>
+      <p>This site no longer shows weaving motifs. The note below stays because the motif files are still in the repository history and in the PICO brand repository.</p>
       <p>Kaili motifs are communal heritage of the Kaili people. They do not belong to PICO. Every kabupaten pattern is an interpretation drawn from written descriptions. None is an authentic reproduction, and no photograph of real cloth was used.</p>
       <ul class="list-disc">
         <li>Sourced motifs (interpretations): Donggala, that is Buya Subi (diamond field and flowering vine) and the Buya Bomba Kota check; Kota Palu, that is a simple vine-and-flower bomba from Batik Bomba; Poso, that is bark-cloth tumpal and diamond in natural brown and cream.</li>

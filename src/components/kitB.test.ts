@@ -195,6 +195,7 @@ describe('DateRange', () => {
   it('the year select shows the year of the window, and the calendar button shows the dates', async () => {
     const y = await mountApp(DateRange, { ...props, modelValue: { from: '2021-01-01', to: '2021-12-31' } })
     expect(y.wrapper.find('button[role="combobox"]').text()).toBe('2021')
+    await until(() => y.wrapper.find('[data-testid="range-trigger"]').exists()) // the calendar is its own chunk
     expect(y.wrapper.find('[data-testid="range-trigger"]').text()).toContain('1 Januari 2021 sampai 31 Desember 2021')
   })
 
