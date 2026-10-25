@@ -11,7 +11,7 @@ const px = computed(() => `var(--pico-mark-${props.size})`)
 </script>
 
 <template>
-  <svg viewBox="0 0 24 24" :style="{ width: px, height: px, flex: 'none' }" aria-hidden="true" focusable="false" :data-state="state">
+  <svg viewBox="0 0 24 24" :style="{ width: px, height: px, flex: 'none' }" aria-hidden="true" focusable="false" :data-state="state" data-contrast-alt="next to its text label">
     <MarkShape :state="state" :color="color" />
   </svg>
 </template>

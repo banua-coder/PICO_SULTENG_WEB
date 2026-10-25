@@ -20,7 +20,7 @@ const forwardedProps = useForwardProps(delegatedProps)
     :class="cn(
       buttonVariants({ variant: 'outline' }),
       'absolute right-1',
-      'size-7 bg-transparent p-0 opacity-50 hover:opacity-100',
+      'size-7 bg-transparent p-0',
       props.class,
     )"
     v-bind="forwardedProps"

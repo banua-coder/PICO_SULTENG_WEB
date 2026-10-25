@@ -18,7 +18,7 @@ const { t } = useI18n()
         <div v-if="b.image" class="hidden sm:block"><PicoImage :src="b.image" :alt="b.title" ratio="16/9" /></div>
         <p class="m-0 font-semibold leading-snug">{{ b.title }}</p>
         <p class="m-0 text-xs text-ink-muted">{{ t('beranda.bannerOld') }}</p>
-        <a v-if="b.href" :href="b.href" target="_blank" rel="noopener noreferrer" class="text-sm">{{ t('beranda.external') }}<span class="sr-only"> {{ b.title }} {{ t('contact.newTab') }}</span></a>
+        <a v-if="b.href" :href="b.href" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-6 items-center text-sm">{{ t('beranda.external') }}<span class="sr-only"> {{ b.title }} {{ t('contact.newTab') }}</span></a>
       </Card>
     </li>
   </ul>

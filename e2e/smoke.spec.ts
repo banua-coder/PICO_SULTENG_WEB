@@ -6,6 +6,7 @@ import { expectNoConsoleErrors, horizontalOverflow, visit, watchConsole } from '
 // and at 1280 x 800 (Chromium). Each run: axe (WCAG 2.2 A and AA), one h1, its own title, no console error, no horizontal scroll.
 const ROUTES = [
   '/',
+  '/mulai',
   '/data',
   '/data/indonesia',
   '/data/provinsi/sulawesi-tengah',

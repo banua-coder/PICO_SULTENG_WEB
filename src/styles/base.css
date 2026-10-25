@@ -100,16 +100,22 @@
     stroke: var(--pico-ink) !important;
   }
   .map-area:focus-visible {
-    outline: 2px solid var(--pico-primary-strong);
+    outline: 2px solid var(--pico-focus, var(--pico-primary-strong));
     outline-offset: 2px;
   }
 }
 
 /* C3: 2px primary-strong ring, offset 2px, on every interactive element.
-   Unlayered on purpose: pico-tokens.css ends with its own (crimson) :focus-visible rule, which is unlayered too and would win over @layer base. */
-:focus-visible {
-  outline: 2px solid var(--pico-primary-strong);
+   Unlayered on purpose: pico-tokens.css ends with its own (crimson) :focus-visible rule, which is unlayered too and would win over @layer base.
+   On a blue or dark-bar ground the blue ring is under 3:1 (1.3 on primary, 2.65 on the bar): `.focus-on-fill` turns it white there.
+   A date input reached with Tab focuses its inner fields; on the calendar button inside it neither :focus-visible nor :focus matches in Chromium (only :focus-within): it had no ring at all. */
+:focus-visible,
+input:focus-within {
+  outline: 2px solid var(--pico-focus, var(--pico-primary-strong));
   outline-offset: 2px;
+}
+.focus-on-fill {
+  --pico-focus: var(--pico-on-primary);
 }
 
 /* Brand v2 illustrations: the light or the dark file, by the theme (the switch or the system) */

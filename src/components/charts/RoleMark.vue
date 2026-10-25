@@ -9,7 +9,7 @@ const transform = computed(() => `translate(${props.x - props.size / 2} ${props.
 </script>
 
 <template>
-  <g :transform="transform" :data-mark="role" aria-hidden="true">
+  <g :transform="transform" :data-mark="role" aria-hidden="true" data-contrast-alt="next to its text label">
     <MarkShape :state="role" :color="color" />
   </g>
 </template>

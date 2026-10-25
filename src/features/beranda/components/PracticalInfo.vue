@@ -30,11 +30,11 @@ const SYMPTOMS = [
         </CardContent>
       </Card>
       <!-- the owner's CardPeriksa: the blue risk block with its button (it opens the self-isolation guide, the old chatbot link is gone) -->
-      <div class="mt-5 rounded-lg bg-primary p-6 text-on-primary shadow-lg" data-testid="risk-cta">
+      <div class="focus-on-fill mt-5 rounded-lg bg-primary p-6 text-on-primary shadow-lg" data-testid="risk-cta">
         <h3 class="m-0 text-[1.25rem] font-bold text-on-primary lg:text-[1.5rem]">{{ t('beranda.riskTitle') }}</h3>
         <div class="flex flex-col lg:flex-row">
           <p class="m-0 mt-4 w-full text-sm lg:w-3/4 lg:text-base">{{ t('beranda.riskText') }}<br><br>{{ t('beranda.riskAsk') }}</p>
-          <RouterLink :to="localize('/isoman')" class="mx-auto my-2 w-full rounded-md border-2 border-on-primary p-4 text-center text-sm font-bold text-on-primary no-underline hover:bg-primary-strong lg:mx-16 lg:my-auto lg:w-1/4 lg:text-base">{{ t('beranda.riskCta') }}</RouterLink>
+          <RouterLink :to="localize('/isoman')" class="mx-auto my-2 w-full rounded-md border-2 border-on-primary p-4 text-center text-sm font-bold text-on-primary no-underline hover:bg-primary-hover lg:mx-16 lg:my-auto lg:w-1/4 lg:text-base">{{ t('beranda.riskCta') }}</RouterLink>
         </div>
       </div>
       <!-- the owner's CardLindungi: the checklist, with the brand v2 pictures in place of the old two -->

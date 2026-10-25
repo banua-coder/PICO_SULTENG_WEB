@@ -115,9 +115,9 @@ The brand v2 illustrations replace the old raster pictures on Wiki, Kontak, Isom
 | Meninggal | orange-500 | `#f97316` | chip, chart, map ramp start; text uses `#c2410c` |
 
 Text in green and orange on white would not reach WCAG AA with the exact hex (2.54 and 2.80 to 1); the card text uses the next darker step of the same hue,
-fills and marks use the exact hex. Dark mode moves green and orange one step darker (`#059669`, `#ea580c`) so the dataviz lightness band passes.
+fills and marks use the exact hex. Dark mode uses the exact legacy green and orange too (the 600 steps it used before made Positif and Meninggal almost the same colour, see docs/contrast-audit.md).
 
 `node validate_palette.js "#991b1b,#2563eb,#10b981,#f97316" --mode light --surface "#ffffff"`: all checks pass; warning: contrast of `#10b981` (2.54) and
 `#f97316` (2.80) against white is under 3:1 ("relief required"): the relief is the word, the chip chevron, the printed number and the table view.
-CVD worst adjacent pair deutan 11.5 (pass). Dark (`#ef4444,#3b82f6,#059669,#ea580c` on `#1f2937`): all pass, CVD worst pair 10.1 (protan), tritan 5.7 reported.
+CVD worst pair deutan 11.5 (pass). Dark (`#ef4444,#3b82f6,#10b981,#f97316` on `#1f2937`): worst pair over all pairs 6.8 (Positif / Meninggal, tritan); docs/contrast-audit.md has the full table.
 Colour is never the only cue: category word on every card, role mark shapes (square, triangle, diamond, bars) on charts and legends, numbers printed on map areas, line forms.

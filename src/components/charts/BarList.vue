@@ -26,12 +26,12 @@ const reserved = computed(() => (width.value > 0 ? model.value.height : buildBar
   <figure class="m-0">
     <figcaption class="mb-2 font-display text-md font-heading text-ink">{{ a11y.title }}</figcaption>
     <div ref="box" class="w-full" :style="{ height: `${reserved}px` }" :data-orientation="orientation">
-      <svg v-if="!asTable && width > 0" :width="width" :height="model.height" role="img" :aria-label="a11y.summary" class="block">
+      <svg v-if="!asTable && width > 0" :width="width" :height="model.height" role="img" :aria-label="a11y.summary" class="block max-w-full">
         <g v-for="b in model.bars" :key="b.key" :data-bar-key="b.key" :data-role="b.role">
           <text :x="b.labelAt.x" :y="b.labelAt.y" :text-anchor="b.labelAt.anchor" dominant-baseline="central" :style="{ fill: 'var(--pico-ink)', fontSize: 'var(--pico-text-sm)' }" data-label>
             <tspan v-for="(line, i) in b.lines" :key="i" :x="b.labelAt.x" :dy="i === 0 ? 0 : 14">{{ line }}</tspan>
           </text>
-          <rect v-if="b.rect" :x="b.rect.x" :y="b.rect.y" :width="b.rect.w" :height="b.rect.h" :fill="roleFill(b.role)" :style="{ stroke: `var(--pico-${b.role})` }" stroke-width="1" data-bar />
+          <rect v-if="b.rect" :x="b.rect.x" :y="b.rect.y" :width="b.rect.w" :height="b.rect.h" :fill="roleFill(b.role)" :style="{ stroke: `var(--pico-${b.role})` }" stroke-width="1" data-bar data-contrast-alt="value printed next to the bar" />
           <text :x="b.valueAt.x" :y="b.valueAt.y" :text-anchor="b.valueAt.anchor" dominant-baseline="central" class="num" :style="{ fill: 'var(--pico-ink)', fontSize: 'var(--pico-text-sm)' }" data-value>{{ text(b.value) }}</text>
         </g>
       </svg>

@@ -125,12 +125,12 @@ const stripe = 'var(--pico-rt)'
           @focusin="zoom.arm"
           @focusout="zoom.disarm"
         >
-          <svg :width="model.width" :height="model.height" role="img" :aria-label="a11y.summary" class="block">
+          <svg :width="model.width" :height="model.height" role="img" :aria-label="a11y.summary" class="block max-w-full">
             <g :transform="`translate(${model.margin.left} ${model.margin.top})`">
               <Axis :plot-w="model.plotW" :plot-h="model.plotH" :x="xLabels" :y="yLabels" />
 
               <!-- the 95 % band: a grey area between the lower and the upper bound -->
-              <path :d="model.band" :fill="stripe" fill-opacity="0.2" stroke="none" data-rt-band />
+              <path :d="model.band" :fill="stripe" fill-opacity="0.2" stroke="none" data-rt-band data-contrast-alt="bounded by the upper and lower lines" />
               <!-- the two bounds as thin lines: upper solid, lower dashed -->
               <path :d="model.upperLine" fill="none" stroke-linejoin="round" :style="{ stroke: 'var(--pico-rt)' }" stroke-width="1" stroke-opacity="0.85" data-rt-upper />
               <path :d="model.lowerLine" fill="none" stroke-linejoin="round" :style="{ stroke: 'var(--pico-rt)' }" stroke-width="1" stroke-opacity="0.85" stroke-dasharray="4 3" data-rt-lower />
@@ -180,8 +180,8 @@ const stripe = 'var(--pico-rt)'
 
     <ul v-if="!asTable && model.hasAny" class="m-0 mt-2 flex list-none flex-wrap gap-x-4 gap-y-1 p-0 text-sm" data-testid="rt-legend">
       <li class="flex items-center gap-2"><svg width="22" height="12" aria-hidden="true"><line x1="0" x2="22" y1="6" y2="6" :style="{ stroke: 'var(--pico-rt)', strokeWidth: 'var(--pico-line-width)' }" /></svg>{{ t('chart.rtEstimateFull') }}</li>
-      <li class="flex items-center gap-2"><svg width="22" height="12" aria-hidden="true"><rect width="22" height="12" :style="{ fill: 'var(--pico-rt)' }" fill-opacity="0.2" /><line x1="0" x2="22" y1="1" y2="1" :style="{ stroke: 'var(--pico-rt)' }" /></svg>{{ t('chart.rtHigh') }} (95 %)</li>
-      <li class="flex items-center gap-2"><svg width="22" height="12" aria-hidden="true"><rect width="22" height="12" :style="{ fill: 'var(--pico-rt)' }" fill-opacity="0.2" /><line x1="0" x2="22" y1="11" y2="11" stroke-dasharray="4 3" :style="{ stroke: 'var(--pico-rt)' }" /></svg>{{ t('chart.rtLow') }} (95 %)</li>
+      <li class="flex items-center gap-2"><svg width="22" height="12" aria-hidden="true"><rect width="22" height="12" :style="{ fill: 'var(--pico-rt)' }" fill-opacity="0.2" data-contrast-alt="the line next to it is the key" /><line x1="0" x2="22" y1="1" y2="1" :style="{ stroke: 'var(--pico-rt)' }" /></svg>{{ t('chart.rtHigh') }} (95 %)</li>
+      <li class="flex items-center gap-2"><svg width="22" height="12" aria-hidden="true"><rect width="22" height="12" :style="{ fill: 'var(--pico-rt)' }" fill-opacity="0.2" data-contrast-alt="the line next to it is the key" /><line x1="0" x2="22" y1="11" y2="11" stroke-dasharray="4 3" :style="{ stroke: 'var(--pico-rt)' }" /></svg>{{ t('chart.rtLow') }} (95 %)</li>
       <li class="flex items-center gap-2"><svg width="22" height="12" aria-hidden="true"><line x1="0" x2="22" y1="6" y2="6" stroke-dasharray="6 4" stroke-width="1.5" :style="{ stroke: 'var(--pico-ink)' }" /></svg>{{ t('chart.rtThreshold') }}</li>
     </ul>
     <!-- one hint paragraph: what the lines are, which scale, and how to zoom -->
