@@ -21,7 +21,7 @@ const tab = 'flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 b
 </script>
 
 <template>
-  <nav :aria-label="t('nav.labelMobile')" class="fixed inset-x-0 bottom-0 z-40 bg-bar pb-[env(safe-area-inset-bottom)] xl:hidden">
+  <nav :aria-label="t('nav.labelMobile')" class="focus-on-fill fixed inset-x-0 bottom-0 z-40 bg-bar pb-[env(safe-area-inset-bottom)] xl:hidden">
     <ul class="m-0 flex list-none p-0">
       <li v-for="item in tabs" :key="item.key" class="flex flex-1">
         <RouterLink :to="item.to" :aria-current="item.active ? 'page' : undefined" :class="[tab, item.active ? 'border-sky text-on-bar-active' : 'border-transparent text-on-bar']">

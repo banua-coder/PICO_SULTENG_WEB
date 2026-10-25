@@ -10,7 +10,7 @@ const { t } = useI18n()
     <slot />
     <a
       :href="`#${id}`"
-      class="inline-flex min-h-touch min-w-touch items-center justify-center rounded-sm text-primary-strong no-underline opacity-60 hover:opacity-100 focus-visible:opacity-100"
+      class="inline-flex min-h-touch min-w-touch items-center justify-center rounded-sm text-ink-muted no-underline hover:text-primary-strong"
       :aria-label="t('heading.link')"
     >
       <span aria-hidden="true">#</span>

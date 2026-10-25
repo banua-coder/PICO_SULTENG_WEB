@@ -31,8 +31,8 @@ const sign = (n: number) => (n > 0 ? '+' : n < 0 ? '−' : '')
         <div v-else class="num text-[1.5rem] leading-8" data-figure>{{ fmt.num(c.value) }}</div>
         <div class="num min-h-6" data-delta :class="c.delta === null ? 'text-sm font-normal text-ink-muted' : ''">
           <template v-if="c.delta !== null">
-            <span class="mr-1 inline-flex items-center rounded-full px-2 py-0.5 align-middle" :style="{ backgroundColor: `var(--pico-${state})` }" aria-hidden="true">
-              <component :is="down(c.delta) ? ChevronsDown : ChevronsUp" class="size-3 text-white" />
+            <span class="mr-1 inline-flex items-center rounded-full px-2 py-0.5 align-middle" :style="{ backgroundColor: `var(--pico-${state})` }" aria-hidden="true" data-contrast-alt="the sign of the change is in the text">
+              <component :is="down(c.delta) ? ChevronsDown : ChevronsUp" class="size-3 text-on-primary" />
             </span>
             <span class="sr-only">{{ t('beranda.daily') }}:</span>{{ sign(c.delta) }}{{ fmt.num(Math.abs(c.delta)) }}
           </template>

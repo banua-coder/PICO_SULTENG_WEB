@@ -219,7 +219,7 @@ const title = computed(() => (props.areaName ? t('map.title', { metric: props.me
               @focus="showTip(p.code, $event)"
               @blur="tip = null"
             >
-              <path :d="p.d" fill-rule="evenodd" :style="{ fill: fillOf(p.code), stroke: 'var(--pico-line-strong)', strokeWidth: `${k}px` }" stroke-linejoin="round" data-fill />
+              <path :d="p.d" fill-rule="evenodd" :style="{ fill: fillOf(p.code), stroke: 'var(--pico-line-strong)', strokeWidth: `${k}px` }" stroke-linejoin="round" data-fill data-contrast-alt="outlined in line-strong, value printed on the area, in the tooltip and the area table" />
               <circle v-if="moved(p) && width > 0" :cx="p.cx" :cy="p.cy" :r="hitR" fill="transparent" data-hit />
             </g>
 

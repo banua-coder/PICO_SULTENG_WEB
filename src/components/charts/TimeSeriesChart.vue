@@ -32,6 +32,8 @@ const props = withDefaults(
   }>(),
   { overlay: undefined, peak: undefined, range: undefined, height: 280 },
 )
+// legacy series colours stay exact (docs/contrast-audit.md): what carries a series besides its colour
+const SERIES_ALT = 'line form and mark, legend and direct label, values in the tooltip and the table view'
 const emit = defineEmits<{ 'focus-date': [date: IsoDate | null] }>()
 
 const { t, locale } = useI18n()
@@ -125,12 +127,12 @@ const legend = computed(() => [...props.series, ...(props.overlay ? [props.overl
           @focusin="zoom.arm"
           @focusout="zoom.disarm"
         >
-          <svg :width="model.width" :height="model.height" role="img" :aria-label="a11y.summary" class="block">
+          <svg :width="model.width" :height="model.height" role="img" :aria-label="a11y.summary" class="block max-w-full">
             <g :transform="`translate(${model.margin.left} ${model.margin.top})`">
               <Axis :plot-w="model.plotW" :plot-h="model.plotH" :x="xLabels" :y="yLabels" />
 
               <template v-for="s in model.series" :key="s.id">
-                <g v-if="kind === 'line' || s.overlay" fill="none" stroke-linejoin="round" :data-series="s.id" :data-role="s.role">
+                <g v-if="kind === 'line' || s.overlay" fill="none" stroke-linejoin="round" :data-series="s.id" :data-role="s.role" :data-contrast-alt="SERIES_ALT">
                   <template v-if="!s.form && lineForm(s.role).doubled">
                     <path :d="s.path" transform="translate(0 -1.75)" :style="{ stroke: `var(--pico-${s.role})` }" stroke-width="1.5" data-line />
                     <path :d="s.path" transform="translate(0 1.75)" :style="{ stroke: `var(--pico-${s.role})` }" stroke-width="1.5" data-line />
@@ -142,7 +144,7 @@ const legend = computed(() => [...props.series, ...(props.overlay ? [props.overl
                     data-line
                   />
                 </g>
-                <g v-else :data-series="s.id" :data-role="s.role">
+                <g v-else :data-series="s.id" :data-role="s.role" :data-contrast-alt="SERIES_ALT">
                   <rect
                     v-for="b in s.bars"
                     :key="b.date"

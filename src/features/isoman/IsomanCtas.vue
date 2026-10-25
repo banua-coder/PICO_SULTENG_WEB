@@ -19,7 +19,7 @@ defineProps<{ items: Cta[] }>()
         <h3 class="m-0 text-base font-bold">{{ c.title }}</h3>
         <p class="my-4 mt-2">{{ c.text }}</p>
         <p v-if="c.inactive" class="m-0 rounded-lg border border-line-strong p-2 text-sm font-semibold text-ink-muted" data-inactive>{{ c.inactive }}</p>
-        <a v-else :href="c.href" :target="c.external ? '_blank' : undefined" :rel="c.external ? 'noopener noreferrer' : undefined" class="flex w-full items-center justify-between rounded-lg bg-primary p-2 font-bold text-on-primary no-underline transition-all duration-150 hover:bg-primary-strong hover:text-on-primary">
+        <a v-else :href="c.href" :target="c.external ? '_blank' : undefined" :rel="c.external ? 'noopener noreferrer' : undefined" class="flex w-full items-center justify-between rounded-lg bg-primary p-2 font-bold text-on-primary no-underline transition-all duration-150 hover:bg-primary-hover hover:text-on-primary">
           <span>{{ c.label }}<span v-if="c.external" class="sr-only"> {{ $t('contact.newTab') }}</span></span>
           <ArrowRight class="size-5" aria-hidden="true" />
         </a>

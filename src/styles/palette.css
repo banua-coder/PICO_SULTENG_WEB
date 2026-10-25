@@ -1,6 +1,7 @@
 /* The old PICO palette (the four case colours are the exact hex of the legacy site: red-800 #991b1b, blue-600 #2563eb, green-500 #10b981, orange-500 #f97316;
    the -ink variants are the same hue one step darker, used only where the colour is text on a white card;
-   dark mode moves green and orange to the 600 steps so the dataviz lightness band passes) (Laravel dashboard: gray page, white cards, blue accent, red / blue / green / orange case colours),
+   dark mode keeps the exact legacy green and orange (5.4 and 5.8 to 1 on #1f2937): the 600 steps used before put orange-600 next to red-500
+   (OKLab distance 5.8, 2.3 under tritanopia, docs/contrast-audit.md); red and blue move to the 500 steps, the legacy 800/600 are under 3:1 there) (Laravel dashboard: gray page, white cards, blue accent, red / blue / green / orange case colours),
    with the text and mark colours moved to the contrast steps that pass WCAG AA and the dataviz palette check
    (node dataviz/scripts/validate_palette.js, light on #ffffff and dark on #1f2937, see docs/redesign-plan.md).
    It overrides the colour tokens of assets/brand/pico-tokens.css, which stays a byte-exact copy of the PICO brand repo.
@@ -16,6 +17,7 @@
   --pico-sky: #3b82f6;
   --pico-primary: #2563eb;
   --pico-primary-strong: #1d4ed8;
+  --pico-primary-hover: #1d4ed8;
   --pico-crimson: #991b1b;
   --pico-ink: #1f2937;
   --pico-ink-muted: #4b5563;
@@ -50,17 +52,18 @@
   --pico-sky: #60a5fa;
   --pico-primary: #2563eb;
   --pico-primary-strong: #93c5fd;
+  --pico-primary-hover: #1d4ed8;
   --pico-crimson: #ef4444;
   --pico-ink: #f3f4f6;
-  --pico-ink-muted: #9ca3af;
+  --pico-ink-muted: #a7aeb9;
   --pico-line: #374151;
   --pico-line-strong: #9ca3af;
   --pico-on-indigo: #111827;
   --pico-on-primary: #ffffff;
   --pico-positive: #ef4444;
   --pico-active: #3b82f6;
-  --pico-recovered: #059669;
-  --pico-deceased: #ea580c;
+  --pico-recovered: #10b981;
+  --pico-deceased: #f97316;
   --pico-positive-ink: #f87171;
   --pico-active-ink: #60a5fa;
   --pico-recovered-ink: #34d399;
@@ -85,27 +88,28 @@
     --pico-sky: #60a5fa;
     --pico-primary: #2563eb;
     --pico-primary-strong: #93c5fd;
+    --pico-primary-hover: #1d4ed8;
     --pico-crimson: #ef4444;
     --pico-ink: #f3f4f6;
-    --pico-ink-muted: #9ca3af;
+    --pico-ink-muted: #a7aeb9;
     --pico-line: #374151;
     --pico-line-strong: #9ca3af;
     --pico-on-indigo: #111827;
     --pico-on-primary: #ffffff;
     --pico-positive: #ef4444;
     --pico-active: #3b82f6;
-    --pico-recovered: #059669;
-    --pico-deceased: #ea580c;
+    --pico-recovered: #10b981;
+    --pico-deceased: #f97316;
     --pico-positive-ink: #f87171;
     --pico-active-ink: #60a5fa;
     --pico-recovered-ink: #34d399;
     --pico-deceased-ink: #fb923c;
     --pico-rt: #93c5fd;
     --pico-band: #6b7280;
-  --pico-scrim: rgb(17 24 39 / 0.6);
-  --pico-bar: #030712;
-  --pico-on-bar: #d1d5db;
-  --pico-on-bar-active: #ffffff;
+    --pico-scrim: rgb(17 24 39 / 0.6);
+    --pico-bar: #030712;
+    --pico-on-bar: #d1d5db;
+    --pico-on-bar-active: #ffffff;
     --pico-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.5);
   }
 }

@@ -29,7 +29,7 @@ const card = 'flex h-full min-h-touch flex-col items-center justify-center gap-1
     <div class="grid grid-cols-2 content-start gap-3 sm:grid-cols-1" :class="banners.length ? '' : 'xl:col-span-2 sm:grid-cols-2'">
       <Card class="py-0">
         <a href="tel:119" :class="card">
-          <Phone class="size-6 text-active sm:hidden" aria-hidden="true" />
+          <Phone class="size-6 text-active-ink sm:hidden" aria-hidden="true" />
           <Illustration class="hidden shrink-0 sm:block" name="telepon-119" :width="72" />
           <span class="leading-tight sm:flex-1">
             <span class="block text-sm font-bold sm:text-lg">{{ t('beranda.callCenter') }}</span>
@@ -40,7 +40,7 @@ const card = 'flex h-full min-h-touch flex-col items-center justify-center gap-1
       </Card>
       <Card class="py-0" data-testid="hotline">
         <a href="tel:+62811404119" :class="card">
-          <PhoneCall class="size-6 text-active" aria-hidden="true" />
+          <PhoneCall class="size-6 text-active-ink" aria-hidden="true" />
           <span class="leading-tight sm:flex-1">
             <span class="block text-sm font-bold sm:text-lg">{{ t('beranda.hotline') }}</span>
             <span class="block text-xs text-ink-muted sm:text-sm">{{ t('beranda.hotlineNote') }}</span>
@@ -50,14 +50,14 @@ const card = 'flex h-full min-h-touch flex-col items-center justify-center gap-1
       </Card>
       <Card class="py-0">
         <RouterLink :to="`${localize('/mulai')}#api`" :class="card">
-          <Code2 class="size-6 text-active" aria-hidden="true" />
+          <Code2 class="size-6 text-active-ink" aria-hidden="true" />
           <span class="text-sm font-bold leading-tight sm:flex-1 sm:text-lg"><span class="sm:hidden">{{ t('beranda.startApiShort') }}</span><span class="hidden sm:inline">{{ t('beranda.startApi') }}</span></span>
           <ArrowRight class="hidden size-5 text-ink-muted sm:block" aria-hidden="true" />
         </RouterLink>
       </Card>
       <Card class="py-0">
         <RouterLink :to="`${localize('/mulai')}#aplikasi`" :class="card">
-          <Smartphone class="size-6 text-active" aria-hidden="true" />
+          <Smartphone class="size-6 text-active-ink" aria-hidden="true" />
           <span class="text-sm font-bold leading-tight sm:flex-1 sm:text-lg"><span class="sm:hidden">{{ t('beranda.startAppShort') }}</span><span class="hidden sm:inline">{{ t('beranda.startApp') }}</span></span>
           <ArrowRight class="hidden size-5 text-ink-muted sm:block" aria-hidden="true" />
         </RouterLink>
